@@ -1,0 +1,210 @@
+---
+title: "US vs World COVID-19"
+author: "David J Jackson"
+date: "3/30/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(pracma)
+library(plotly)
+library(scales)
+library(prophet)
+library(lubridate)
+library(RSQLite)
+```
+```{r, echo=FALSE}
+rm(list=ls())
+#these libraries are necessary
+#create the URL where the dataset is stored with automatic upDates every day
+db <- dbConnect(SQLite(), dbname="../db/CORVID.sqlite3")
+
+JHUDATA<- dbGetQuery(db, "SELECT country,Date,confirmed,deaths,recovered FROM JHUDATA;")
+colnames(JHUDATA) <- c("Countries","Date","Cases","Deaths","Recovered")
+JHUDATA$Date <- as.Date(JHUDATA$Date)
+
+
+```
+
+### The US COVID-19 Data by Cases, Deaths and Death Rate.
+
+```{r,echo=FALSE}
+JHU_US <- JHUDATA %>% filter(Countries == "US" )
+# Calculate Summary Cases and Deaths(World)
+# World
+# JHUDATA Summary by Year
+US_yearly <- JHU_US %>% group_by(Yearly =floor_date(Date,"year")) %>%                                             summarise(
+  
+                                    tc = sum(Cases),
+                                    td = sum(Deaths),
+                                    mean_cases = mean(Cases),
+                                    mean_deaths = mean(Deaths),
+                                    death_rate = td/tc,
+                                    Count = n())
+
+# Summary by Month
+US_monthly <- JHU_US %>% group_by(Monthly =floor_date(Date,"month")) %>%                                            summarise(
+                                        tc = sum(Cases),
+                                        td = sum(Deaths), 
+                                        mean_cases = mean(Cases),
+                                        mean_deaths = mean(Deaths),                                                        death_rate = td/tc,
+                                        Count = n())
+
+## Weekly Summary
+US_weekly <- JHU_US %>% group_by(Weekly =floor_date(Date,"week")) %>%                                             summarise(
+                                      tc = sum(Cases),
+                                      td = sum(Deaths),
+                                      mean_cases = mean(Cases),
+                                      mean_deaths = mean(Deaths),
+                                      death_rate = td/tc,
+                                      Count = n())
+
+## Daily Summary
+us_daily <- JHU_US %>% group_by(Daily =floor_date(Date,"day")) %>%                                              summarise(
+                                    tc = sum(Cases),
+                                    td = sum(Deaths),  
+                                    mean_cases = mean(Cases),
+                                    mean_deaths = mean(Deaths),
+                                    death_rate = td/tc,
+                                    Count = n())
+```
+
+```{r, echo=FALSE}
+us_daily %>% plot_ly() %>% add_bars(x=~Daily,y=~tc) %>% 
+        layout(title="US: Total Accumulated  Cases By Day")
+
+
+us_daily %>% plot_ly() %>% add_bars(x=~Daily,y=~td) %>% 
+        layout(title="US: Total Accumulated Deaths By Day")
+
+us_daily %>% plot_ly() %>% add_bars(x=~Daily,y=~death_rate) %>% 
+        layout(title="US: Percent of Cases Ending in Death by Week") 
+      
+```
+
+### The World(including US) COVID-19 Data by Cases, Deaths and Death Rate.
+
+```{r, echo=FALSE}
+world_yearly <- JHUDATA %>% group_by(Yearly =floor_date(Date,"year")) %>%                                             summarise(
+  
+                                    tc = sum(Cases),
+                                    td = sum(Deaths),
+                                    mean_cases = mean(Cases),
+                                    mean_deaths = mean(Deaths),
+                                    death_rate = td/tc,
+                                    Count = n())
+
+# Summary by Month
+world_monthly <- JHUDATA %>% group_by(Monthly =floor_date(Date,"month")) %>%                                            summarise(
+                                        tc = sum(Cases),
+                                        td = sum(Deaths), 
+                                        mean_cases = mean(Cases),
+                                        mean_deaths = mean(Deaths),                                                        death_rate = td/tc,
+                                        Count = n())
+
+## Weekly Summary
+world_weekly <- JHUDATA %>% group_by(Weekly =floor_date(Date,"week")) %>%                                             summarise(
+                                      tc = sum(Cases),
+                                      td = sum(Deaths),
+                                      mean_cases = mean(Cases),
+                                      mean_deaths = mean(Deaths),
+                                      death_rate = td/tc,
+                                      Count = n())
+
+## Daily Summary
+world_daily <- JHUDATA %>% group_by(Daily =floor_date(Date,"day")) %>%                                              summarise(
+                                    tc = sum(Cases),
+                                    td = sum(Deaths),  
+                                    mean_cases = mean(Cases),
+                                    mean_deaths = mean(Deaths),
+                                    death_rate = td/tc,
+                                    Count = n())
+```
+```{r, echo=FALSE}
+world_daily %>% plot_ly() %>% add_bars(x=~Daily,y=~tc) %>% 
+        layout(title="World: Total Accumulated  Cases By Day")
+
+
+world_daily %>% plot_ly() %>% add_bars(x=~Daily,y=~td) %>% 
+        layout(title="World: Total Accumulated Deaths By Day")
+
+world_daily %>% plot_ly() %>% add_bars(x=~Daily,y=~death_rate) %>% 
+        layout(title="World : Percent of Cases Ending in Death by Week") 
+      
+```
+
+### The World (minus US) COVID-19 Data by Cases, Deaths and Death Rate.
+
+```{r,echo=FALSE}
+less_US <- JHUDATA %>% filter(Countries != "US" )
+world_yearly <- less_US %>% group_by(Yearly =floor_date(Date,"year")) %>%                                             summarise(
+  
+                                    tc = sum(Cases),
+                                    td = sum(Deaths),
+                                    mean_cases = mean(Cases),
+                                    mean_deaths = mean(Deaths),
+                                    death_rate = td/tc,
+                                    Count = n())
+
+# Summary by Month
+world_monthly <- less_US %>% group_by(Monthly =floor_date(Date,"month")) %>%                                            summarise(
+                                        tc = sum(Cases),
+                                        td = sum(Deaths), 
+                                        mean_cases = mean(Cases),
+                                        mean_deaths = mean(Deaths),                                                        death_rate = td/tc,
+                                        Count = n())
+
+## Weekly Summary
+world_weekly <- less_US %>% group_by(Weekly =floor_date(Date,"week")) %>%                                             summarise(
+                                      tc = sum(Cases),
+                                      td = sum(Deaths),
+                                      mean_cases = mean(Cases),
+                                      mean_deaths = mean(Deaths),
+                                      death_rate = td/tc,
+                                      Count = n())
+
+## Daily Summary
+world_daily <- less_US %>% group_by(Daily =floor_date(Date,"day")) %>%                                              summarise(
+                                    tc = sum(Cases),
+                                    td = sum(Deaths),  
+                                    mean_cases = mean(Cases),
+                                    mean_deaths = mean(Deaths),
+                                    death_rate = td/tc,
+                                    Count = n())
+```
+```{r, echo=FALSE}
+world_daily %>% plot_ly() %>% add_bars(x=~Daily,y=~tc) %>% 
+        layout(title="World (less US): Total Accumulated  Cases By Day")
+
+
+world_daily %>% plot_ly() %>% add_bars(x=~Daily,y=~td) %>% 
+        layout(title="World(less US): Total Accumulated Deaths By Day")
+
+world_daily %>% plot_ly() %>% add_bars(x=~Daily,y=~death_rate) %>% 
+        layout(title="World (less US): Percent of Cases Ending in Death by Week") 
+      
+```
+```{r,echo=FALSE}
+
+JHULATEST <-  JHUDATA %>% 
+  group_by(Date, Countries) %>%
+  summarise(
+    TotalCases = sum(Cases, na.rm=TRUE)
+  ) %>%
+  group_by(Countries) %>%
+  arrange(desc(Date)) %>%
+  mutate(
+    PreviousTotalCases = lead(TotalCases)
+  ) %>%
+  ungroup() %>%
+  na.omit()
+JHULATEST <- JHULATEST %>% mutate(EXP = TotalCases/ PreviousTotalCases)
+JHULATEST$Date <- as.character(JHULATEST$Date)
+dbWriteTable(db, "JHULATEST",JHULATEST ,overwrite=TRUE)
+```
+```{r,echo=FALSE}
+dbDisconnect(db)
+```
+
