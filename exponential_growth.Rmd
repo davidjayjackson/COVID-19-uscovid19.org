@@ -1,0 +1,29 @@
+---
+title: "Eexponential Growth?"
+author: "David J Jackson"
+date: "4/8/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(RSQLite)
+```
+```{r}
+rm(list=ls())
+db <- dbConnect(SQLite(), dbname="../db/CORVID.sqlite3")
+
+JHUDATA<- dbGetQuery(db, "SELECT * FROM JHULATEST;")
+# colnames(JHUDATA) <- c("Countries","Date","Cases","Deaths","Recovered")
+JHUDATA$Date <- as.Date(JHUDATA$Date)
+```
+```{r}
+JHUXP <- JHUDATA %>% mutate(XP = NewCases/PreviousTotalCases ) %>% 
+      filter(Countries=="US")
+```
+```{r}
+ggplot(JHUXP) + geom_line(aes(x=Date,y=XP)) +
+  labs(title="USA: Measuring Eexponential Growth",y="NewCases/PreviousTotalCases")
+``` 
+
