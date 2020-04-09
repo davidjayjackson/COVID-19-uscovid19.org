@@ -1,171 +1,65 @@
 ---
-title: "Analysis of USA COVID-19 Data"
+title: "US Using ECDC Data"
 author: "David J Jackson"
-date: "Apr. 6,2020 %:30 EST/EDT"
+date: "4/9/2020"
 output: html_document
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(fig.width=9, fig.height=6)
 library(tidyverse)
-library(pracma)
-library(plotly)
-library(scales)
-library(prophet)
-library(lubridate)
 library(RSQLite)
 ```
-```{r, echo=FALSE}
+```{r,echo=FALSE}
 rm(list=ls())
 #these libraries are necessary
 #create the URL where the dataset is stored with automatic upDates every day
 db <- dbConnect(SQLite(), dbname="../db/CORVID.sqlite3")
-
-JHUDATA<- dbGetQuery(db, "SELECT country,Date,confirmed,deaths,recovered FROM JHUDATA;")
-colnames(JHUDATA) <- c("Countries","Date","Cases","Deaths","Recovered")
-JHUDATA$Date <- as.Date(JHUDATA$Date)
 ```
 ```{r,echo=FALSE}
+US <- dbGetQuery(db, "SELECT Countries,Reported,Cases,Deaths FROM ECDC 
+                 WHERE Countries ='USA'")
+US$Reported <- as.Date(US$Reported)
 
-JHULATEST <-  JHUDATA %>% 
-  group_by(Date, Countries) %>%
-  summarise(
-    TotalCases = sum(Cases, na.rm=TRUE),
-    TotalDeaths = sum(Deaths,na.rm=TRUE)
-  ) %>% 
-  group_by(Countries) %>%
-  arrange(desc(Date)) %>%
-  mutate(
-    PreviousTotalCases = lead(TotalCases),
-    PreviousTotalDeaths = lead(TotalDeaths)
-  ) %>%
-  ungroup() %>%
-  na.omit()
-JHULATEST <- JHULATEST %>% mutate(NewCases = TotalCases - PreviousTotalCases)
-JHULATEST <- JHULATEST %>% mutate(NewDeaths = TotalDeaths - PreviousTotalDeaths)
-JHULATEST$Date <- as.character(JHULATEST$Date)
-dbWriteTable(db, "JHULATEST",JHULATEST ,overwrite=TRUE)
-JHULATEST$Date <- as.Date(JHULATEST$Date)
+```
+
+## US Cases  and Deaths by Date
+ * Data Source: European Centre for Disease Prevention and Control
+ * URL: https://www.ecdc.europa.eu/en/publications-data/download-todays-data-geographic-distribution-covid-19-cases-worldwide
+
+```{r,echo=FALSE}
+ggplot(US) + geom_col(aes(x=Reported,y=Cases,fill=Cases)) +
+  theme(axis.text.x = element_text(angle = 45)) +
+      labs(title="US COVID-19: Cases by Date",x="Date Reported",y="Total Cases") 
+ 
 ```
 ```{r,echo=FALSE}
-dbDisconnect(db)
-
+ggplot(US) + geom_col(aes(x=Reported,y=Deaths,fill=Deaths)) +
+  theme(axis.text.x = element_text(angle = 45)) +
+      labs(title="US COVID-19: Deaths by Date",x="Date Reported",y="Total Deaths")
 ```
 
+### US Accumulated Daily Total: Cases and Deaths
 
-### Data Source: John Hopkins Coronavirus Resource Center
+* Data Source: John Hopkins Coronavirus Resource Center
 * URL: https://coronavirus.jhu.edu/map.html
 
-### The US COVID-19  Daily  Totals : Cases, Deaths and Death Rate.
-
-
-```{r, echo=FALSE}
-JHU_daily_total_US <- JHULATEST %>% filter(Countries == "US" )
-# Calculate Summary Cases and Deaths(World)
-# World
-# JHUDATA Summary by Year
-US_yearly_total <- JHU_daily_total_US %>% group_by(Yearly =floor_date(Date,"year")) %>%                                             summarise(
-  
-                                    tc = sum(NewCases),
-                                   td = sum(NewDeaths),
-                                   # mean_cases = mean(TotalCases),
-                                   # mean_deaths = mean(TotalDeaths),
-                                    death_rate = td/tc,
-                                    Count = n())
-
-# Summary by Month
-US_monthly_total <- JHU_daily_total_US %>% group_by(Monthly =floor_date(Date,"month")) %>%                                            summarise(
-                                        tc = sum(NewCases),
-                                        td = sum(NewDeaths), 
-                                        # mean_cases = mean(TotalCases),
-                                       # mean_deaths = mean(TotalDeaths),                                                        death_rate = td/tc,
-                                        Count = n())
-
-## Weekly Summary
-US_weekly_total <- JHU_daily_total_US %>% group_by(Weekly =floor_date(Date,"week")) %>%                                             summarise(
-                                      tc = sum(NewCases),
-                                      td = sum(NewDeaths),
-                                      mean_cases = mean(TotalCases),
-                                    #  mean_deaths = mean(TotalDeaths),
-                                     death_rate = td/tc,
-                                      Count = n())
-
-## Daily Summary
-us_daily_total <- JHU_daily_total_US %>% group_by(Daily =floor_date(Date,"day")) %>%                                              summarise(
-                                    tc = sum(NewCases),
-                                    td = sum(NewDeaths),  
-                                    mean_cases = mean(TotalCases),
-                                  #  mean_deaths = mean(TotalDeaths),
-                                    death_rate = td/tc,
-                                    Count = n())
+```{r,echo=FALSE}
+JHU_US<- dbGetQuery(db, "SELECT country,Date,confirmed,deaths,recovered FROM JHUDATA
+                     WHERE country='US';")
+colnames(JHU_US) <- c("Countries","Date","Cases","Deaths","Recovered")
+JHU_US$Date <- as.Date(JHU_US$Date)
 ```
-
-```{r, echo=FALSE}
-us_daily_total %>% plot_ly() %>% add_bars(x=~Daily,y=~tc) %>% 
-        layout(title="US: Total Number of Cases By Date")
-
-
-us_daily_total %>% plot_ly() %>% add_bars(x=~Daily,y=~td) %>% 
-        layout(title="US: Total Number of Deaths by Date")
-
-us_daily_total %>% plot_ly() %>% add_bars(x=~Daily,y=~death_rate) %>% 
-        layout(title="US: Percent of Cases Ending in Death by Week") 
-      
-```
-
-####  Cases and Deaths are Accumulated to date.
 
 ```{r,echo=FALSE}
-JHU_acc_US <- JHUDATA %>% filter(Countries == "US" )
-# Calculate Summary Cases and Deaths(World)
-# World
-# JHUDATA Summary by Year
-US_acc_yearly <- JHU_acc_US %>% group_by(Yearly =floor_date(Date,"year")) %>%                                             summarise(
-  
-                                    tc = sum(Cases),
-                                    td = sum(Deaths),
-                                    mean_cases = mean(Cases),
-                                    mean_deaths = mean(Deaths),
-                                    death_rate = td/tc,
-                                    Count = n())
-
-# Summary by Month
-US_acc_monthly <- JHU_acc_US %>% group_by(Monthly =floor_date(Date,"month")) %>%                                            summarise(
-                                        tc = sum(Cases),
-                                        td = sum(Deaths), 
-                                        mean_cases = mean(Cases),
-                                        mean_deaths = mean(Deaths),                                                        death_rate = td/tc,
-                                        Count = n())
-
-## Weekly Summary
-US_acc_weekly <- JHU_acc_US %>% group_by(Weekly =floor_date(Date,"week")) %>%                                             summarise(
-                                      tc = sum(Cases),
-                                      td = sum(Deaths),
-                                      mean_cases = mean(Cases),
-                                      mean_deaths = mean(Deaths),
-                                      death_rate = td/tc,
-                                      Count = n())
-
-## Daily Summary
-us_acc_daily <- JHU_acc_US %>% group_by(Daily =floor_date(Date,"day")) %>%                                              summarise(
-                                    tc = sum(Cases),
-                                    td = sum(Deaths),  
-                                    mean_cases = mean(Cases),
-                                    mean_deaths = mean(Deaths),
-                                    death_rate = td/tc,
-                                    Count = n())
+ggplot(JHU_US) + geom_col(aes(x=Date,y=Cases,fill=Cases)) +
+  theme(axis.text.x = element_text(angle = 45)) +
+      labs(title="US COVID-19: Total Confirmed Cases by Date",x="Date Reported",y="Total Cases") + scale_y_continuous(labels = scales::comma)
 ```
-
-```{r, echo=FALSE}
-us_acc_daily %>% plot_ly() %>% add_bars(x=~Daily,y=~tc) %>% 
-        layout(title="US: Total Accumulated  Cases By Day")
-
-
-us_acc_daily %>% plot_ly() %>% add_bars(x=~Daily,y=~td) %>% 
-        layout(title="US: Total Accumulated Deaths By Day")
-
-us_acc_daily %>% plot_ly() %>% add_bars(x=~Daily,y=~death_rate) %>% 
-        layout(title="US: Percent of Cases Ending in Death by Week") 
-      
+```{r,echo=FALSE}
+ggplot(JHU_US) + geom_col(aes(x=Date,y=Deaths,fill=Deaths)) +
+  theme(axis.text.x = element_text(angle = 45)) +
+      labs(title="US COVID-19: Total  Deaths by Date",x="Date Reported",y="Total Deaths") + 
+  scale_y_continuous(labels = scales::comma)
 ```
-
