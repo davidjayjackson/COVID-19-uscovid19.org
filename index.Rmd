@@ -55,7 +55,8 @@ JHU_US$Date <- as.Date(JHU_US$Date)
 ```{r,echo=FALSE}
 ggplot(JHU_US) + geom_col(aes(x=Date,y=Cases,fill=Cases)) +
   theme(axis.text.x = element_text(angle = 45)) +
-      labs(title="US COVID-19: Total Confirmed Cases by Date",x="Date Reported",y="Total Cases") + scale_y_continuous(labels = scales::comma)
+      labs(title="USA COVID-19: Total Confirmed Cases by Date",x="Date Reported",y="Total Cases") + scale_y_continuous(labels = scales::comma) +
+  scale_fill_gradient(low="#56B1F7",high="#132B43", labels = scales::comma)
 ```
 ```{r,echo=FALSE}
 ggplot(JHU_US) + geom_col(aes(x=Date,y=Deaths,fill=Deaths)) +
@@ -63,3 +64,11 @@ ggplot(JHU_US) + geom_col(aes(x=Date,y=Deaths,fill=Deaths)) +
       labs(title="US COVID-19: Total  Deaths by Date",x="Date Reported",y="Total Deaths") + 
   scale_y_continuous(labels = scales::comma)
 ```
+```{r}
+ggplot(US) + geom_point(aes(x=Cases,y=Deaths)) +geom_smooth(aes(x=Cases,y=Deaths))
+```
+```{r}
+ggplot(US) + geom_line(aes(x=Reported,y=Cases,col="Cases")) 
+ggplot(US)  + geom_line(aes(x=Reported,y=Deaths,col="Deaths"))
+```
+
