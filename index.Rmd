@@ -1,7 +1,7 @@
 ---
 title: "United States COVID-19 Analysis"
 author: "David J Jackson"
-date: "Apr. 10,2020 03:30PM EDT"
+date: "Apr. 11,2020 11:45AM EDT"
 output: html_document
 ---
 
@@ -15,7 +15,7 @@ library(RSQLite)
 rm(list=ls())
 #these libraries are necessary
 #create the URL where the dataset is stored with automatic upDates every day
-db <- dbConnect(SQLite(), dbname="../db/CORVID.sqlite3")
+db <- dbConnect(SQLite(), dbname="../COVIDDB//CORVID.sqlite3")
 ```
 ```{r,echo=FALSE}
 US <- dbGetQuery(db, "SELECT Countries,Reported,Cases,Deaths FROM ECDC 
@@ -63,12 +63,5 @@ ggplot(JHU_US) + geom_col(aes(x=Date,y=Deaths,fill=Deaths)) +
   theme(axis.text.x = element_text(angle = 45)) +
       labs(title="US COVID-19: Total  Deaths by Date",x="Date Reported",y="Total Deaths") + 
   scale_y_continuous(labels = scales::comma)
-```
-```{r}
-ggplot(US) + geom_point(aes(x=Cases,y=Deaths)) +geom_smooth(aes(x=Cases,y=Deaths))
-```
-```{r}
-ggplot(US) + geom_line(aes(x=Reported,y=Cases,col="Cases")) 
-ggplot(US)  + geom_line(aes(x=Reported,y=Deaths,col="Deaths"))
-```
+
 
