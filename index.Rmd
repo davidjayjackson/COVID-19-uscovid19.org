@@ -1,7 +1,7 @@
 ---
 title: "United States COVID-19 Analysis"
 author: "David J Jackson"
-date: "Apr. 15,2020 10:40AM  EDT"
+date: "Apr. 15,2020 02:00PM  EDT"
 output: html_document
 ---
 
@@ -60,7 +60,7 @@ JHU_US$Date <- as.Date(JHU_US$Date)
 ```
 
 ```{r,echo=FALSE}
-ggplot(JHU_US) + geom_col(aes(x=Date,y=Cases,fill=Cases)) +
+ggplot(JHU_US) + geom_col(aes(x=Date,y=na.omit(Cases),fill=Cases)) +
   theme(axis.text.x = element_text(angle = 45)) +
       labs(title="USA COVID-19: Total Confirmed Cases by Date",x="Date Reported",y="Total Cases") + scale_y_continuous(labels = scales::comma) +
   scale_fill_gradient(low="#56B1F7",high="#132B43", labels = scales::comma)
