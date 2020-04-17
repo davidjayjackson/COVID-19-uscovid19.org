@@ -1,7 +1,7 @@
 ---
 title: "United States COVID-19 Analysis"
 author: "David J Jackson"
-date: "Apr. 16,2020 08:20PM  EDT"
+date: "Apr. 16,2020 11:13PM  EDT"
 output: html_document
 ---
 
@@ -11,7 +11,7 @@ knitr::opts_chunk$set(fig.width=9, fig.height=6)
 library(tidyverse)
 library(plotly)
 library(RSQLite)
-library(patchwork)
+theme_set(theme_light())
 ```
 ```{r,echo=FALSE}
 rm(list=ls())
@@ -37,17 +37,20 @@ jumped to 2408 which is 321 more than it's previous single day high on 4/11/2020
 
 
 ```{r,echo=FALSE}
-cases_1 <- US %>% filter(Reported >= Sys.Date() - 30) %>% ggplot() + geom_col(aes(x=Reported,y=Cases,fill=Cases)) +
+US %>% filter(Reported >= Sys.Date() - 30) %>%  ggplot() +
+  geom_col(aes(x=Reported,y=Cases,fill=Cases)) +
   theme(axis.text.x = element_text(angle = 45)) +
-      labs(title="US COVID-19: Cases by Date",y="Total Cases") 
+      labs(title="US COVID-19: Cases by Date",y="Total Cases",subtitle = "(Shaded Box = incubation period)") +
+  geom_rect(data=US,aes(xmin=max(Reported) -10,xmax=max(Reported) -15,ymin=min(Cases),ymax=max(Cases)), alpha= 0.01,fill="grey")
     
-ggplotly(cases_1)
+    
+# ggplotly(cases_1)
 
- deaths_1 <- US %>% filter(Reported >= Sys.Date() - 30) %>%  ggplot() + geom_col(aes(x=Reported,y=Deaths,fill=Deaths)) +
+ US %>% filter(Reported >= Sys.Date() - 30) %>%  ggplot() + geom_col(aes(x=Reported,y=Deaths,fill=Deaths)) +
   theme(axis.text.x = element_text(angle = 45)) +
       labs(x="Date Reported",y="Total Deaths",title="COVID-19: Deaths by Date")
            
-ggplotly(deaths_1)
+# ggplotly(deaths_1)
 
 ```
 
