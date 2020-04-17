@@ -1,7 +1,7 @@
 ---
 title: "United States COVID-19 Analysis"
 author: "David J Jackson"
-date: "Apr. 17,2020 01:40PM  EDT"
+date: "Apr. 17,2020 02:15PM  EDT"
 output: html_document
 ---
 
@@ -31,6 +31,7 @@ US$Reported <- as.Date(US$Reported)
  * URL: https://www.ecdc.europa.eu/en/publications-data/download-todays-data-geographic-distribution-covid-19-cases-worldwide
 
 ### Daily Summary: 
+* Apr. 17, 2020: Cases rose for a 4th straight day from 31,148 to 31,667. Deaths fell from a single day high of 4928 to 2299.
 * Apr 16, 2020: Another bad day for COVID-19 in at the US. While Cases continue to stay below it's single day  high. Deaths nearly doubled it previous days high (Apr. 15 to 2408) to 4928.
 * Apr. 15, 2020, This definitely a good news /bad news day...While US cases fell below the single day high for a 4th straignt day. Single day deaths
 jumped to 2408 which is 321 more than it's previous single day high on 4/11/2020.
