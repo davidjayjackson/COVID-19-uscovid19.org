@@ -1,7 +1,7 @@
 ---
 title: "United States COVID-19 Analysis"
 author: "David J Jackson"
-date: "Apr. 14,2020 04:30PM  EDT"
+date: "Apr. 14,2020 06:00PM  EDT"
 output: html_document
 ---
 
@@ -31,6 +31,7 @@ US$Reported <- as.Date(US$Reported)
  * URL: https://www.ecdc.europa.eu/en/publications-data/download-todays-data-geographic-distribution-covid-19-cases-worldwide
 
 ### Daily Summary: 
+* Apr. 18, 2020: Cases declined to 30,833 from 31,667, while deaths increased from 2299 to 3770
 * Apr. 17, 2020: Cases rose for a 4th straight day from 31,148 to 31,667. Deaths fell from a single day high of 4928 to 2299.
 * Apr 16, 2020: Another bad day for COVID-19 in at the US. While Cases continue to stay below it's single day  high. Deaths nearly doubled it previous days high (Apr. 15 to 2408) to 4928.
 * Apr. 15, 2020, This definitely a good news /bad news day...While US cases fell below the single day high for a 4th straignt day. Single day deaths
@@ -56,9 +57,16 @@ US %>% filter(Reported >= Sys.Date() - 30) %>%  ggplot() +
 ```
 
 ### US Accumulated Daily Total: Cases and Deaths
-
 * Data Source: John Hopkins Coronavirus Resource Center
 * URL: https://coronavirus.jhu.edu/map.html
+
+#### Exponential Growth by the Numbers:
+* The first confirmed case  US were on Jan. 1, 2020 (Washington State)
+* March 11, 2020 total cases: 1,281
+* March 17, 2020 total cases: 6,421
+* March 19, 2020 total cases: 13,747
+* March 21, 2020 total cases: 25,600
+* April 11, 2020 total cases: 52,639
 
 ```{r,echo=FALSE}
 JHU_US<- dbGetQuery(db, "SELECT country,Date,confirmed,deaths,recovered FROM JHUDATA
