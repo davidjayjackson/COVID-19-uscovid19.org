@@ -1,7 +1,7 @@
 ---
 title: "United States COVID-19 Analysis"
 author: "David J Jackson"
-date: "Apr. 17,2020 02:15PM  EDT"
+date: "Apr. 14,2020 04:30PM  EDT"
 output: html_document
 ---
 
@@ -68,7 +68,8 @@ JHU_US$Date <- as.Date(JHU_US$Date)
 ```
 
 ```{r,echo=FALSE}
-acc_3 <-ggplot(JHU_US) + geom_col(aes(x=Date,y=na.omit(Cases),fill=Cases)) +
+acc_3 <- JHU_US %>% filter(Date >= Sys.Date() -60) %>%
+  ggplot() + geom_col(aes(x=Date,y=na.omit(Cases),fill=Cases)) +
   theme(axis.text.x = element_text(angle = 45)) +
       labs(title="USA COVID-19: Total Confirmed Cases by Date",x="Date Reported",y="Total Cases")  + scale_y_continuous(labels = scales::comma) +
   scale_fill_gradient(labels = scales::comma)
@@ -76,9 +77,12 @@ ggplotly(acc_3)
 
 ```
 ```{r,echo=FALSE}
-acc_4 <- ggplot(JHU_US) + geom_col(aes(x=Date,y=Deaths,fill=Deaths)) +
+
+acc_4 <- JHU_US %>% filter(Date >= Sys.Date() -60) %>%
+    ggplot() + geom_col(aes(x=Date,y=Deaths,fill=Deaths)) +
   theme(axis.text.x = element_text(angle = 45)) +
-      labs(title="US COVID-19: Total  Deaths by Date",x="Date Reported",y="Total Deaths") +   scale_y_continuous(labels = scales::comma) + scale_fill_gradient(labels = scales::comma)
+      labs(title="US COVID-19: Total  Deaths by Date",x="Date Reported",y="Total Deaths") +   
+  scale_y_continuous(labels = scales::comma) + scale_fill_gradient(labels = scales::comma)
 ggplotly(acc_4)
 ```
 
