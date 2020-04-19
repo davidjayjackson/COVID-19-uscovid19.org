@@ -1,7 +1,7 @@
 ---
 title: "United States COVID-19 Analysis"
 author: "David J Jackson"
-date: "Apr. 14,2020 06:00PM  EDT"
+date: "Apr. 19,2020 12:50 PM/EDT"
 output: html_document
 ---
 
