@@ -1,0 +1,74 @@
+---
+title: 'US: A Tail of Two Plots'
+author: "David J Jackson"
+date: "4/20/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE,echo=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(fig.width=9, fig.height=6)
+library(tidyverse)
+library(plotly)
+library(readODS)
+library(RSQLite)
+```
+```{r, echo=FALSE}
+rm(list=ls())
+db <- dbConnect(SQLite(), dbname="../COVIDDB/CORVID.sqlite3")
+```
+```{r,message=FALSE}
+SD <-read_ods("./us_shutdown.ods")
+SD$Shutdown <-lubridate::mdy(SD$Shutdown)
+SD$Delay <- SD$Shutdown - as.Date("2020-01-21")
+```
+
+## What's the old saying ..."We All Have 20/20 Hindsight"
+
+```{r,echo=FALSE}
+SD %>% ggplot() + geom_col(aes(x=Delay,y=reorder(State,Delay))) +
+  labs(title="Elasped Days from First Confirmed US Case",
+       x="Delayed in Days",y="US States(and DC",
+       caption ="(Shutdown Dates = https://www.nbcnews.com)",
+       subtitle="First confirmed cases Jan. 21,2020") 
+
+# SD %>% ggplot() + geom_col(aes(x=Shutdown,y=State,fill=Delay)) +
+#   labs(title="Elasped Days from First Confirmed US Case",
+#        x="Delayed in Days",y="US States(and DC",
+#        caption ="(Shutdown Dates = https://www.nbcnews.com)",
+#        subtitle="First confirmed cases Jan. 21,2020") 
+
+```
+```{r,echo=FALSE}
+usstates <- dbGetQuery(db, "SELECT state,date,cases,deaths FROM us_states ;")
+usstates$date <- as.Date(usstates$date)
+
+states <- usstates %>% filter(state !="American Samoa" &
+                       state !="Northern Mariana Islands" &
+                      state != "Virgin Islands"  &
+                      state != "Puerto Rico" &
+                      state != "Guam")
+```
+
+### US: Elasped Time/Days From First Confirmed Case 
+
+```{r,message=FALSE}
+scott <- states %>% mutate(Days = date - as.Date("2020-01-21")) %>%
+  arrange(state,date) %>% filter(cases >0) %>%
+  group_by(state) %>% filter(row_number()==1)
+```
+
+```{r,message=FALSE}
+scott  %>%
+  ggplot(aes(x=Days,y=state,fill=cases)) +
+  geom_tile() + labs(title="First Confirmed Cases by States",
+                      x="Days from Jan. 22, 2020",
+                      y="US States")
+
+scott  %>%
+  ggplot(aes(x=date,y=state,fill=cases)) +
+  geom_tile() + labs(title="First Confirmed Cases by States",
+                      x="Date of first Cases",
+                      y="US States")
+```
+
