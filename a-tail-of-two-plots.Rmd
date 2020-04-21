@@ -1,7 +1,7 @@
 ---
 title: 'US: A Tail of Two Plots'
 author: "David J Jackson"
-date: "4/20/2020"
+date: "Apr. 20, 2020 3:30 PM/EDT"
 output: html_document
 ---
 
@@ -12,6 +12,8 @@ library(tidyverse)
 library(plotly)
 library(readODS)
 library(RSQLite)
+theme_set(theme_linedraw())
+
 ```
 ```{r, echo=FALSE}
 rm(list=ls())
@@ -30,7 +32,10 @@ SD %>% ggplot() + geom_col(aes(x=Delay,y=reorder(State,Delay))) +
   labs(title="Elasped Days from First Confirmed US Case",
        x="Delayed in Days",y="US States(and DC",
        caption ="(Shutdown Dates = https://www.nbcnews.com)",
-       subtitle="First confirmed cases Jan. 21,2020") 
+       subtitle="First confirmed cases Jan. 21,2020") +
+      scale_x_continuous(breaks=seq(0, 100, by = 10)) +
+     theme(panel.grid.major.y = element_blank(), panel.grid.minor.y = element_blank())
+      
 
 # SD %>% ggplot() + geom_col(aes(x=Shutdown,y=State,fill=Delay)) +
 #   labs(title="Elasped Days from First Confirmed US Case",
@@ -63,12 +68,16 @@ scott  %>%
   ggplot(aes(x=Days,y=state,fill=cases)) +
   geom_tile() + labs(title="First Confirmed Cases by States",
                       x="Days from Jan. 22, 2020",
-                      y="US States")
+                      y="US States") +
+  scale_x_continuous(breaks=seq(0, 100, by = 10)) +
+  theme(panel.grid.major.y = element_blank(), panel.grid.minor.y = element_blank())
 
 scott  %>%
   ggplot(aes(x=date,y=state,fill=cases)) +
   geom_tile() + labs(title="First Confirmed Cases by States",
                       x="Date of first Cases",
-                      y="US States")
+                      y="US States") +
+   theme(panel.grid.major.y = element_blank(), panel.grid.minor.y = element_blank())
+     
 ```
 
