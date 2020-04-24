@@ -1,7 +1,7 @@
 ---
 title: "United States COVID-19 Analysis"
 author: "David J Jackson"
-date: "Apr. 23,2020 5:50 PM/EDT"
+date: "Apr. 24,2020 12:45 PM/EDT"
 output: html_document
 ---
 
@@ -11,6 +11,8 @@ knitr::opts_chunk$set(fig.width=9, fig.height=6)
 library(tidyverse)
 library(plotly)
 library(RSQLite)
+library(patchwork)
+library(ggeasy)
 theme_set(theme_light())
 ```
 ```{r,echo=FALSE}
@@ -87,7 +89,7 @@ acc_4 <- JHU_US %>% filter(Date >= Sys.Date() -60) %>%
 ggplotly(acc_4)
 ```
 
-### US Recoveries Accoumliated  and Daily
+### US Recoveries Accoumliated  and Daily Totals
 
 ```{r} 
 JHU_US %>% filter(Date >= Sys.Date() -60) %>%
@@ -96,22 +98,6 @@ JHU_US %>% filter(Date >= Sys.Date() -60) %>%
       labs(title="USA COVID-19: Accumulated  Recoveries by Date",x="Date Reported",y="Total Cases")  + scale_y_continuous(labels = scales::comma) +
   scale_fill_gradient(labels = scales::comma)
 ```
-```{r}
-
-# WA <- JHU_US %>% group_by(Date) %>% 
-# summarise(Cases=sum(Cases), Deaths = sum(Deaths))   %>%
-#    mutate(daily_deaths = Deaths - lag(Deaths)) %>% 
-#    mutate(daily_cases = Cases -  lag(Cases)) %>%
-#   mutate(daily_recovered = Recovered -  lag(Recovered)) %>%
-#    mutate(DeathRate = daily_deaths/daily_cases)
-```
-```{r}
-
-JHU_US %>% filter(Date >= Sys.Date() -60) %>%
-  ggplot() + geom_col(aes(x=Date,y=na.omit(Recovered),fill=Recovered)) +
-  theme(axis.text.x = element_text(angle = 45)) +
-      labs(title="USA COVID-19: Accumulated  Recoveries by Date",x="Date Reported",y="Total Cases")  + scale_y_continuous(labels = scales::comma) +
-  scale_fill_gradient(labels = scales::comma)
 
 
 
