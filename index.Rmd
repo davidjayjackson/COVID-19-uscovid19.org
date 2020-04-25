@@ -1,7 +1,7 @@
 ---
 title: "United States COVID-19 Analysis"
 author: "David J Jackson"
-date: "Apr. 25, 2020 12:15 PM/EDT"
+date: "Apr. 25, 2020 12:55 PM/EDT"
 output: html_document
 ---
 
@@ -28,7 +28,7 @@ US$Reported <- as.Date(US$Reported)
 
 ```
 
-## US Cases  and Deaths by Date (Previous 30 Days)
+## US Cases  and Deaths by Date (Previous 60 Days)
  * Data Source: European Centre for Disease Prevention and Control
  * URL: https://www.ecdc.europa.eu/en/publications-data/download-todays-data-geographic-distribution-covid-19-cases-worldwide
 
@@ -37,7 +37,7 @@ US %>% filter(Reported >= Sys.Date() - 60) %>%  ggplot() +
   geom_col(aes(x=Reported,y=Cases,fill=Cases)) +
   theme(axis.text.x = element_text(angle = 45)) +
       labs(title="US COVID-19: Daily Cases by Date",y="Total Cases",subtitle = "(Shaded Box = incubation period)") +
-  geom_rect(data=US,aes(xmin=max(Reported) -10,xmax=max(Reported) -15,ymin=min(Cases),ymax=max(Cases)), alpha= 0.01,fill="grey")
+  geom_rect(data=US,aes(xmin=max(Reported) -10,xmax=max(Reported) -15,ymin=min(Cases),ymax=max(Cases)), alpha= 0.01,fill="grey") + scale_y_log10()
 ```
 ```{r}
     
@@ -45,7 +45,8 @@ US %>% filter(Reported >= Sys.Date() - 60) %>%  ggplot() +
 
  US %>% filter(Reported >= Sys.Date() - 600) %>%  ggplot() + geom_col(aes(x=Reported,y=Deaths,fill=Deaths)) +
   theme(axis.text.x = element_text(angle = 45)) +
-      labs(x="Date Reported",y="Total Deaths",title="COVID-19: Deaths by Date")
+      labs(x="Date Reported",y="Total Deaths",title="COVID-19: Deaths by Date") +
+  scale_y_log10()
            
 # ggplotly(deaths_1)
 
@@ -74,10 +75,10 @@ JHU_US$Date <- as.Date(JHU_US$Date)
 JHU_US %>% filter(Date >= Sys.Date() -60) %>%
   ggplot() + geom_col(aes(x=Date,y=na.omit(Cases),fill=Cases)) +
   theme(axis.text.x = element_text(angle = 45)) +
-      labs(title="USA COVID-19: Accumulated Total (Confirmed) Cases by Date",x="Date Reported",y="Total Cases")  + scale_y_continuous(labels = scales::comma) +
+      labs(title="USA COVID-19: Accumulated Total (Confirmed) Cases by Date",x="Date Reported",y="Total Cases")  + scale_y_log10()  +
   scale_fill_gradient(labels = scales::comma)
 
-
+# scale_y_continuous(labels = scales::comma)
 ```
 ```{r,echo=FALSE}
 
