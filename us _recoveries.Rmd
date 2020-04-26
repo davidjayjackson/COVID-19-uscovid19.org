@@ -6,11 +6,14 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE,
+            width=9, fig.height=6)
 library(tidyverse)
 library(RSQLite)
 library(scales)
 library(plotly)
+library(patchwork)
+library(ggeasy)
 ```
 ```{r}
 db <- dbConnect(SQLite(), dbname="../COVIDDB/CORVID.sqlite3")
@@ -59,3 +62,46 @@ US %>% ggplot() + geom_col(aes(x=date,y=daily_recovery)) +
        y="Log of  Recoveries",
        caption="(https://coronavirus.jhu.edu/map.html)") +
   scale_y_log10()
+```
+
+
+#### Comparing Daily Cases to Recoveries
+
+```{r}
+US %>% ggplot() + geom_line(aes(x=date,y=daily_recovery,col="Recoveries"),lwd=1) + 
+  labs(title="US Daily Cases and Recoveries by Date",
+       caption="(Source: https://coronavirus.jhu.edu/map.html)",
+       y="Daily Cases and Recoveries",subtitle="Apr. 25, 2020") + 
+  geom_line(aes(x=date,y=daily_cases,col="Cases"),lwd=1) +
+  easy_remove_x_axis()
+
+```
+```{r}
+US %>% ggplot() + geom_line(aes(x=date,y=daily_recovery,col="Recoveries"),lwd=1) + 
+  labs(title="US Daily Cases and Recoveries by Date",
+       caption="(Source: https://coronavirus.jhu.edu/map.html)",
+       y="Daily Cases and Recoveries",subtitle="Apr. 25,2020") + 
+  geom_line(aes(x=date,y=daily_cases,col="Cases"),lwd=1) +
+  scale_y_log10()
+```
+
+```{r}
+
+aa <- US %>% ggplot() + geom_line(aes(x=date,y=daily_recovery,col="Recoveries"),lwd=1) + 
+    labs(title="US Daily Cases and Recoveries by Date" ,
+       y="Daily Cases and Recoveries",subtitle="Apr. 25, 2020") + 
+    geom_line(aes(x=date,y=daily_cases,col="Cases"),lwd=1) +
+  easy_remove_x_axis()
+
+```
+```{r}
+ab <- US %>% ggplot() + geom_line(aes(x=date,y=daily_recovery,col="Recoveries"),lwd=1) + 
+  labs(title="US Daily Cases and Recoveries by Date",
+       caption="(Source: https://coronavirus.jhu.edu/map.html)",
+       y="Daily Cases and Recoveries") + 
+  geom_line(aes(x=date,y=daily_cases,col="Cases"),lwd=1) +
+  scale_y_log10()
+```
+```{r}
+aa /ab
+```
