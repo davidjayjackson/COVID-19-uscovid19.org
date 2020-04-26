@@ -97,7 +97,7 @@ aa <- US %>% ggplot() + geom_line(aes(x=date,y=daily_recovery,col="Recoveries"),
 ab <- US %>% ggplot() + geom_line(aes(x=date,y=daily_recovery,col="Recoveries"),lwd=1) + 
   labs(title="US Daily Cases and Recoveries by Date",
        caption="(Source: https://coronavirus.jhu.edu/map.html)",
-       y="Daily Cases and Recoveries") + 
+       y="Log of Daily Cases and Recoveries") + 
   geom_line(aes(x=date,y=daily_cases,col="Cases"),lwd=1) +
   scale_y_log10()
 ```
@@ -105,22 +105,25 @@ ab <- US %>% ggplot() + geom_line(aes(x=date,y=daily_recovery,col="Recoveries"),
 aa /ab
 ```
 
-#### Deaths Flatting the Curve
+#### Flatting the Curve
 
 ```{r}
-US %>% ggplot() + geom_line(aes(x=date,y=deaths),lwd=1) + 
-  labs(title="US Accumliated Deaths to Date",
-       y="Log of  Deaths",
+US %>% ggplot() + geom_line(aes(x=date,y=daily_deaths,col="Deaths"),lwd=1) + 
+  geom_line(aes(x=date,y=daily_cases,col="Cases"),lwd=1) +
+  geom_line(aes(x=date,y=daily_recovery,col="Recoveries"),lwd=1) +
+    labs(title="US Comparing Deaths,Cases and Recoveries",
+       y="Log10 Scale",
        caption="(https://coronavirus.jhu.edu/map.html)") +
   scale_y_log10()
 
 ```
 ```{r}
-US %>% ggplot() + geom_line(aes(x=date,y=daily_deaths),lwd=1) + 
-  labs(title="US Daily Deaths by Date",
-       y="Log of  Deaths",
-       caption="(https://coronavirus.jhu.edu/map.html)") +
-  scale_y_log10()
-
+US %>% ggplot() + geom_line(aes(x=date,y=daily_deaths,col="Deaths"),lwd=1) + 
+  geom_line(aes(x=date,y=daily_cases,col="Cases"),lwd=1) +
+  geom_line(aes(x=date,y=daily_recovery,col="Recoveries"),lwd=1) +
+    labs(title="US Comparing Deaths,Cases and Recoveries",
+       y="Log10 Scale",
+       caption="(https://coronavirus.jhu.edu/map.html)") 
+  
 ```
 
