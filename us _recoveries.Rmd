@@ -14,6 +14,7 @@ library(scales)
 library(plotly)
 library(patchwork)
 library(ggeasy)
+theme_set(theme_linedraw())
 ```
 ```{r}
 db <- dbConnect(SQLite(), dbname="../COVIDDB/CORVID.sqlite3")
@@ -31,7 +32,7 @@ US <- US%>% mutate(daily_recovery = recovered - lag(recovered))
 #### US Recoveries  by Date (Daily and Accumliated)
 
 ```{r}
-plot1 <- US %>% ggplot() + geom_line(aes(x=date,y=recovered),lwd=1) + 
+plot1 <- US %>% ggplot() + geom_line(aes(x=date,y=recovered),col="blue",lwd=1) + 
   labs(title="US Accumliated Recoveries to Date",
        capton="(Source: https://coronavirus.jhu.edu/map.html")  
    
@@ -39,29 +40,10 @@ plot1 <- US %>% ggplot() + geom_line(aes(x=date,y=recovered),lwd=1) +
 ggplotly(plot1)
 ```
 ```{r}
-plot2 <- US %>% ggplot() + geom_line(aes(x=date,y=daily_recovery),lwd=1) + 
+plot2 <- US %>% ggplot() + geom_line(aes(x=date,y=daily_recovery),col="blue",lwd=1) + 
   labs(title="US Daily Recoveries by Date",
        caption="(https://coronavirus.jhu.edu/map.html)")
 ggplotly(plot2)
-```
-
-#### US Recoveries  by Date (Daily and Accumliated)
-
-
-```{r}
-US %>% ggplot() + geom_col(aes(x=date,y=recovered)) + 
-  labs(title="US Accumliated Recoveries to Date",
-       y="Log of  Recoveries",
-       caption="(https://coronavirus.jhu.edu/map.html)") +
-  scale_y_log10()
-
-```
-```{r}
-US %>% ggplot() + geom_col(aes(x=date,y=daily_recovery)) + 
-  labs(title="US Daily Recoveries by Date",
-       y="Log of  Recoveries",
-       caption="(https://coronavirus.jhu.edu/map.html)") +
-  scale_y_log10()
 ```
 
 #### Comparing Daily Cases to Recoveries
@@ -79,14 +61,15 @@ US %>% ggplot() + geom_line(aes(x=date,y=daily_recovery,col="Recoveries"),lwd=1)
 US %>% ggplot() + geom_line(aes(x=date,y=daily_recovery,col="Recoveries"),lwd=1) + 
   labs(title="US Daily Cases and Recoveries by Date",
        caption="(Source: https://coronavirus.jhu.edu/map.html)",
-       y="Daily Cases and Recoveries",subtitle="Apr. 25,2020") + 
+       y="Log of Daily Cases and Recoveries",subtitle="Apr. 25,2020") + 
   geom_line(aes(x=date,y=daily_cases,col="Cases"),lwd=1) +
   scale_y_log10()
 ```
 
 ```{r}
 
-aa <- US %>% ggplot() + geom_line(aes(x=date,y=daily_recovery,col="Recoveries"),lwd=1) + 
+US %>% ggplot() + 
+  geom_line(aes(x=date,y=daily_recovery,col="Recoveries"),lwd=1) + 
     labs(title="US Daily Cases and Recoveries by Date" ,
        y="Daily Cases and Recoveries",subtitle="Apr. 25, 2020") + 
     geom_line(aes(x=date,y=daily_cases,col="Cases"),lwd=1) +
@@ -94,36 +77,61 @@ aa <- US %>% ggplot() + geom_line(aes(x=date,y=daily_recovery,col="Recoveries"),
 
 ```
 ```{r}
-ab <- US %>% ggplot() + geom_line(aes(x=date,y=daily_recovery,col="Recoveries"),lwd=1) + 
+US %>% ggplot() + geom_line(aes(x=date,y=daily_recovery,col="Recoveries"),lwd=1) + 
   labs(title="US Daily Cases and Recoveries by Date",
        caption="(Source: https://coronavirus.jhu.edu/map.html)",
        y="Log of Daily Cases and Recoveries") + 
   geom_line(aes(x=date,y=daily_cases,col="Cases"),lwd=1) +
   scale_y_log10()
 ```
-```{r}
-aa /ab
-```
 
 #### Flatting the Curve
 
 ```{r}
-US %>% ggplot() + geom_line(aes(x=date,y=daily_deaths,col="Deaths"),lwd=1) + 
-  geom_line(aes(x=date,y=daily_cases,col="Cases"),lwd=1) +
-  geom_line(aes(x=date,y=daily_recovery,col="Recoveries"),lwd=1) +
-    labs(title="US Comparing Deaths,Cases and Recoveries",
+US %>% ggplot() + geom_line(aes(x=date,y=daily_deaths),lwd=1) + 
+      labs(title="US  Deaths by Date",
        y="Log10 Scale",
        caption="(https://coronavirus.jhu.edu/map.html)") +
   scale_y_log10()
 
 ```
 ```{r}
-US %>% ggplot() + geom_line(aes(x=date,y=daily_deaths,col="Deaths"),lwd=1) + 
-  geom_line(aes(x=date,y=daily_cases,col="Cases"),lwd=1) +
-  geom_line(aes(x=date,y=daily_recovery,col="Recoveries"),lwd=1) +
-    labs(title="US Comparing Deaths,Cases and Recoveries",
+US %>% ggplot() + geom_line(aes(x=date,y=daily_cases),lwd=1) + 
+      labs(title="US Cases by Date",
        y="Log10 Scale",
-       caption="(https://coronavirus.jhu.edu/map.html)") 
+       caption="(https://coronavirus.jhu.edu/map.html)") +
+  scale_y_log10()
   
+```
+```{r}
+US %>% ggplot() + geom_line(aes(x=date,y=daily_recovery),lwd=1) + 
+      labs(title="US Recoveries by Date",
+       y="Log10 Scale",
+       caption="(https://coronavirus.jhu.edu/map.html)") +
+  scale_y_log10()
+  
+```
+
+## European CDC Daily Cases and Deaths
+
+```{r}
+ECDC <- dbGetQuery(db, "SELECT * FROM ECDC 
+                 WHERE Countries ='USA'")
+ECDC$Reported <- as.Date(ECDC$Reported)
+```
+```{r}
+ECDC %>% ggplot() + geom_line(aes(x=Reported,y=Cases),col="Red",lwd=1) + 
+      labs(title="US  Cases by Date",
+       y="Log10 of Cases",
+       caption="(Source: European CDc)") +
+  scale_y_log10()
+
+```
+```{r}
+ECDC %>% ggplot() + geom_line(aes(x=Reported,y=Deaths),col="Red",lwd=1) + 
+      labs(title="US  Deaths by Date",
+       y="Log10 Scale",
+       caption="(Source: European CDC)") +
+  scale_y_log10() 
 ```
 
