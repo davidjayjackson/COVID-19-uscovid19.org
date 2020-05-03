@@ -1,7 +1,7 @@
 ---
 title: "United States COVID-19 Analysis"
 author: "David J Jackson"
-date: "May 2, 2020 2:30 PM/EDT"
+date: "May 3, 2020 3:15 PM/EDT"
 output: html_document
 ---
 
@@ -13,6 +13,7 @@ library(plotly)
 library(RSQLite)
 library(patchwork)
 library(ggeasy)
+library(scales)
 theme_set(theme_light())
 ```
 ```{r,echo=FALSE}
@@ -100,7 +101,16 @@ JHU_US %>% filter(Date >= Sys.Date() -60) %>%
       labs(title="USA COVID-19: Accumulated  Recoveries by Date",x="Date Reported",y="Total Cases")  + scale_y_continuous(labels = scales::comma) +
   scale_fill_gradient(labels = scales::comma)
 ```
-
+```{r}
+US %>% ggplot(aes(x=Reported,y=Cases)) + geom_line() +
+  geom_smooth() + scale_y_log10() +
+  labs(title="US Cases by Date(Log10)",x="Date",y=" Log of Cases")
+```
+```{r}
+US %>% ggplot(aes(x=Reported,y=Cases)) + geom_line() +
+  geom_smooth() + 
+  labs(title="US Cases by Date",x="Date",y=" Log of Cases")
+```
 
 
 
