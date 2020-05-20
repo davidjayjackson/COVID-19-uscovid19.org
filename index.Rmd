@@ -1,7 +1,7 @@
 ---
 title: "United States COVID-19 Analysis"
 author: "David J Jackson"
-date: "May 19, 2020 2:45 PM/EDT"
+date: "May 20, 2020 1:35 PM/EDT"
 output: html_document
 ---
 
@@ -34,23 +34,24 @@ US$Reported <- as.Date(US$Reported)
  * URL: https://www.ecdc.europa.eu/en/publications-data/download-todays-data-geographic-distribution-covid-19-cases-worldwide
 
 ```{r,echo=FALSE}
-US %>% filter(Reported >= Sys.Date() - 60) %>%  ggplot() +
+plot_1 <-US %>% filter(Reported >= Sys.Date() - 60) %>%  ggplot() +
   geom_col(aes(x=Reported,y=Cases,fill=Cases)) +
   theme(axis.text.x = element_text(angle = 45)) +
       labs(title="US COVID-19: Daily Cases by Date",y="Total Cases",subtitle = "(Shaded Box = incubation period)") +
   geom_rect(data=US,aes(xmin=max(Reported) -10,xmax=max(Reported) -15,ymin=min(Cases),ymax=max(Cases)), alpha= 0.01,fill="grey") 
   
+ggplotly(plot_1)
 ```
 ```{r}
     
 # ggplotly(cases_1)
 
- US %>% filter(Reported >= Sys.Date() - 60) %>%  ggplot() + geom_col(aes(x=Reported,y=Deaths,fill=Deaths)) +
+plot_2 <-  US %>% filter(Reported >= Sys.Date() - 60) %>%  ggplot() + geom_col(aes(x=Reported,y=Deaths,fill=Deaths)) +
   theme(axis.text.x = element_text(angle = 45)) +
       labs(x="US Date Reported",y="Total Deaths",title=" US COVID-19: Deaths by Date") 
   
            
-# ggplotly(deaths_1)
+ggplotly(plot_2)
 
 ```
 
