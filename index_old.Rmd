@@ -1,0 +1,120 @@
+---
+title: "United States COVID-19 Analysis"
+author: "David J Jackson"
+date:  "July 6, 2020 "
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(fig.width=9, fig.height=6)
+library(tidyverse)
+library(plotly)
+library(RSQLite)
+library(patchwork)
+library(ggeasy)
+library(scales)
+theme_set(theme_light())
+```
+```{r,echo=FALSE}
+rm(list=ls())
+#these libraries are necessary
+#create the URL where the dataset is stored with automatic upDates every day
+db <- dbConnect(SQLite(), dbname="../COVIDDB/CORVID.sqlite3")
+```
+```{r,echo=FALSE}
+US <- dbGetQuery(db, "SELECT Countries,Reported,Cases,Deaths FROM ECDC 
+                 WHERE Countries ='USA'")
+US$Reported <- as.Date(US$Reported)
+
+```
+
+## US Cases  and Deaths by Date (Previous 60 Days)
+ * Data Source: European Centre for Disease Prevention and Control
+ * URL: https://www.ecdc.europa.eu/en/publications-data/download-todays-data-geographic-distribution-covid-19-cases-worldwide
+
+```{r,echo=FALSE}
+plot_1 <-US %>% filter(Reported >= Sys.Date() - 60) %>%  ggplot() +
+  geom_col(aes(x=Reported,y=Cases,fill=Cases)) +
+  theme(axis.text.x = element_text(angle = 45)) +
+      labs(title="US COVID-19: Daily Cases by Date",y="Total Cases",subtitle = "(Shaded Box = incubation period)") +
+  geom_rect(data=US,aes(xmin=max(Reported) -10,xmax=max(Reported) -15,ymin=min(Cases),ymax=max(Cases)), alpha= 0.01,fill="grey") 
+  
+ggplotly(plot_1)
+```
+```{r}
+    
+# ggplotly(cases_1)
+
+plot_2 <-  US %>% filter(Reported >= Sys.Date() - 60) %>%  ggplot() + geom_col(aes(x=Reported,y=Deaths,fill=Deaths)) +
+  theme(axis.text.x = element_text(angle = 45)) +
+      labs(x="US Date Reported",y="Total Deaths",title=" US COVID-19: Deaths by Date") 
+  
+           
+ggplotly(plot_2)
+
+```
+
+### US Accumulated Daily Total: Cases and Deaths
+* Data Source: John Hopkins Coronavirus Resource Center
+* URL: https://coronavirus.jhu.edu/map.html
+
+#### Exponential Growth by the Numbers:
+* The first confirmed case  US were on Jan. 1, 2020 (Washington State)
+* March 11, 2020 total cases: 1,281
+* March 17, 2020 total cases: 6,421
+* March 19, 2020 total cases: 13,747
+* March 21, 2020 total cases: 25,600
+* April 11, 2020 total cases: 52,639
+
+```{r,echo=FALSE}
+JHU_US<- dbGetQuery(db, "SELECT country,Date,confirmed,deaths,recovered FROM JHUDATA
+                     WHERE country='US';")
+colnames(JHU_US) <- c("Countries","Date","Cases","Deaths","Recovered")
+JHU_US$Date <- as.Date(JHU_US$Date) 
+```
+
+```{r,echo=FALSE}
+JHU_US %>% filter(Date >= Sys.Date() -60) %>%
+  ggplot() + geom_col(aes(x=Date,y=na.omit(Cases),fill=Cases)) +
+  theme(axis.text.x = element_text(angle = 45)) +
+      labs(title="USA COVID-19: Accumulated Total (Confirmed) Cases by Date",x="Date Reported",y="Total Cases")  + 
+  scale_fill_gradient(labels = scales::comma)
+
+# scale_y_continuous(labels = scales::comma)
+```
+```{r,echo=FALSE}
+
+acc_4 <- JHU_US %>% filter(Date >= Sys.Date() -60) %>%
+    ggplot() + geom_col(aes(x=Date,y=Deaths,fill=Deaths)) +
+  theme(axis.text.x = element_text(angle = 45)) +
+      labs(title="US COVID-19: Total  Deaths by Date",x="Date Reported",y="Total Deaths") +   
+  scale_y_continuous(labels = scales::comma) + scale_fill_gradient(labels = scales::comma)
+ggplotly(acc_4)
+```
+
+### US Recoveries Accoumliated  and Daily Totals
+
+```{r} 
+JHU_US %>% filter(Date >= Sys.Date() -60) %>%
+  ggplot() + geom_col(aes(x=Date,y=na.omit(Recovered),fill=Recovered)) +
+  theme(axis.text.x = element_text(angle = 45)) +
+      labs(title="USA COVID-19: Accumulated  Recoveries by Date",x="Date Reported",y="Total Cases")  + scale_y_continuous(labels = scales::comma) +
+  scale_fill_gradient(labels = scales::comma)
+```
+```{r}
+US %>% ggplot(aes(x=Reported,y=Cases)) + geom_line() +
+  geom_smooth() + scale_y_log10() +
+  labs(title="US Accumulated Cases by Date(Log10)",x="Date",y=" Log of Cases")
+```
+```{r}
+US %>% ggplot(aes(x=Reported,y=Deaths)) + geom_line() +
+  geom_smooth() + scale_y_log10() +
+  labs(title="US Accumulated Deaths by Date(Log10)",x="Date",y=" Log of Cases")
+```
+
+
+
+
+
+
