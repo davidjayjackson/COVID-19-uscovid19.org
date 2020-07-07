@@ -1,7 +1,7 @@
 ---
 title: "Total Cases and Deaths by US State"
 author: "David J Jackson"
-date: "7/6/2020"
+date: "7/7/2020"
 output: html_document
 ---
 
@@ -12,7 +12,6 @@ library(RSQLite)
 library(scales)
 ```
 
-## Comparing States Cases and Deaths (as of July 5, 2020)
 ### Data Source: New York Times
 * Github: https://github.com/nytimes/
 
