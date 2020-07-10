@@ -1,7 +1,7 @@
 ---
 title: "Total Cases and Deaths by US State"
 author: "David J Jackson"
-date: "7/9/2020"
+date: "7/10/2020"
 output: html_document
 ---
 
@@ -69,11 +69,5 @@ ST %>% filter(cases >=100000) %>%
   scale_x_continuous(labels = scales::comma)
 ```
 
-### Cases on one axis and Deaths on the other
 
-```{r}
-STATES %>% ggplot() + geom_point(aes(x=deaths,y=cases)) +
-  scale_x_log10() + scale_y_log10() 
- 
-```
 
