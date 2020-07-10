@@ -12,12 +12,12 @@ library(RSQLite)
 library(scales)
 ```
 
-### Data Source: New York Times
+## Data Source: New York Times
 * Github: https://github.com/nytimes/
 
 ```{r,echo=FALSE}
 rm(list=ls())
-db <- dbConnect(SQLite(), dbname="../COVIDDB/CORVID.sqlite3")
+db <- dbConnect(SQLite(), dbname="../COVIDDB/COVID.sqlite3")
 STATES <- dbGetQuery(db, "SELECT * FROM us_states ;")
 STATES$date <- as.Date(STATES$date)
 ST <- STATES %>% filter(date =="2020-07-08")
