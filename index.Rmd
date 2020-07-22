@@ -20,52 +20,52 @@ rm(list=ls())
 db <- dbConnect(SQLite(), dbname="../COVIDDB/COVID.sqlite3")
 STATES <- dbGetQuery(db, "SELECT * FROM us_states ;")
 STATES$date <- as.Date(STATES$date)
-ST <- STATES %>% filter(date =="2020-07-18")
+ST <- STATES %>% filter(date =="2020-07-21")
 ```
 
-## Total Cases and Deaths by Statev(as of July 18, 2020)
+## Total Cases and Deaths by Statev(as of July 21, 2020)
 
 ```{r, echo=FALSE}
 ST %>% ggplot() + geom_col(aes(x=cases,y=state)) +
-  labs(title="Total Cases by State as of July 18, 2020") +
+  labs(title="Total Cases by State as of July 21,2020") +
   scale_x_continuous(labels = scales::comma)
 ```
 
 ```{r, echo=FALSE}
 ST %>% ggplot() + geom_col(aes(x=deaths,y=state)) +
-  labs(title="Total Deaths by State as of July 18, 2020") 
+  labs(title="Total Deaths by State as of July 21, 2020") 
 ```
 
-## States with 25,000 or Fewer Cases (as of July 18, 2020)
+## States with 25,000 or Fewer Cases (as of July 21, 2020)
 
 ```{r,echo=FALSE}
 ST %>% filter(cases <=25000) %>%
   ggplot() + geom_col(aes(x=cases,y=state)) +
-  labs(title="States with 25, 000  Or Fewer Cases as of July 18, 2020") +
+  labs(title="States with 25, 000  Or Fewer Cases as of July 21, 2020") +
   scale_x_continuous(labels = scales::comma)
 ```
 
-### States with 49999 or fewer Cases (as of Jul 18, 2020 )
+### States with 49999 or fewer Cases (as of Jul 21, 2020 )
 
 ```{r,echo=FALSE}
 ST %>% filter(cases <=49999) %>%
   ggplot() + geom_col(aes(x=cases,y=state)) +
-  labs(title="States with 49999  Or Fewer Cases as of July 18, 2020") +
+  labs(title="States with 49999  Or Fewer Cases as of July 21, 2020") +
   scale_x_continuous(labels = scales::comma)
 ```
 ```{r,echo=FALSE}
 ST %>% filter(cases >=50000) %>%
   ggplot() + geom_col(aes(x=cases,y=state)) +
-  labs(title="States with 50,000 or more Cases as of July 18, 2020") +
+  labs(title="States with 50,000 or more Cases as of July 21, 2020") +
   scale_x_continuous(labels = scales::comma)
 ```
 
-### States with 100,000 or more cases (as of July 18, 2020)
+### States with 100,000 or more cases (as of July 21, 2020)
 
 ```{r,echo=FALSE}
 ST %>% filter(cases >=100000) %>%
   ggplot() + geom_col(aes(x=cases,y=state)) +
-  labs(title="States  100,000 or more Cases as of July 18, 2020") +
+  labs(title="States  100,000 or more Cases as of July 21, 2020") +
   scale_x_continuous(labels = scales::comma)
 ```
 
