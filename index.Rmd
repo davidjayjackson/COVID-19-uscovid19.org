@@ -26,13 +26,13 @@ ST <- STATES %>% filter(date =="2020-07-23")
 ## Total Cases and Deaths by Statev(as of July 23, 2020)
 
 ```{r, echo=FALSE}
-ST %>% ggplot() + geom_col(aes(x=cases,y=state)) +
+ST %>% ggplot() + geom_col(aes(x=cases,y=reorder(state,cases))) +
   labs(title="Total Cases by State as of July 23,2020")   +
   scale_x_continuous(labels = scales::comma)
 ```
 
 ```{r, echo=FALSE}
-ST %>% ggplot() + geom_col(aes(x=deaths,y=state)) +
+ST %>% ggplot() + geom_col(aes(x=deaths,y=reorder(state,deaths))) +
   labs(title="Total Deaths by State as of July 23, 2020") 
 ```
 
@@ -41,7 +41,7 @@ ST %>% ggplot() + geom_col(aes(x=deaths,y=state)) +
 ```{r,echo=FALSE}
 ST %>% filter(cases <=25000) %>%
   ggplot() + geom_col(aes(x=cases,y=state)) +
-  labs(title="States with 25, 000  Or Fewer Cases as of July 21, 2020") +
+  labs(title="States with 25, 000  Or Fewer Cases as of July 23, 2020") +
   scale_x_continuous(labels = scales::comma)
 ```
 
