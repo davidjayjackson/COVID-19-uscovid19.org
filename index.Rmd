@@ -1,7 +1,7 @@
 ---
 title: "Total Cases and Deaths by US State"
 author: "David J Jackson"
-date: "7/25/2020"
+date: "7/27/2020"
 output: html_document
 ---
 
@@ -23,51 +23,66 @@ STATES$date <- as.Date(STATES$date)
 ST <- STATES %>% filter(date =="2020-07-23")
 ```
 
-## Total Cases and Deaths by Statev(as of July 23, 2020)
+## Total Cases and Deaths by Statev(as of July 27, 2020)
 
 ```{r, echo=FALSE}
 ST %>% ggplot() + geom_col(aes(x=cases,y=reorder(state,cases))) +
-  labs(title="Total Cases by State as of July 23,2020")   +
+  labs(title="Total Cases by State as of July 27,2020")   +
   scale_x_continuous(labels = scales::comma)
 ```
 
 ```{r, echo=FALSE}
 ST %>% ggplot() + geom_col(aes(x=deaths,y=reorder(state,deaths))) +
-  labs(title="Total Deaths by State as of July 23, 2020") 
+  labs(title="Total Deaths by State as of July 27, 2020") 
 ```
 
-## States with 25,000 or Fewer Cases (as of July 23, 2020)
+## States with 25,000 or Fewer Cases (as of July 27, 2020)
 
 ```{r,echo=FALSE}
 ST %>% filter(cases <=25000) %>%
   ggplot() + geom_col(aes(x=cases,y=state)) +
-  labs(title="States with 25, 000  Or Fewer Cases as of July 23, 2020") +
+  labs(title="States with 25, 000  Or Fewer Cases as of July 27, 2020") +
   scale_x_continuous(labels = scales::comma)
 ```
 
-### States with 49999 or fewer Cases (as of Jul 23, 2020 )
+### States with 49999 or fewer Cases (as of Jul 27, 2020 )
 
 ```{r,echo=FALSE}
 ST %>% filter(cases <=49999) %>%
   ggplot() + geom_col(aes(x=cases,y=state)) +
-  labs(title="States with 49999  Or Fewer Cases as of July 23, 2020") +
+  labs(title="States with 49999  Or Fewer Cases as of July 27, 2020") +
   scale_x_continuous(labels = scales::comma)
 ```
 ```{r,echo=FALSE}
 ST %>% filter(cases >=50000) %>%
   ggplot() + geom_col(aes(x=cases,y=state)) +
-  labs(title="States with 50,000 or more Cases as of July 23, 2020") +
+  labs(title="States with 50,000 or more Cases as of July 27, 2020") +
   scale_x_continuous(labels = scales::comma)
 ```
 
-### States with 100,000 or more cases (as of July 23, 2020)
+### States with 100,000 or more cases (as of July 27, 2020)
 
 ```{r,echo=FALSE}
-ST %>% filter(cases >=100000) %>%
+ST %>% filter(cases <=14999) %>%
   ggplot() + geom_col(aes(x=cases,y=state)) +
-  labs(title="States  100,000 or more Cases as of July 23, 2020") +
+  labs(title="States  with 14999 or fewer Deaths as of July 27, 2020") +
   scale_x_continuous(labels = scales::comma)
 ```
 
+### States with 100,000 or more deaths (as of July 27, 2020)
 
+```{r,echo=FALSE}
+ST %>% filter(deaths >=15000) %>%
+  ggplot() + geom_col(aes(x=deaths,y=state)) +
+  labs(title="States  15000 or more Deaths as of July 27, 2020") +
+  scale_x_continuous(labels = scales::comma)
+```
 
+### States with 49999 or few Deaths as of July 27, 2020
+
+```{r,echo=FALSE}
+ST %>% filter(deaths <=49999) %>%
+  ggplot() + geom_col(aes(x=deaths,y=state)) +
+  labs(title="States  with 49999 or fewer Deaths as of July 27, 2020") +
+  scale_x_continuous(labels = scales::comma)
+```
