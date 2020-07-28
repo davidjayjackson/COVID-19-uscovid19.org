@@ -1,7 +1,7 @@
 ---
 title: "Total Cases and Deaths by US State"
 author: "David J Jackson"
-date: "7/27/2020"
+date: "7/28/2020"
 output: html_document
 ---
 
@@ -20,10 +20,10 @@ rm(list=ls())
 db <- dbConnect(SQLite(), dbname="../COVIDDB/COVID.sqlite3")
 STATES <- dbGetQuery(db, "SELECT * FROM us_states ;")
 STATES$date <- as.Date(STATES$date)
-ST <- STATES %>% filter(date =="2020-07-23")
+ST <- STATES %>% filter(date =="2020-07-27")
 ```
 
-## Total Cases and Deaths by Statev(as of July 27, 2020)
+## Total Cases and Deaths by States (as of July 27, 2020)
 
 ```{r, echo=FALSE}
 ST %>% ggplot() + geom_col(aes(x=cases,y=reorder(state,cases))) +
