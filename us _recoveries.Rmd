@@ -1,7 +1,7 @@
 ---
 title: "US COVID-19 Recoveries"
 author: "David J Jackson"
-date: "5/23/2020 3:40 pm"
+date: "7/2392020"
 output: html_document
 ---
 
@@ -17,13 +17,14 @@ library(ggeasy)
 theme_set(theme_light())
 ```
 ```{r}
-db <- dbConnect(SQLite(), dbname="../COVIDDB/CORVID.sqlite3")
+db <- dbConnect(SQLite(), dbname="../COVIDDB/COVID.sqlite3")
 ```
 ```{r}
 US <- dbGetQuery(db, "SELECT * FROM JHUDATA 
                  WHERE country ='US'")
 US$date <- as.Date(US$date)
-
+```
+```{r}
 US <- US%>% mutate(daily_deaths = deaths - lag(deaths))
 US <- US%>% mutate(daily_cases = confirmed - lag(confirmed))
 US <- US%>% mutate(daily_recovery = recovered - lag(recovered))
