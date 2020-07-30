@@ -1,7 +1,7 @@
 ---
 title: "Total Cases and Deaths by US State"
 author: "David J Jackson"
-date: "7/29/2020"
+date: "7/30/2020"
 output: html_document
 ---
 
