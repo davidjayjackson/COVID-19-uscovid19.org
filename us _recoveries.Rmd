@@ -1,7 +1,7 @@
 ---
 title: "US COVID-19 Recoveries"
 author: "David J Jackson"
-date: "8/1/2020"
+date: "8/2/2020"
 output: html_document
 ---
 
