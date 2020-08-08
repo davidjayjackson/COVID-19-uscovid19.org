@@ -1,7 +1,7 @@
 ---
 title: "Total Cases and Deaths by US State"
 author: "David J Jackson"
-date: "August 7, 2020"
+date: "August 8, 2020"
 output: html_document
 ---
 
@@ -20,65 +20,65 @@ rm(list=ls())
 db <- dbConnect(SQLite(), dbname="../COVIDDB/COVID.sqlite3")
 STATES <- dbGetQuery(db, "SELECT * FROM us_states ;")
 STATES$date <- as.Date(STATES$date)
-ST <- STATES %>% filter(date =="2020-08-01")
+ST <- STATES %>% filter(date =="2020-08-07")
 ```
 
-## Total Cases and Deaths by States (Week ending Aug. 1, 2020)
+## Total Cases and Deaths by States (Week ending Aug. 7, 2020)
 
 ```{r, echo=FALSE}
 ST %>% ggplot() + geom_col(aes(x=cases,y=reorder(state,cases))) +
-  labs(title="Total Cases by State for Weekly Ending Aug. 1,2020")   +
+  labs(title="Total Cases by State for Weekly Ending Aug. 7,2020")   +
   scale_x_continuous(labels = scales::comma)
 ```
 
 ```{r, echo=FALSE}
 ST %>% ggplot() + geom_col(aes(x=deaths,y=reorder(state,deaths))) +
-  labs(title="Total Deaths by State as of Aug. 1, 2020") 
+  labs(title="Total Deaths by State as of Aug. 7, 2020") 
 ```
 
-## States with 25,000 or Fewer Cases for Week ending Aug. 1, 2020
+## States with 25,000 or Fewer Cases for Week ending Aug. 7, 2020
 
 ```{r,echo=FALSE}
 ST %>% filter(cases <=25000) %>%
   ggplot() + geom_col(aes(x=cases,y=state)) +
-  labs(title="States with 25, 000  Or Fewer Cases for Week ending July 31, 2020") +
+  labs(title="States with 25, 000  Or Fewer Cases for Week ending Aug. 7, 2020") +
   scale_x_continuous(labels = scales::comma)
 ```
 
-### States with 49999 or fewer Cases for Week Ending Aug. 1, 2020 
+### States with 49999 or fewer Cases for Week Ending Aug. 7, 2020 
 
 ```{r,echo=FALSE}
 ST %>% filter(cases <=49999) %>%
   ggplot() + geom_col(aes(x=cases,y=state)) +
-  labs(title="States with 49999  Or Fewer Cases for Week Ending Aug. 1, 2020") +
+  labs(title="States with 49999  Or Fewer Cases for Week Ending Aug. 7, 2020") +
   scale_x_continuous(labels = scales::comma)
 ```
 ```{r,echo=FALSE}
 ST %>% filter(cases >=50000) %>%
   ggplot() + geom_col(aes(x=cases,y=state)) +
-  labs(title="States with 50,000 or more Cases for Week Ending Aug. 1, 2020") +
+  labs(title="States with 50,000 or more Cases for Week Ending Aug. 7, 2020") +
   scale_x_continuous(labels = scales::comma)
 ```
 
-### States with 100,000 or more cases for Week Ending Aug. 1, 2020
+### States with 100,000 or more cases for Week Ending Aug. 7, 2020
 
 ```{r,echo=FALSE}
 ST %>% filter(cases <=14999) %>%
   ggplot() + geom_col(aes(x=cases,y=state)) +
-  labs(title="States  with 14999 or fewer Deaths for Week Ending Aug. 1, 2020") +
+  labs(title="States  with 14999 or fewer Deaths for Week Ending Aug. 7, 2020") +
   scale_x_continuous(labels = scales::comma)
 ```
 
-### States with 100,000 or more deaths for Week Ending Aug. 1, 2020
+### States with 100,000 or more deaths for Week Ending Aug. 7, 2020
 
 ```{r,echo=FALSE}
 ST %>% filter(deaths >=15000) %>%
   ggplot() + geom_col(aes(x=deaths,y=state)) +
-  labs(title="States  15000 or more Deaths for Weeking Ending  Aug. 1, 2020") +
+  labs(title="States  15000 or more Deaths for Weeking Ending  Aug. 7, 2020") +
   scale_x_continuous(labels = scales::comma)
 ```
 
-### States with 49999 or few Deaths for Week Ending  Aug. 1, 2020
+### States with 49999 or few Deaths for Week Ending  Aug. 7, 2020
 
 ```{r,echo=FALSE}
 ST %>% filter(deaths <=49999) %>%
