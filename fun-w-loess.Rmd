@@ -16,11 +16,16 @@ df$Date <- as.Date(df$Date)
 
 ```{r}
 df$seq <- seq(1,1259,by=1)
-lw1 <- loess(df$seq~df$Close,span=0.9)
+lw1 <- loess(df$Close~df$seq,span=0.7)
 df$smooth <- predict(lw1) 
 
 
 plot(df$Date,df$Close,type="l")
 lines(df$Date,df$smooth,col="red")
+```
+```{r}
+library(ggplot2)
+ggplot(df) + geom_point(aes(x=Date,y=Close),col="red") +
+  geom_line(aes(x=Date,y=lw1))
 ```
 
