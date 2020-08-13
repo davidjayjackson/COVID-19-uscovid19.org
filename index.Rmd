@@ -1,5 +1,5 @@
 ---
-title: 'USA Battle with COVID-19'
+title: "Spain's Battle with COVID-19"
 author: "David J Jackson"
 date: "8/12/2020"
 output: html_document
@@ -15,7 +15,7 @@ rm(list=ls())
 source("../DATA/movavg.R")
 db <- db <- dbConnect(RSQLite::SQLite(),dbname= "../COVIDDB/COVID.sqlite3")
 df <- dbGetQuery(db,"select * from ECDC")
-df <- subset(df,Countries =="USA" & Cases >0 )
+df <- subset(df,Countries =="Spain" & Cases >0 )
 df$Reported <- as.Date(df$Reported)
 str(df)
 
@@ -23,14 +23,14 @@ str(df)
 ```{r}
 US <- subset(df,Reported >="2020-04-01")
 US$MA14 <- movingAverage(US$Cases,14)
-plot(US$Reported,US$Cases,type="l",main="US COVID-19 Cases Apr. 1,2020 - Aug. 12, 2020")
+plot(US$Reported,US$Cases,type="l",main="Spain's COVID-19 Cases Apr. 1,2020 - Aug. 12, 2020")
 lines(US$Reported,US$MA14,col="red")
 grid(col="black")
 ```
 ```{r}
 US <- subset(df,Reported >="2020-04-01" & Reported <="2020-08-08")
 US$Deaths14 <- movingAverage(US$Deaths,14)
-plot(US$Reported,US$Deaths,type="l",main="US COVID-19 Deaths Apr. 1,2020 - Aug. 12, 2020")
+plot(US$Reported,US$Deaths,type="l",main="Spain's COVID-19 Deaths Apr. 1,2020 - Aug. 12, 2020")
 lines(US$Reported,US$Deaths14,col="red")
 grid(col="black")
 ```
