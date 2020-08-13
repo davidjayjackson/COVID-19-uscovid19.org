@@ -1,88 +1,95 @@
 ---
-title: "Total Cases and Deaths by US State"
+title: 'USA Battle with COVID-19'
 author: "David J Jackson"
-date: "August 12, 2020"
+date: "8/12/2020"
 output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-library(tidyverse)
+knitr::opts_chunk$set(echo = TRUE,message = FALSE)
+options(scipen=5)
 library(RSQLite)
-library(scales)
 ```
-
-## A Data Source: New York Times
-* Github: https://github.com/nytimes/
-
-```{r,echo=FALSE}
+```{r}
 rm(list=ls())
-db <- dbConnect(SQLite(), dbname="../COVIDDB/COVID.sqlite3")
-STATES <- dbGetQuery(db, "SELECT * FROM us_states ;")
-STATES$date <- as.Date(STATES$date)
-ST <- STATES %>% filter(date =="2020-08-07")
+source("../DATA/movavg.R")
+db <- db <- dbConnect(RSQLite::SQLite(),dbname= "../COVIDDB/COVID.sqlite3")
+df <- dbGetQuery(db,"select * from ECDC")
+df <- subset(df,Countries =="USA" & Cases >0 )
+df$Reported <- as.Date(df$Reported)
+str(df)
+
+```
+```{r}
+US <- subset(df,Reported >="2020-04-01")
+US$MA14 <- movingAverage(US$Cases,14)
+plot(US$Reported,US$Cases,type="l",main="US COVID-19 Cases Apr. 1,2020 - Aug. 12, 2020")
+lines(US$Reported,US$MA14,col="red")
+grid(col="black")
+```
+```{r}
+US <- subset(df,Reported >="2020-04-01" & Reported <="2020-08-08")
+US$Deaths14 <- movingAverage(US$Deaths,14)
+plot(US$Reported,US$Deaths,type="l",main="US COVID-19 Deaths Apr. 1,2020 - Aug. 12, 2020")
+lines(US$Reported,US$Deaths14,col="red")
+grid(col="black")
 ```
 
-## Total Cases and Deaths by States (Week ending Aug. 7, 2020)
+#### Non-Moving Average By Week and By Month
 
-```{r, echo=FALSE}
-ST %>% ggplot() + geom_col(aes(x=cases,y=reorder(state,cases))) +
-  labs(title="Total Cases by State for Weekly Ending Aug. 7,2020")   +
-  scale_x_continuous(labels = scales::comma)
+```{r}
+US$Monthly <- as.Date(cut(US$Reported,
+  breaks = "month"))
+US$Weekly <- as.Date(cut(US$Reported,
+  breaks = "week",
+  start.on.monday = FALSE))
+
+```
+```{r}
+Weekly_Cases <- aggregate(Cases~Weekly,US,FUN=sum)
+Weekly_Deaths <- aggregate(Deaths~Weekly,US,FUN=sum)
+
+```
+```{r}
+barplot(Cases ~Weekly,data=Weekly_Cases,main="Weekly Barplot of Cases")
+grid(col="black")
+barplot(Deaths ~Weekly,data=Weekly_Deaths,main="Weekly Barplot of Deaths")
+grid(col="black")
+```
+```{r}
+
+Monthly_Cases <- aggregate(Cases~Monthly,US,FUN=sum)
+Monthly_Deaths <- aggregate(Deaths~Monthly,US,FUN=sum)
+```
+```{r}
+barplot(Cases ~Monthly,data=Monthly_Cases,main="Monthly Barplot of Total Cases")
+grid(col="black")
+barplot(Deaths ~Monthly,data=Monthly_Deaths,main="Monthly Barplot of Total Deaths")
+grid(col="black")
 ```
 
-```{r, echo=FALSE}
-ST %>% ggplot() + geom_col(aes(x=deaths,y=reorder(state,deaths))) +
-  labs(title="Total Deaths by State as of Aug. 7, 2020") 
+### Weekly and Montly Mean COVID-19 Cases And Deaths
+
 ```
+```{r}
+Weekly_Cases <- aggregate(Cases~Weekly,US,FUN=mean)
+Weekly_Deaths <- aggregate(Deaths~Weekly,US,FUN=mean)
 
-## States with 25,000 or Fewer Cases for Week ending Aug. 7, 2020
-
-```{r,echo=FALSE}
-ST %>% filter(cases <=25000) %>%
-  ggplot() + geom_col(aes(x=cases,y=state)) +
-  labs(title="States with 25, 000  Or Fewer Cases for Week ending Aug. 7, 2020") +
-  scale_x_continuous(labels = scales::comma)
 ```
-
-### States with 49999 or fewer Cases for Week Ending Aug. 7, 2020 
-
-```{r,echo=FALSE}
-ST %>% filter(cases <=49999) %>%
-  ggplot() + geom_col(aes(x=cases,y=state)) +
-  labs(title="States with 49999  Or Fewer Cases for Week Ending Aug. 7, 2020") +
-  scale_x_continuous(labels = scales::comma)
+```{r}
+barplot(Cases ~Weekly,data=Weekly_Cases,main="Weekly Barplot of Mean Cases")
+grid(col="black")
+barplot(Deaths ~Weekly,data=Weekly_Deaths,main="Weekly Barplot of Mean Deaths")
+grid(col="black")
 ```
-```{r,echo=FALSE}
-ST %>% filter(cases >=50000) %>%
-  ggplot() + geom_col(aes(x=cases,y=state)) +
-  labs(title="States with 50,000 or more Cases for Week Ending Aug. 7, 2020") +
-  scale_x_continuous(labels = scales::comma)
+```{r}
+
+Monthly_Cases <- aggregate(Cases~Monthly,US,FUN=mean)
+Monthly_Deaths <- aggregate(Deaths~Monthly,US,FUN=mean)
 ```
-
-### States with 100,000 or more cases for Week Ending Aug. 7, 2020
-
-```{r,echo=FALSE}
-ST %>% filter(cases <=14999) %>%
-  ggplot() + geom_col(aes(x=cases,y=state)) +
-  labs(title="States  with 14999 or fewer Deaths for Week Ending Aug. 7, 2020") +
-  scale_x_continuous(labels = scales::comma)
-```
-
-### States with 100,000 or more deaths for Week Ending Aug. 7, 2020
-
-```{r,echo=FALSE}
-ST %>% filter(deaths >=15000) %>%
-  ggplot() + geom_col(aes(x=deaths,y=state)) +
-  labs(title="States  15000 or more Deaths for Weeking Ending  Aug. 7, 2020") +
-  scale_x_continuous(labels = scales::comma)
-```
-
-### States with 49999 or few Deaths for Week Ending  Aug. 7, 2020
-
-```{r,echo=FALSE}
-ST %>% filter(deaths <=49999) %>%
-  ggplot() + geom_col(aes(x=deaths,y=state)) +
-  labs(title="States  with 49999 or fewer Deaths for Week Ending Aug. 1, 2020") +
-  scale_x_continuous(labels = scales::comma)
+```{r}
+barplot(Cases ~Monthly,data=Monthly_Cases,main="Monthly Mean Barplot of Cases")
+grid(col="black")
+barplot(Deaths ~Monthly,data=Monthly_Deaths,main="Monthly Mean Barplot of Deaths")
+grid(col="black")
 ```
