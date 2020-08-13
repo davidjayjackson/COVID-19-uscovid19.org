@@ -51,6 +51,8 @@ US$Weekly <- as.Date(cut(US$Reported,
 ```{r}
 Weekly_Cases <- aggregate(Cases~Weekly,US,FUN=sum)
 Weekly_Deaths <- aggregate(Deaths~Weekly,US,FUN=sum)
+Weekly_Cases$DRate <- Weekly_Deaths$Deaths/Weekly_Cases$Cases
+Weekly_Cases$PredDeaths <- Weekly_Cases$Cases* .091
 
 ```
 ```{r}
@@ -58,16 +60,34 @@ barplot(Cases ~Weekly,data=Weekly_Cases,main="USA's Weekly Barplot of Cases")
 grid(col="black")
 barplot(Deaths ~Weekly,data=Weekly_Deaths,main="USA's Weekly Barplot of Deaths")
 grid(col="black")
+
+barplot(DRate ~Weekly,data=Weekly_Cases,main="USA's Weekly Deaths Rates \n (max death rate = 9% week of Apr.4, 2020) ")
+grid(col="black")
+
+barplot(PredDeaths ~Weekly,data=Weekly_Cases,main="USA's Estimated Weekly Deaths \n (predicted deaths = max date rate * deaths)")
+grid(col="black")
 ```
+
+###  Monthly Deaths Rate i.e. Deaths/Cases
+
 ```{r}
 
 Monthly_Cases <- aggregate(Cases~Monthly,US,FUN=sum)
 Monthly_Deaths <- aggregate(Deaths~Monthly,US,FUN=sum)
+Monthly_Cases$DRate <- Monthly_Deaths$Deaths/Monthly_Cases$Cases
+Monthly_Cases$PredDeaths <- Monthly_Cases$Cases* .066
+
 ```
 ```{r}
 barplot(Cases ~Monthly,data=Monthly_Cases,main="USA's Monthly Barplot of Total Cases")
 grid(col="black")
 barplot(Deaths ~Monthly,data=Monthly_Deaths,main="USA's Monthly Barplot of Total Deaths")
+grid(col="black")
+
+barplot(DRate ~Monthly,data=Monthly_Cases,main="USA's Monthly Deaths Rates  ")
+grid(col="black")
+
+barplot(PredDeaths ~Monthly,data=Monthly_Cases,main="USA's Monthly Estimated Deaths \n  ")
 grid(col="black")
 ```
 
@@ -77,6 +97,7 @@ grid(col="black")
 ```{r}
 Weekly_Cases <- aggregate(Cases~Weekly,US,FUN=mean)
 Weekly_Deaths <- aggregate(Deaths~Weekly,US,FUN=mean)
+
 
 ```
 ```{r}
