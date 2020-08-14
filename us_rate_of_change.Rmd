@@ -1,0 +1,24 @@
+---
+title: "US COVID-19 Calculating ROC"
+author: "David Jackson"
+date: "8/14/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(RSQLite)
+```
+```{r}
+rm(list=ls())
+source("../DATA/movavg.R")
+db <- db <- dbConnect(RSQLite::SQLite(),dbname= "../COVIDDB/COVID.sqlite3")
+df <- dbGetQuery(db,"select * from ECDC")
+df <- subset(df,Countries =="USA" & Cases >0 )
+df$Reported <- as.Date(df$Reported)
+str(df)
+```
+```{r}
+
+```
+
