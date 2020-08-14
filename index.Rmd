@@ -28,14 +28,14 @@ US <- subset(df,Reported >="2020-04-01")
 summary(US$Cases)
 summary(US$Deaths)
 US$MA14 <- movingAverage(US$Cases,14)
-plot(US$Reported,US$Cases,type="l",main="USA's COVID-19 Cases Apr. 1,2020 - Aug. 14, 2020")
+plot(US$Reported,US$Cases,type="l",main="COVID-19 Cases Apr. 1,2020 - Aug. 14, 2020")
 lines(US$Reported,US$MA14,col="red")
 grid(col="black")
 ```
 ```{r}
 US <- subset(df,Reported >="2020-04-01" & Reported <="2020-08-08")
 US$Deaths14 <- movingAverage(US$Deaths,14)
-plot(US$Reported,US$Deaths,type="l",main="USA's COVID-19 Deaths Apr. 1,2020 - Aug. 12, 2020")
+plot(US$Reported,US$Deaths,type="l",main="COVID-19 Deaths Apr. 1,2020 - Aug. 12, 2020")
 lines(US$Reported,US$Deaths14,col="red")
 grid(col="black")
 ```
@@ -58,15 +58,15 @@ Weekly_Cases$PredDeaths <- Weekly_Cases$Cases* .091
 
 ```
 ```{r}
-barplot(Cases ~Weekly,data=Weekly_Cases,main="USA's Weekly Barplot of Cases")
+barplot(Cases ~Weekly,data=Weekly_Cases,main="Weekly Barplot of Cases")
 grid(col="black")
-barplot(Deaths ~Weekly,data=Weekly_Deaths,main="USA's Weekly Barplot of Deaths")
-grid(col="black")
-
-barplot(DRate ~Weekly,data=Weekly_Cases,main="USA's Weekly Deaths Rates \n (max death rate = 9% week of Apr.4, 2020) ")
+barplot(Deaths ~Weekly,data=Weekly_Deaths,main="Weekly Barplot of Deaths")
 grid(col="black")
 
-barplot(PredDeaths ~Weekly,data=Weekly_Cases,main="USA's Estimated Weekly Deaths \n (predicted deaths = max date rate * deaths)")
+barplot(DRate ~Weekly,data=Weekly_Cases,main="Weekly Deaths Rates \n (max death rate = 9% week of Apr.4, 2020) ")
+grid(col="black")
+
+barplot(PredDeaths ~Weekly,data=Weekly_Cases,main="Estimated Weekly Deaths ")
 grid(col="black")
 ```
 
@@ -81,15 +81,15 @@ Monthly_Cases$PredDeaths <- Monthly_Cases$Cases* .066
 
 ```
 ```{r}
-barplot(Cases ~Monthly,data=Monthly_Cases,main="USA's Monthly Barplot of Total Cases")
+barplot(Cases ~Monthly,data=Monthly_Cases,main="Monthly Total Cases")
 grid(col="black")
-barplot(Deaths ~Monthly,data=Monthly_Deaths,main="USA's Monthly Barplot of Total Deaths")
-grid(col="black")
-
-barplot(DRate ~Monthly,data=Monthly_Cases,main="USA's Monthly Deaths Rates  ")
+barplot(Deaths ~Monthly,data=Monthly_Deaths,main="Monthly Total Deaths")
 grid(col="black")
 
-barplot(PredDeaths ~Monthly,data=Monthly_Cases,main="USA's Monthly Estimated Deaths")
+barplot(DRate ~Monthly,data=Monthly_Cases,main="Monthly Deaths Rates  ")
+grid(col="black")
+
+barplot(PredDeaths ~Monthly,data=Monthly_Cases,main="Monthly Estimated Deaths")
 grid(col="black")
 ```
 
