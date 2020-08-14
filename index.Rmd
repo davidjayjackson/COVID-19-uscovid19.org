@@ -1,7 +1,7 @@
 ---
 title: "US's Battle with COVID-19"
 author: "David J Jackson"
-date: "8/13/2020"
+date: "8/14/2020"
 output: 
   html_document: 
     fig_width: 9
@@ -25,8 +25,10 @@ str(df)
 ```
 ```{r}
 US <- subset(df,Reported >="2020-04-01")
+summary(US$Cases)
+summary(US$Deaths)
 US$MA14 <- movingAverage(US$Cases,14)
-plot(US$Reported,US$Cases,type="l",main="USA's COVID-19 Cases Apr. 1,2020 - Aug. 13, 2020")
+plot(US$Reported,US$Cases,type="l",main="USA's COVID-19 Cases Apr. 1,2020 - Aug. 14, 2020")
 lines(US$Reported,US$MA14,col="red")
 grid(col="black")
 ```
@@ -87,18 +89,15 @@ grid(col="black")
 barplot(DRate ~Monthly,data=Monthly_Cases,main="USA's Monthly Deaths Rates  ")
 grid(col="black")
 
-barplot(PredDeaths ~Monthly,data=Monthly_Cases,main="USA's Monthly Estimated Deaths \n  ")
+barplot(PredDeaths ~Monthly,data=Monthly_Cases,main="USA's Monthly Estimated Deaths")
 grid(col="black")
 ```
 
 ### Weekly and Montly Mean COVID-19 Cases And Deaths
 
-```
 ```{r}
 Weekly_Cases <- aggregate(Cases~Weekly,US,FUN=mean)
 Weekly_Deaths <- aggregate(Deaths~Weekly,US,FUN=mean)
-
-
 ```
 ```{r}
 barplot(Cases ~Weekly,data=Weekly_Cases,main="USA's Weekly Barplot of Mean Cases")
@@ -107,13 +106,12 @@ barplot(Deaths ~Weekly,data=Weekly_Deaths,main="USA's Weekly Barplot of Mean Dea
 grid(col="black")
 ```
 ```{r}
-
 Monthly_Cases <- aggregate(Cases~Monthly,US,FUN=mean)
 Monthly_Deaths <- aggregate(Deaths~Monthly,US,FUN=mean)
 ```
 ```{r}
 barplot(Cases ~Monthly,data=Monthly_Cases,main="USA's Monthly Mean Barplot of Cases")
-grid(col="black")
+
 barplot(Deaths ~Monthly,data=Monthly_Deaths,main="USA's Monthly Mean Barplot of Deaths")
 grid(col="black")
 ```
