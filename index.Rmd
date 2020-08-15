@@ -1,5 +1,5 @@
 ---
-title: "US's Battle with COVID-19"
+title: "USA's Battle with COVID-19"
 author: "David J Jackson"
 date: "8/14/2020"
 output: 
@@ -9,7 +9,7 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE,message = FALSE)
+knitr::opts_chunk$set(echo = FALSE,message = FALSE)
 options(scipen=5)
 library(RSQLite)
 ```
@@ -28,14 +28,16 @@ US <- subset(df,Reported >="2020-04-01")
 summary(US$Cases)
 summary(US$Deaths)
 US$MA14 <- movingAverage(US$Cases,14)
-plot(US$Reported,US$Cases,type="l",main="COVID-19 Cases Apr. 1,2020 - Aug. 14, 2020")
+plot(US$Reported,US$Cases,type="l",main=" COVID-19 Cases Apr. 1,2020 - Aug. 14, 2020",
+     xlab="Date Reported",ylab="Cases")
 lines(US$Reported,US$MA14,col="red")
 grid(col="black")
 ```
 ```{r}
 US <- subset(df,Reported >="2020-04-01" & Reported <="2020-08-08")
 US$Deaths14 <- movingAverage(US$Deaths,14)
-plot(US$Reported,US$Deaths,type="l",main="COVID-19 Deaths Apr. 1,2020 - Aug. 12, 2020")
+plot(US$Reported,US$Deaths,type="l",main="COVID-19 Deaths Apr. 1,2020 - Aug. 12, 2020",
+     xlab="Date Reported",ylab="Deaths and 14 day Moving Averges(red)")
 lines(US$Reported,US$Deaths14,col="red")
 grid(col="black")
 ```
@@ -54,19 +56,22 @@ US$Weekly <- as.Date(cut(US$Reported,
 Weekly_Cases <- aggregate(Cases~Weekly,US,FUN=sum)
 Weekly_Deaths <- aggregate(Deaths~Weekly,US,FUN=sum)
 Weekly_Cases$DRate <- Weekly_Deaths$Deaths/Weekly_Cases$Cases
-Weekly_Cases$PredDeaths <- Weekly_Cases$Cases* .091
+Weekly_Cases$LivedSaved <- Weekly_Cases$Cases * (max(Weekly_Cases$DRate) - Weekly_Cases$DRate)
 
 ```
 ```{r}
-barplot(Cases ~Weekly,data=Weekly_Cases,main="Weekly Barplot of Cases")
+barplot(Cases ~Weekly,data=Weekly_Cases,main="Weekly COVOD-19 Cases",xlab="Weekly Date",ylab="Cases")
 grid(col="black")
-barplot(Deaths ~Weekly,data=Weekly_Deaths,main="Weekly Barplot of Deaths")
-grid(col="black")
-
-barplot(DRate ~Weekly,data=Weekly_Cases,main="Weekly Deaths Rates \n (max death rate = 9% week of Apr.4, 2020) ")
+barplot(Deaths ~Weekly,data=Weekly_Deaths,main="Weekly COVID-19 Deaths",
+        xlab="Weekly Date",ylab="Deaths")
 grid(col="black")
 
-barplot(PredDeaths ~Weekly,data=Weekly_Cases,main="Estimated Weekly Deaths ")
+barplot(DRate ~Weekly,data=Weekly_Cases,main="Weekly Change in Deaths Rates",
+        xlab="Weekly Date",ylab="Cases")
+grid(col="black")
+
+barplot(LivedSaved ~Weekly,data=Weekly_Cases,main="Estimated Lives Saved Per Week",
+        xlab="Weekly Date",ylab="Est. Lives Saved")
 grid(col="black")
 ```
 
@@ -77,32 +82,38 @@ grid(col="black")
 Monthly_Cases <- aggregate(Cases~Monthly,US,FUN=sum)
 Monthly_Deaths <- aggregate(Deaths~Monthly,US,FUN=sum)
 Monthly_Cases$DRate <- Monthly_Deaths$Deaths/Monthly_Cases$Cases
-Monthly_Cases$PredDeaths <- Monthly_Cases$Cases* .066
+Monthly_Cases$LivedSaved <- Monthly_Cases$Cases * (max(Monthly_Cases$DRate) - Monthly_Cases$DRate)
 
 ```
 ```{r}
-barplot(Cases ~Monthly,data=Monthly_Cases,main="Monthly Total Cases")
+barplot(Cases ~Monthly,data=Monthly_Cases,main="Monthly Total Cases",
+        xlab="Months",ylab="Monthly Cases")
 grid(col="black")
-barplot(Deaths ~Monthly,data=Monthly_Deaths,main="Monthly Total Deaths")
+barplot(Deaths ~Monthly,data=Monthly_Deaths,main="Monthly Total Deaths",
+        xlab="Months",ylab="Monthly Deaths")
 grid(col="black")
 
-barplot(DRate ~Monthly,data=Monthly_Cases,main="Monthly Deaths Rates  ")
+barplot(DRate ~Monthly,data=Monthly_Cases,main="Monthly Deaths Rates",
+        xlab="Months",ylab=" Death Rate %")
 grid(col="black")
 
-barplot(PredDeaths ~Monthly,data=Monthly_Cases,main="Monthly Estimated Deaths")
+barplot(LivedSaved ~Monthly,data=Monthly_Cases,main="Estimated Lives Saved",
+        xlab="Months",ylab="Est. Lives Saved")
 grid(col="black")
 ```
 
-### Weekly and Montly Mean COVID-19 Cases And Deaths
+### Weekly and Monthly Mean COVID-19 Cases And Deaths
 
 ```{r}
 Weekly_Cases <- aggregate(Cases~Weekly,US,FUN=mean)
 Weekly_Deaths <- aggregate(Deaths~Weekly,US,FUN=mean)
 ```
 ```{r}
-barplot(Cases ~Weekly,data=Weekly_Cases,main="USA's Weekly Barplot of Mean Cases")
+barplot(Cases ~Weekly,data=Weekly_Cases,main="Weekly Mean Cases",
+        xlab="Weekly Date",ylab="Mean/Average Cases")
 grid(col="black")
-barplot(Deaths ~Weekly,data=Weekly_Deaths,main="USA's Weekly Barplot of Mean Deaths")
+barplot(Deaths ~Weekly,data=Weekly_Deaths,main="Weekly Mean Deaths",
+        xlab="Weekly Date",ylab="Mean/Average Cases")
 grid(col="black")
 ```
 ```{r}
@@ -110,8 +121,10 @@ Monthly_Cases <- aggregate(Cases~Monthly,US,FUN=mean)
 Monthly_Deaths <- aggregate(Deaths~Monthly,US,FUN=mean)
 ```
 ```{r}
-barplot(Cases ~Monthly,data=Monthly_Cases,main="USA's Monthly Mean Barplot of Cases")
+barplot(Cases ~Monthly,data=Monthly_Cases,main="Monthly Mean Cases",
+        xlab="Monthly Date",ylab="Mean/Average Cases")
 
-barplot(Deaths ~Monthly,data=Monthly_Deaths,main="USA's Monthly Mean Barplot of Deaths")
+barplot(Deaths ~Monthly,data=Monthly_Deaths,main="Monthly Mean Deaths",
+          xlab="Month Date",ylab="Mean/Average Deaths")
 grid(col="black")
 ```
