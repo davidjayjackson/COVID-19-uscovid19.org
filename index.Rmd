@@ -56,7 +56,7 @@ US$Weekly <- as.Date(cut(US$Reported,
 Weekly_Cases <- aggregate(Cases~Weekly,US,FUN=sum)
 Weekly_Deaths <- aggregate(Deaths~Weekly,US,FUN=sum)
 Weekly_Cases$DRate <- Weekly_Deaths$Deaths/Weekly_Cases$Cases
-Weekly_Cases$LivedSaved <- Weekly_Cases$Cases * (max(Weekly_Cases$DRate) - Weekly_Cases$DRate)
+Weekly_Cases$LivedSaved <- Weekly_Cases$Cases - Weekly_Deaths$Deaths
 
 ```
 ```{r}
