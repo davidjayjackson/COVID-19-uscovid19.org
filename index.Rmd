@@ -1,7 +1,7 @@
 ---
 title: "USA's Battle with COVID-19"
 author: "David J Jackson"
-date: "August 19, 2020"
+date: "August 20, 2020"
 output: 
   html_document: 
     fig_width: 9
@@ -28,7 +28,7 @@ US <- subset(df,Reported >="2020-04-01")
 summary(US$Cases)
 summary(US$Deaths)
 US$MA14 <- movingAverage(US$Cases,14)
-plot(US$Reported,US$Cases,type="l",main=" COVID-19 Cases Apr. 1,2020 - Aug. 19, 2020",
+plot(US$Reported,US$Cases,type="l",main=" COVID-19 Cases Apr. 1,2020 - Aug. , 202020",
      xlab="Date Reported",ylab="Cases")
 lines(US$Reported,US$MA14,col="red")
 grid(col="black")
@@ -36,7 +36,7 @@ grid(col="black")
 ```{r}
 US <- subset(df,Reported >="2020-04-01" & Reported <="2020-08-19")
 US$Deaths14 <- movingAverage(US$Deaths,14)
-plot(US$Reported,US$Deaths,type="l",main="COVID-19 Deaths Apr. 1,2020 - Aug. 19, 2020",
+plot(US$Reported,US$Deaths,type="l",main="COVID-19 Deaths Apr. 1,2020 - Aug. 20, 2020",
      xlab="Date Reported",ylab="Deaths and 14 day Moving Averges(red)")
 lines(US$Reported,US$Deaths14,col="red")
 grid(col="black")
@@ -55,7 +55,7 @@ US$Weekly <- as.Date(cut(US$Reported,
 ```{r}
 Weekly_Cases <- aggregate(Cases~Weekly,US,FUN=sum)
 Weekly_Deaths <- aggregate(Deaths~Weekly,US,FUN=sum)
-Weekly_Cases$DRate <- Weekly_Deaths$Deaths/Weekly_Cases$Cases
+Weekly_Cases$DRate <- Weekly_Deaths$Deaths/Weekly_Cases$Cases * 100
 Weekly_Cases$LivedSaved <- Weekly_Cases$Cases - Weekly_Deaths$Deaths
 
 ```
@@ -81,7 +81,7 @@ grid(col="black")
 
 Monthly_Cases <- aggregate(Cases~Monthly,US,FUN=sum)
 Monthly_Deaths <- aggregate(Deaths~Monthly,US,FUN=sum)
-Monthly_Cases$DRate <- Monthly_Deaths$Deaths/Monthly_Cases$Cases
+Monthly_Cases$DRate <- Monthly_Deaths$Deaths/Monthly_Cases$Cases * 100
 Monthly_Cases$LivedSaved <- Monthly_Cases$Cases * (max(Monthly_Cases$DRate) - Monthly_Cases$DRate)
 
 ```
