@@ -1,7 +1,7 @@
 ---
 title: "USA's Battle with COVID-19"
 author: "David J Jackson"
-date: "August 22, 2020"
+date: "August 23, 2020"
 output: 
   html_document: 
     fig_width: 9
@@ -28,7 +28,7 @@ US <- subset(df,Reported >="2020-04-01")
 summary(US$Cases)
 summary(US$Deaths)
 US$MA14 <- movingAverage(US$Cases,14)
-plot(US$Reported,US$Cases,type="l",main=" COVID-19 Cases Apr. 1,2020 - Aug. 22, 202020",
+plot(US$Reported,US$Cases,type="l",main=" COVID-19 Cases Apr. 1,2020 - Aug. 23, 202020",
      xlab="Date Reported",ylab="Cases")
 lines(US$Reported,US$MA14,col="red")
 grid(col="black")
@@ -36,7 +36,7 @@ grid(col="black")
 ```{r}
 US <- subset(df,Reported >="2020-04-01" & Reported <="2020-08-22")
 US$Deaths14 <- movingAverage(US$Deaths,14)
-plot(US$Reported,US$Deaths,type="l",main="COVID-19 Deaths Apr. 1,2020 - Aug. 22, 2020",
+plot(US$Reported,US$Deaths,type="l",main="COVID-19 Deaths Apr. 1,2020 - Aug. 23, 2020",
      xlab="Date Reported",ylab="Deaths and 14 day Moving Averges(red)")
 lines(US$Reported,US$Deaths14,col="red")
 grid(col="black")
