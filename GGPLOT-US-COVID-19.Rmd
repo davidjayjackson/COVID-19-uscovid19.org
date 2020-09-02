@@ -1,0 +1,70 @@
+---
+title: 'GGPLOT2: Us in a Nutshell'
+author: "David Jackson"
+date: "09/02/2020"
+output: 
+  html_document: 
+    fig_width: 12
+    fig_height: 9
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(RSQLite)
+library(ggplot2)
+library(scales)
+theme_set(theme_linedraw())
+```
+
+```{r}
+rm(list=ls())
+source("../DATA/movavg.R")
+db <- db <- dbConnect(RSQLite::SQLite(),dbname= "../COVIDDB/COVID.sqlite3")
+df <- dbGetQuery(db,"select * from JHUDATA")
+df <- subset(df,country =="US" & date >="2020-04-01" )
+df$date <- as.Date(df$date)
+str(df)
+# dbDisconnect(db)
+```
+### GGPLOt2 Plots of Cumulative Cases and Deaths
+#### Source: New York Times
+
+```{r}
+ggplot(df) +geom_line(aes(x=date,y=confirmed,col="red"),lwd=3) + 
+    scale_x_date(date_breaks = "1 month") +
+  scale_y_continuous(labels = comma) +
+   theme(axis.text.x=element_text(angle =- 45, vjust = 0.5)) +
+  labs(title="US Cumulative Total Cases",x="Date Reported",y="Cumulative Cases")
+```
+```{r}
+ggplot(df) +geom_line(aes(x=date,y=deaths,col="red"),lwd=3) + 
+    scale_x_date(date_breaks = "1 month") +
+  scale_y_continuous(labels = comma) +
+   theme(axis.text.x=element_text(angle =- 45, vjust = 0.5)) +
+  labs(title="US Cumulative Total Deaths",x="Date Reported",y="Cumulative Deaths")
+```
+### GGPLOt2 Plots of Daily Deaths and Deaths
+#### Source: European CDPC
+
+```{r}
+df1 <- dbGetQuery(db,"select * from ECDC")
+df1 <- subset(df1,Countries =="USA" & Reported >="2020-04-01" )
+df1$Reported <- as.Date(df1$Reported)
+str(df1)
+dbDisconnect(db)
+```
+
+```{r}
+ggplot(df1) +geom_line(aes(x=Reported,y=Cases,col="red"),lwd=2) + 
+    scale_x_date(date_breaks = "1 month") +
+  scale_y_continuous(labels = comma) +
+   theme(axis.text.x=element_text(angle =- 45, vjust = 0.5)) +
+  labs(title="US Daily Total Cases",x="Date Reported",y="Daily Cases")
+```
+```{r}
+ggplot(df1) +geom_line(aes(x=Reported,y=Deaths,col="red"),lwd=2) + 
+    scale_x_date(date_breaks = "1 month") +
+  scale_y_continuous(labels = comma) +
+   theme(axis.text.x=element_text(angle =- 45, vjust = 0.5)) +
+  labs(title="US Daily Total Deaths",x="Date Reported",y="Daily Deaths")
+```
