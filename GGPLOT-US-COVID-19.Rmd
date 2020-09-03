@@ -1,7 +1,7 @@
 ---
 title: 'GGPLOT2: Us in a Nutshell'
 author: "David Jackson"
-date: "09/02/2020"
+date: "09/03/2020"
 output: 
   html_document: 
     fig_width: 12
@@ -30,14 +30,15 @@ str(df)
 #### Source: New York Times
 
 ```{r}
-ggplot(df) +geom_line(aes(x=date,y=confirmed,col="red"),lwd=3) + 
+ggplot(df) +geom_line(aes(x=date,y=confirmed),lwd=3,col="red") + 
     scale_x_date(date_breaks = "1 month") +
   scale_y_continuous(labels = comma) +
    theme(axis.text.x=element_text(angle =- 45, vjust = 0.5)) +
-  labs(title="US Cumulative Total Cases",x="Date Reported",y="Cumulative Cases")
+  labs(title="US Cumulative Total Cases",
+       x="Date Reported",y="Cumulative Cases")
 ```
 ```{r}
-ggplot(df) +geom_line(aes(x=date,y=deaths,col="red"),lwd=3) + 
+ggplot(df) +geom_line(aes(x=date,y=deaths),lwd=3,col="blue") + 
     scale_x_date(date_breaks = "1 month") +
   scale_y_continuous(labels = comma) +
    theme(axis.text.x=element_text(angle =- 45, vjust = 0.5)) +
@@ -55,14 +56,14 @@ dbDisconnect(db)
 ```
 
 ```{r}
-ggplot(df1) +geom_line(aes(x=Reported,y=Cases,col="red"),lwd=2) + 
+ggplot(df1) +geom_line(aes(x=Reported,y=Cases,col="red"),lwd=2,col="red") + 
     scale_x_date(date_breaks = "1 month") +
   scale_y_continuous(labels = comma) +
    theme(axis.text.x=element_text(angle =- 45, vjust = 0.5)) +
   labs(title="US Daily Total Cases",x="Date Reported",y="Daily Cases")
 ```
 ```{r}
-ggplot(df1) +geom_line(aes(x=Reported,y=Deaths,col="red"),lwd=2) + 
+ggplot(df1) +geom_line(aes(x=Reported,y=Deaths),lwd=2,col="blue") + 
     scale_x_date(date_breaks = "1 month") +
   scale_y_continuous(labels = comma) +
    theme(axis.text.x=element_text(angle =- 45, vjust = 0.5)) +
