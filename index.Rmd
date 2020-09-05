@@ -1,7 +1,7 @@
 ---
 title: "USA': COVID-19 In  A Nutshell"
 author: "David J Jackson"
-date: "Sept. 3, 2020"
+date: "Sept. 5, 2020"
 output: 
   html_document: 
     fig_width: 9
@@ -20,6 +20,7 @@ db <- db <- dbConnect(RSQLite::SQLite(),dbname= "../COVIDDB/COVID.sqlite3")
 df <- dbGetQuery(db,"select * from ECDC")
 df <- subset(df,Countries =="USA" & Cases >0 )
 df$Reported <- as.Date(df$Reported)
+df <- df[order(df$Reported,decreasing = TRUE),]
 str(df)
 
 ```
