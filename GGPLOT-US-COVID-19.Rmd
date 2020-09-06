@@ -24,11 +24,12 @@ source("../DATA/movavg.R")
 db <- db <- dbConnect(RSQLite::SQLite(),dbname= "../COVIDDB/COVID.sqlite3")
 df <- dbGetQuery(db,"select * from JHUDATA")
 df <- df[order(df$date,decreasing = TRUE),]
-df <- subset(df,country =="US" & date >="2020-04-01" )
+US <-df
+df <- subset(df,country =="US" & date >="2020-01-01" )
 df$date <- as.Date(df$date)
 str(df)
 # dbDisconnect(db)
-summary(df)
+# summary(US)
 ```
 ### GGPLOt2 Plots of Cumulative Cases and Deaths
 #### Source: New York Times
@@ -53,26 +54,33 @@ ggplot(df) +geom_line(aes(x=date,y=deaths),lwd=3,col="blue") +
 
 ```{r}
 df1 <- dbGetQuery(db,"select * from ECDC")
-df1 <- subset(df1,Countries =="USA" & Reported >="2020-04-01" )
 df1$Reported <- as.Date(df1$Reported)
-str(df1)
+df1 <- df1[order(df1$Reported,decreasing = TRUE),]
+df1 <- subset(df1,Countries =="USA" & Reported >="2020-03-01" )
+df1$Reported <- as.Date(df1$Reported)
+mean(df1$Cases)
+mean(df1$Deaths)
 dbDisconnect(db)
 ```
 
 ```{r}
-p1 <-ggplot(df1) +geom_line(aes(x=Reported,y=Cases,col="red"),lwd=2,col="red") + 
+
+ggplot(df1) +geom_line(aes(x=Reported,y=Cases,col="red"),lwd=2,col="red") + 
     scale_x_date(date_breaks = "1 month") +
   scale_y_continuous(labels = comma) +
    theme(axis.text.x=element_text(angle =- 45, vjust = 0.5)) +
-  labs(title="US Daily Total Cases",x="Date Reported",y="Daily Cases")
+  labs(title="US Daily Total Cases(2020-03-01 - 2020-09-04)",x="Date Reported",y="Daily Cases")
 ```
 ```{r}
-p2 <-ggplot(df1) +geom_line(aes(x=Reported,y=Deaths),lwd=2,col="blue") + 
+ggplot(df1) +geom_line(aes(x=Reported,y=Deaths),lwd=2,col="blue") + 
     scale_x_date(date_breaks = "1 month") +
   scale_y_continuous(labels = comma) +
    theme(axis.text.x=element_text(angle =- 45, vjust = 0.5)) +
-  labs(title="US Daily Total Deaths",x="Date Reported",y="Daily Deaths")
+  labs(title="US Daily Total Deaths(2020-03-01 - 2020-09-04)",x="Date Reported",y="Daily Deaths") +
+  geom_hline(yintercept=861,col="red",lwd=2) +
+  geom_hline(yintercept=1889,col="green",lwd=2) +
+  geom_hline(yintercept=1616,col="black",lwd=2)
+  
 
-ggplotly(p1)
-ggplotly(p2)
+
 ```
