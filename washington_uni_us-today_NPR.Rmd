@@ -1,0 +1,54 @@
+---
+title: "Factcheck  WashUni COVD-19"
+author: "David Jackson"
+date: "9/7/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE,warning=FALSE,message=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(RSQLite)
+library(dplyr)
+```
+
+### Fact Checking Washington University COVID-19 Deaths Model
+#### USA Today and Washington project 400,000 deaths by Jan. 2020
+
+```{r}
+rm(list=ls())
+db <- db <- dbConnect(RSQLite::SQLite(),dbname= "../COVIDDB/COVID.sqlite3")
+df <- dbGetQuery(db,"select * from ECDC")
+df$Reported <- as.Date(df$Reported)
+df <- df[order(df$Reported,decreasing = TRUE),]
+df <- subset(df,Countries =="USA" )
+df$Reported <- as.Date(df$Reported)
+```
+
+#### Average Deaths per Day (Jan.. 31 - Sept. 7, 2020)
+
+```{r}
+mean(df$Deaths)
+```
+#### Average nUmer of Deaths per Day (Feb. 29, 2020 - Sept. 7, 2020)
+```{r}
+dfdeaths <- df %>% filter(Reported >="2020-02-29")
+mean(dfdeaths$Deaths)
+```
+
+#### Avaerge number  of Deaths Per Day Needed to reach 410,000
+
+```{r}
+(410000 - 188900) / 117 # Jan 1, 2021
+189000 + 117*984 ## My Projeted Deaths by Jan. 1,2021
+
+(410000 - 188900)/ 147 # Jan 31, 2021
+189000 + 147*984  ## Projected Deaths by Jan. 31,2020
+```
+
+#### NPR/Washington Uni 300,000 by Dec. 1,2020.
+
+```{r}
+(300000 - 188900)/85
+189000 + 984 * 85    # Projected Deaths by Dec. 1, 2020
+```
+
