@@ -29,26 +29,33 @@ df$Reported <- as.Date(df$Reported)
 ```{r}
 mean(df$Deaths)
 ```
+
 #### Average nUmer of Deaths per Day (Feb. 29, 2020 - Sept. 7, 2020)
+
 ```{r}
 dfdeaths <- df %>% filter(Reported >="2020-02-29")
 mean(dfdeaths$Deaths)
-```
-
-#### Avaerge number  of Deaths Per Day Needed to reach 410,000
-
-```{r}
-(410000 - 188900) / 117 # Jan 1, 2021
-189000 + 117*984 ## My Projeted Deaths by Jan. 1,2021
-
-(410000 - 188900)/ 147 # Jan 31, 2021
-189000 + 147*984  ## Projected Deaths by Jan. 31,2020
 ```
 
 #### NPR/Washington Uni 300,000 by Dec. 1,2020.
 
 ```{r}
 (300000 - 188900)/85
-189000 + 984 * 85    # Projected Deaths by Dec. 1, 2020
+189000 + (984 * 85)    # Projected Deaths by Dec. 1, 2020
+300000 - (189000 + 984 * 85)
 ```
+
+#### Yahoo/USA Today Avaerge number  of Deaths Per Day Needed to reach 410,000
+
+```{r}
+(410000 - 188900) / 117 # Jan 1, 2021
+189000 + (117*984) ## My Projeted Deaths by Jan. 1,2021
+410000 -  (117*984)
+
+(410000 - 188900)/ 147 # Jan 31, 2021
+189000 + (147*984)  ## Projected Deaths by Jan. 31,2021
+410000 - (189000 + 147*984)
+```
+
+
 
