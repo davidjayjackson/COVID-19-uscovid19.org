@@ -62,12 +62,30 @@ df1 <- subset(df1,Countries =="USA" )
 df1$Reported <- as.Date(df1$Reported)
 mean(df1$Deaths)
 df1death <- df1 %>% filter(Reported>="2020-02-29") 
+```
+#### Average US Covid-19 Deaths/day
+
+```{r}
 mean(df1death$Death)
-(410000 - 188900) / 117 # Jan 1, 2020
-(410000 - 188900)/ 147 # Jan 31, 2020
-### NPR/Washington Uni 300,000 by Dec. 1,2020.
-(300000 - 188900)/85
-# dbDisconnect(db)
+```
+
+#### Average Deaths/day for Jan. 1, 2021
+#### Washington Uni and Yahoo/USA Today: 
+#### 410,000
+
+```{r}
+(410000 - 187000) / 116 # Jan 1, 2020
+```
+#### Average Deaths/Day for Jan. 31, 2020
+
+```{r}
+(410000 - 187000)/ 146 # Jan 31, 2020
+```
+
+#### NPR/Washington Uni 300,000 by Dec. 1,2020 
+
+```{r}
+(300000 - 187000)/84
 ```
 
 ```{r,echo=FALSE}
@@ -76,7 +94,7 @@ p1 <-ggplot(df1) +geom_line(aes(x=Reported,y=Cases,col="red"),lwd=2,col="red") +
     scale_x_date(date_breaks = "1 month") +
   scale_y_continuous(labels = comma) +
    theme(axis.text.x=element_text(angle =- 45, vjust = 0.5)) +
-  labs(title="US Daily Total Cases(2020-03-01 - 2020-09-04)",x="Date Reported",y="Daily Cases")
+  labs(title="US Daily Total Cases(2020-03-01 - 2020-09-08)",x="Date Reported",y="Daily Cases")
 ggplotly(p1)
 ```
 
@@ -85,8 +103,8 @@ p2 <-ggplot(df1death) +geom_line(aes(x=Reported,y=Deaths),lwd=2,col="blue") +
     scale_x_date(date_breaks = "1 month") +
   scale_y_continuous(labels = comma) +
    theme(axis.text.x=element_text(angle =- 45, vjust = 0.5)) +
-  labs(title="US Daily Total Deaths(2020-03-01 - 2020-09-05)",x="Date Reported",y="Daily Deaths") +
-  geom_hline(yintercept=943,col="red",lwd=2) +
+  labs(title="US Daily Total Deaths(2020-03-01 - 2020-09-08)",x="Date Reported",y="Daily Deaths") +
+  geom_hline(yintercept=977,col="red",lwd=2) +
   geom_hline(yintercept=1873,col="green",lwd=2) +
   geom_hline(yintercept=1493,col="black",lwd=2)
 ggplotly(p2)
