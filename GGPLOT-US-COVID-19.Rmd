@@ -60,33 +60,35 @@ df1$Reported <- as.Date(df1$Reported)
 df1 <- df1[order(df1$Reported,decreasing = TRUE),]
 df1 <- subset(df1,Countries =="USA" )
 df1$Reported <- as.Date(df1$Reported)
-mean(df1$Deaths)
 df1death <- df1 %>% filter(Reported>="2020-02-29") 
 ```
+
 #### Average US Covid-19 Deaths/day
 
 ```{r}
 mean(df1death$Death)
 ```
 
-#### Average Deaths/day for Jan. 1, 2021
-#### Washington Uni and Yahoo/USA Today: 
-#### 410,000
+### NPR/Washington Uni 300,000 by Dec. 1,2020 
 
 ```{r}
-(410000 - 192000) / 111 # Jan 1, 2021
+(300000 - 193000)/80
+```
+
+### Washington Uni and Yahoo/USA Today: 
+#### 410,000 Jan. 1 2021
+
+```{r}
+(410000 - 193000) / 111 # Jan 1, 2021
 ```
 #### Average Deaths/Day for Jan. 31, 2020
+#### 410,000 
 
 ```{r}
-(410000 - 187000)/ 141 # Jan 31, 2020
+(410000 - 193000)/ 142 # Jan 31, 2020
 ```
 
-#### NPR/Washington Uni 300,000 by Dec. 1,2020 
 
-```{r}
-(300000 - 187000)/80
-```
 
 ```{r,echo=FALSE}
 
@@ -97,27 +99,21 @@ p1 <-ggplot(df1) +geom_line(aes(x=Reported,y=Cases,col="red"),lwd=2,col="red") +
   labs(title="US Daily Total Cases(2020-03-01 - 2020-09-08)",x="Date Reported",y="Daily Cases")
 ggplotly(p1)
 ```
-
-```{r,echo=FALSE}
-p2 <-
-```
-
-
 ```{r,echo=FALSE}
 ggplot(df1death) +geom_line(aes(x=Reported,y=Deaths),lwd=2,col="blue") + 
     scale_x_date(date_breaks = "1 month") +
   scale_y_continuous(labels = comma) +
    theme(axis.text.x=element_text(angle =- 45, vjust = 0.5)) +
-  labs(title="US Daily Total Deaths(2020-03-01 - 2020-09-08)",x="Date Reported",y="Daily Deaths") +
-  geom_hline(yintercept=980,col="red",lwd=2,col="Daily Avg") +
-  geom_hline(yintercept=1963,col="green",lwd=2,col="Jan. 1") +
-  geom_hline(yintercept=1412,col="black",lwd=2,col="Dec. 1")
+  labs(title="US Daily Total Deaths(2020-03-01 - 2020-09-08)",
+       subtitle="Daily Avg (Black:980); Dec. 1 (Blue:1412);  Jan. 1 (Green:1964); Jan. 31 (Red:1582)"
+       ,x="Date Reported",y="Daily Deaths") +
+  geom_hline(yintercept=980,lwd=2,col="black") +
+  geom_hline(yintercept=1338,lwd=1,col="blue") +
+  geom_hline(yintercept=1955,lwd=1,col="green") +
+   geom_hline(yintercept=1528,lwd=1,col="red")
 ```
 
 
-```{r,echo=FALSE}
-ggplotly(p2)
-```
 
 #### Histograms of Daily Cases and Deaths
 
