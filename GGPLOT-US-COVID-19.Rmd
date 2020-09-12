@@ -1,7 +1,7 @@
 ---
 title: 'GGPLOT2: Us in a Nutshell'
 author: "David Jackson"
-date: "09/05/2020"
+date: "09/12/2020"
 output: 
   html_document: 
     fig_width: 10
@@ -51,7 +51,7 @@ ggplotly(cumm_cases)
 ggplotly(cumm_deaths)
 ```
 
-## GGPLOt2 Plots of Daily Deaths and Deaths
+## GGPLOt2 Plots of Daily Deaths and Cases
 #### Source: European CDPC
 
 ```{r, echo=FALSE}
@@ -74,18 +74,18 @@ mean(df1death$Death)
 #### 410,000
 
 ```{r}
-(410000 - 187000) / 116 # Jan 1, 2020
+(410000 - 192000) / 111 # Jan 1, 2021
 ```
 #### Average Deaths/Day for Jan. 31, 2020
 
 ```{r}
-(410000 - 187000)/ 146 # Jan 31, 2020
+(410000 - 187000)/ 141 # Jan 31, 2020
 ```
 
 #### NPR/Washington Uni 300,000 by Dec. 1,2020 
 
 ```{r}
-(300000 - 187000)/84
+(300000 - 187000)/80
 ```
 
 ```{r,echo=FALSE}
@@ -99,14 +99,23 @@ ggplotly(p1)
 ```
 
 ```{r,echo=FALSE}
-p2 <-ggplot(df1death) +geom_line(aes(x=Reported,y=Deaths),lwd=2,col="blue") + 
+p2 <-
+```
+
+
+```{r,echo=FALSE}
+ggplot(df1death) +geom_line(aes(x=Reported,y=Deaths),lwd=2,col="blue") + 
     scale_x_date(date_breaks = "1 month") +
   scale_y_continuous(labels = comma) +
    theme(axis.text.x=element_text(angle =- 45, vjust = 0.5)) +
   labs(title="US Daily Total Deaths(2020-03-01 - 2020-09-08)",x="Date Reported",y="Daily Deaths") +
-  geom_hline(yintercept=977,col="red",lwd=2) +
-  geom_hline(yintercept=1873,col="green",lwd=2) +
-  geom_hline(yintercept=1493,col="black",lwd=2)
+  geom_hline(yintercept=980,col="red",lwd=2,col="Daily Avg") +
+  geom_hline(yintercept=1963,col="green",lwd=2,col="Jan. 1") +
+  geom_hline(yintercept=1412,col="black",lwd=2,col="Dec. 1")
+```
+
+
+```{r,echo=FALSE}
 ggplotly(p2)
 ```
 
