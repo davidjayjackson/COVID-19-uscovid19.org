@@ -1,7 +1,7 @@
 ---
-title: "USA': COVID-19 In  A Nutshell"
-author: "David J Jackson"
-date: "Sept. 13, 2020"
+title: 'GGPLot2: USA COVID-19'
+author: "David Jackson"
+date: "9/14/2020"
 output: 
   html_document: 
     fig_width: 9
@@ -9,37 +9,53 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE,message = FALSE)
-options(scipen=5)
+knitr::opts_chunk$set(echo = FALSE,message = FALSE,warning = FALSE)
+library(ggplot2)
+library(scales)
 library(RSQLite)
+theme_set(theme_linedraw())
 ```
+
+## Spain's Battle with COVID-19
+
 ```{r}
 rm(list=ls())
 source("../DATA/movavg.R")
 db <- db <- dbConnect(RSQLite::SQLite(),dbname= "../COVIDDB/COVID.sqlite3")
 df <- dbGetQuery(db,"select * from ECDC")
-df <- subset(df,Countries =="USA" & Cases >0 )
+df <- subset(df,Countries =="USA"  )
 df$Reported <- as.Date(df$Reported)
-df <- df[order(df$Reported,decreasing = TRUE),]
-str(df)
-
+mean(df$Cases)
+mean(df$Deaths)
 ```
 ```{r}
 US <- subset(df,Reported >="2020-04-01")
-summary(US$Cases)
-summary(US$Deaths)
-US$MA14 <- movingAverage(US$Cases,14)
-plot(US$Reported,US$Cases,type="l",main=" COVID-19 Cases Apr. 1,2020 - Present",
-     xlab="Date Reported",ylab="Cases")
-lines(US$Reported,US$MA14,col="red")
-grid(col="black")
+US <- US[order(US$Reported,decreasing = TRUE),]
+# US$MA14 <- movingAverage(US$Cases,14)
+# US$MAD <- movingAverage(US$Deaths,14)
+```
+
+### Plot of Daily Cases and Deaths
+
+```{r}
+ggplot(US) + geom_line(aes(x=Reported,y=Cases,col="Daily Cases")) +
+  labs(title="COVID-19 Cases by Date") +
+  geom_smooth(aes(x=Reported,y=Cases))
 ```
 ```{r}
-US$Deaths14 <- movingAverage(US$Deaths,14)
-plot(US$Reported,US$Deaths,type="l",main="COVID-19 Deaths Apr. 1,2020 - Present",
-     xlab="Date Reported",ylab="Deaths and 14 day Moving Averges(red)")
-lines(US$Reported,US$Deaths14,col="red")
-grid(col="black")
+ggplot(US) + geom_line(aes(x=Reported,y=Deaths,col="Daily Deaths")) +
+  labs(title="COVID-19 Deaths by Date")  +
+  geom_smooth(aes(x=Reported,y=Deaths))
+```
+```{r}
+USA <- subset(US,Reported >="2020-06-01")
+ggplot(USA) + geom_line(aes(x=Reported,y=Cases,col="Daily Cases")) +
+  labs(title="COVID-19 Cases by Date since Jun. 1, 2020") +
+  geom_smooth(aes(x=Reported,y=Cases))
+
+ggplot(USA) + geom_line(aes(x=Reported,y=Deaths,col="Daily Deaths")) +
+  labs(title="COVID-19 Deaths by Date (since Jun. 1, 202")  +
+  geom_smooth(aes(x=Reported,y=Deaths))
 ```
 
 #### Non-Moving Average By Week and By Month
@@ -55,77 +71,30 @@ US$Weekly <- as.Date(cut(US$Reported,
 ```{r}
 Weekly_Cases <- aggregate(Cases~Weekly,US,FUN=sum)
 Weekly_Deaths <- aggregate(Deaths~Weekly,US,FUN=sum)
-Weekly_Cases$DRate <- Weekly_Deaths$Deaths/Weekly_Cases$Cases * 100
-# Weekly_Cases$LivedSaved <- Weekly_Cases$Cases - Weekly_Deaths$Deaths
+Weekly_Cases$DRate <- Weekly_Deaths$Deaths/Weekly_Cases$Cases
+Weekly_Cases$LivedSaved <- Weekly_Cases$Cases * (max(Weekly_Cases$DRate) - Weekly_Cases$DRate) * 100
 
 ```
 ```{r}
-barplot(Cases ~Weekly,data=Weekly_Cases,main="Weekly COVOD-19 Cases",xlab="Weekly Date",ylab="Cases")
-grid(col="black")
-barplot(Deaths ~Weekly,data=Weekly_Deaths,main="Weekly COVID-19 Deaths",
-        xlab="Weekly Date",ylab="Deaths")
-grid(col="black")
+ggplot(Weekly_Cases) + geom_col(aes(x=Weekly,y=Cases)) + 
+  labs(title="Weekly Cases",x="Date Reported", y="Weekly Cases")
 
-barplot(DRate ~Weekly,data=Weekly_Cases,main="Weekly Case-Fatality_Ratio
-",
-        xlab="Weekly Date",ylab="Cases")
-grid(col="black")
-
-# barplot(LivedSaved ~Weekly,data=Weekly_Cases,main="Estimated Lives Saved Per Week",
-#         xlab="Weekly Date",ylab="Est. Lives Saved")
-# grid(col="black")
-```
-
-###  Monthly Deaths Rate i.e. Deaths/Cases
+ggplot(Weekly_Deaths) + geom_col(aes(x=Weekly,y=Deaths)) + 
+  labs(title="Weekly Deaths",x="Date Reported", y="Weekly Deaths")
+``` 
+#### Monthly Cases and Deaths
 
 ```{r}
 
 Monthly_Cases <- aggregate(Cases~Monthly,US,FUN=sum)
 Monthly_Deaths <- aggregate(Deaths~Monthly,US,FUN=sum)
-Monthly_Cases$DRate <- Monthly_Deaths$Deaths/Monthly_Cases$Cases * 100
-# Monthly_Cases$LivedSaved <- Monthly_Cases$Cases * (max(Monthly_Cases$DRate) - Monthly_Cases$DRate)
-
+Monthly_Cases$DRate <- Monthly_Deaths$Deaths/Monthly_Cases$Cases
+Monthly_Cases$LivedSaved <- Monthly_Cases$Cases * (max(Monthly_Cases$DRate) - Monthly_Cases$DRate) * 100
 ```
 ```{r}
-barplot(Cases ~Monthly,data=Monthly_Cases,main="Monthly Total Cases",
-        xlab="Months",ylab="Monthly Cases")
-grid(col="black")
-barplot(Deaths ~Monthly,data=Monthly_Deaths,main="Monthly Total Deaths",
-        xlab="Months",ylab="Monthly Deaths")
-grid(col="black")
+ggplot(Monthly_Cases) + geom_col(aes(x=Monthly,y=Cases)) +
+  labs(title="Monthly Cases")
 
-barplot(DRate ~Monthly,data=Monthly_Cases,main="Monthly Deaths Rates",
-        xlab="Months",ylab=" Death Rate %")
-grid(col="black")
-
-# barplot(LivedSaved ~Monthly,data=Monthly_Cases,main="Estimated Lives Saved",
-#         xlab="Months",ylab="Est. Lives Saved")
-# grid(col="black")
-```
-
-### Weekly and Monthly Mean COVID-19 Cases And Deaths
-
-```{r}
-Weekly_Cases <- aggregate(Cases~Weekly,US,FUN=mean)
-Weekly_Deaths <- aggregate(Deaths~Weekly,US,FUN=mean)
-```
-```{r}
-barplot(Cases ~Weekly,data=Weekly_Cases,main="Weekly Mean Cases",
-        xlab="Weekly Date",ylab="Mean/Average Cases")
-grid(col="black")
-barplot(Deaths ~Weekly,data=Weekly_Deaths,main="Weekly Mean Deaths",
-        xlab="Weekly Date",ylab="Mean/Average Cases")
-grid(col="black")
-```
-```{r}
-Monthly_Cases <- aggregate(Cases~Monthly,US,FUN=mean)
-Monthly_Deaths <- aggregate(Deaths~Monthly,US,FUN=mean)
-```
-```{r}
-barplot(Cases ~Monthly,data=Monthly_Cases,main="Monthly Mean Cases",
-        xlab="Monthly Date",ylab="Mean/Average Cases")
-
-barplot(Deaths ~Monthly,data=Monthly_Deaths,main="Monthly Mean Deaths",
-          xlab="Month Date",ylab="Mean/Average Deaths")
-grid(col="black")
+ggplot(Monthly_Deaths) + geom_col(aes(x=Monthly,y=Deaths)) +
+  labs(title="Monthly Deaths")
 ```
