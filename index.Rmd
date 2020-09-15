@@ -1,7 +1,7 @@
 ---
 title: 'GGPLot2: USA COVID-19'
 author: "David Jackson"
-date: "9/14/2020"
+date: "9/15/2020"
 output: 
   html_document: 
     fig_width: 9
@@ -82,6 +82,7 @@ ggplot(Weekly_Cases) + geom_col(aes(x=Weekly,y=Cases)) +
 ggplot(Weekly_Deaths) + geom_col(aes(x=Weekly,y=Deaths)) + 
   labs(title="Weekly Deaths",x="Date Reported", y="Weekly Deaths")
 ``` 
+
 #### Monthly Cases and Deaths
 
 ```{r}
