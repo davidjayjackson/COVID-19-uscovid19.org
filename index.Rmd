@@ -1,7 +1,7 @@
 ---
 title: 'GGPLot2: USA COVID-19'
 author: "David Jackson"
-date: "9/15/2020"
+date: "9/16/2020"
 output: 
   html_document: 
     fig_width: 9
@@ -25,12 +25,14 @@ db <- db <- dbConnect(RSQLite::SQLite(),dbname= "../COVIDDB/COVID.sqlite3")
 df <- dbGetQuery(db,"select * from ECDC")
 df <- subset(df,Countries =="USA"  )
 df$Reported <- as.Date(df$Reported)
-mean(df$Cases)
-mean(df$Deaths)
+AA <- subset(df,Reported >="2020-02-28")
+mean(AA$Cases)
+mean(AA$Deaths)
 ```
 ```{r}
 US <- subset(df,Reported >="2020-04-01")
 US <- US[order(US$Reported,decreasing = TRUE),]
+
 # US$MA14 <- movingAverage(US$Cases,14)
 # US$MAD <- movingAverage(US$Deaths,14)
 ```
