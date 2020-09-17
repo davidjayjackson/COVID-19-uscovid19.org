@@ -1,7 +1,7 @@
 ---
-title: 'GGPLot2: USA COVID-19'
+title: 'USA Battle with COVID-19'
 author: "David Jackson"
-date: "9/16/2020"
+date: "9/17/2020"
 output: 
   html_document: 
     fig_width: 9
@@ -56,7 +56,7 @@ ggplot(USA) + geom_line(aes(x=Reported,y=Cases,col="Daily Cases")) +
   geom_smooth(aes(x=Reported,y=Cases))
 
 ggplot(USA) + geom_line(aes(x=Reported,y=Deaths,col="Daily Deaths")) +
-  labs(title="COVID-19 Deaths by Date (since Jun. 1, 202")  +
+  labs(title="COVID-19 Deaths by Date (since Jun. 1, 202)")  +
   geom_smooth(aes(x=Reported,y=Deaths))
 ```
 
