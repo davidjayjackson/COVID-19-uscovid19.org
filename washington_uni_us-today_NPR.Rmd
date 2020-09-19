@@ -1,7 +1,7 @@
 ---
 title: "Factcheck  WashUni COVD-19"
 author: "David Jackson"
-date: "9/7/2020"
+date: "9/8/2020"
 output: html_document
 ---
 
@@ -30,7 +30,7 @@ df$Reported <- as.Date(df$Reported)
 mean(df$Deaths)
 ```
 
-#### Average nUmer of Deaths per Day (Feb. 29, 2020 - Sept. 7, 2020)
+#### Average nUmer of Deaths per Day (Feb. 29, 2020 - Sept. 9, 2020)
 
 ```{r}
 dfdeaths <- df %>% filter(Reported >="2020-02-29")
@@ -40,21 +40,20 @@ mean(dfdeaths$Deaths)
 #### NPR/Washington Uni 300,000 by Dec. 1,2020.
 
 ```{r}
-(300000 - 188900)/85
-189000 + (984 * 85)    # Projected Deaths by Dec. 1, 2020
-300000 - (189000 + 984 * 85)
+max(df$Deaths) + (147 * 980 )    # Projected Deaths by Dec. 1, 2020
+300000 - (max(df$Deaths) + 980 * 84)
 ```
 
 #### Yahoo/USA Today Avaerge number  of Deaths Per Day Needed to reach 410,000
 
 ```{r}
-(410000 - 188900) / 117 # Jan 1, 2021
-189000 + (117*984) ## My Projeted Deaths by Jan. 1,2021
+(410000 - max(df$Deaths)) / 117 # Jan 1, 2021
+max(df$Deaths) + (117*980) ## My Projeted Deaths by Jan. 1,2021
 410000 -  (117*984)
 
-(410000 - 188900)/ 147 # Jan 31, 2021
+(410000 - max(df$Deaths))/ 147 # Jan 31, 2021
 189000 + (147*984)  ## Projected Deaths by Jan. 31,2021
-410000 - (189000 + 147*984)
+410000 - (max(df$Deaths) + 147*984)
 ```
 
 

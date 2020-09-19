@@ -1,0 +1,7 @@
+Average Cases: 24,701
+Average Deaths: 750
+
+Total Cases: 6,150,655 + 3,680,300 = 65,680,300
+Total Deaths: 186797 + 111,750 = 298,750
+
+Day till first Cases was reported. 149
