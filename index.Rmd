@@ -1,7 +1,7 @@
 ---
 title: 'USA Battle with COVID-19'
 author: "David Jackson"
-date: "9/18/2020"
+date: "9/20/2020"
 output: 
   html_document: 
     fig_width: 9
@@ -16,7 +16,7 @@ library(RSQLite)
 theme_set(theme_linedraw())
 ```
 
-## Spain's Battle with COVID-19
+## USA's Battle with COVID-19
 
 ```{r}
 rm(list=ls())
@@ -56,7 +56,7 @@ ggplot(USA) + geom_line(aes(x=Reported,y=Cases,col="Daily Cases")) +
   geom_smooth(aes(x=Reported,y=Cases))
 
 ggplot(USA) + geom_line(aes(x=Reported,y=Deaths,col="Daily Deaths")) +
-  labs(title="COVID-19 Deaths by Date (since Jun. 1, 202)")  +
+  labs(title="COVID-19 Deaths by Date (since Jun. 1, 2020)")  +
   geom_smooth(aes(x=Reported,y=Deaths))
 ```
 
