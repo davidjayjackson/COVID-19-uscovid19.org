@@ -1,7 +1,7 @@
 ---
 title: 'USA Battle with COVID-19'
 author: "David Jackson"
-date: "9/21/2020"
+date: "9/22/2020"
 output: 
   html_document: 
     fig_width: 9
@@ -24,30 +24,33 @@ source("../DATA/movavg.R")
 db <- db <- dbConnect(RSQLite::SQLite(),dbname= "../COVIDDB/COVID.sqlite3")
 df <- dbGetQuery(db,"select * from ECDC")
 df <- subset(df,Countries =="USA"  )
+#
+df <- df[order(df$Reported,decreasing = TRUE),]
+df$MAC <- movingAverage(df$Cases,14)
+df$MAD <- movingAverage(df$Deaths,14)
+#
 df$Reported <- as.Date(df$Reported)
-AA <- subset(df,Reported >="2020-02-28")
+AA <- subset(df,Reported >="2020-01-21")
 mean(AA$Cases)
+#
+AB <- subset(df,Reported >="2020-02-28")
 mean(AA$Deaths)
-```
-```{r}
+#
 US <- subset(df,Reported >="2020-04-01")
-US <- US[order(US$Reported,decreasing = TRUE),]
-
-# US$MA14 <- movingAverage(US$Cases,14)
-# US$MAD <- movingAverage(US$Deaths,14)
 ```
+
 
 ### Plot of Daily Cases and Deaths
 
 ```{r}
 ggplot(US) + geom_line(aes(x=Reported,y=Cases,col="Daily Cases")) +
   labs(title="COVID-19 Cases by Date") +
-  geom_smooth(aes(x=Reported,y=Cases))
+    geom_line(aes(Reported,MAC,col="14 Day Mov Avg."))
 ```
 ```{r}
 ggplot(US) + geom_line(aes(x=Reported,y=Deaths,col="Daily Deaths")) +
   labs(title="COVID-19 Deaths by Date")  +
-  geom_smooth(aes(x=Reported,y=Deaths))
+ geom_line(aes(Reported,MAD,col="14 Day Mov Avg."))
 ```
 ```{r}
 USA <- subset(US,Reported >="2020-06-01")
