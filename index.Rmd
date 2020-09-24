@@ -1,7 +1,7 @@
 ---
 title: 'USA Battle with COVID-19'
 author: "David Jackson"
-date: "9/23/2020"
+date: "2020-09-24"
 output: 
   html_document: 
     fig_width: 9
@@ -99,8 +99,10 @@ Monthly_Cases$LivedSaved <- Monthly_Cases$Cases * (max(Monthly_Cases$DRate) - Mo
 ```
 ```{r}
 ggplot(Monthly_Cases) + geom_col(aes(x=Monthly,y=Cases)) +
-  labs(title="Monthly Cases")
+  labs(title="Monthly Cases") +
+  scale_y_continuous(labels = scales::comma)
 
 ggplot(Monthly_Deaths) + geom_col(aes(x=Monthly,y=Deaths)) +
-  labs(title="Monthly Deaths")
+  labs(title="Monthly Deaths") +
+  scale_y_continuous(labels = scales::comma)
 ```
