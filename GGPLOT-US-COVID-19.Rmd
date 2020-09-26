@@ -72,20 +72,20 @@ mean(df1death$Deaths)
 ### NPR/Washington Uni 300,000 by Dec. 1,2020 
 
 ```{r}
-(300000 - sum(df1death$Deaths))/73
+(300000 - sum(df1death$Deaths))/65
 ```
 
 ### Washington Uni and Yahoo/USA Today: 
 #### 410,000 Jan. 1 2021
 
 ```{r}
-(410000 - sum(df1death$Deaths)) / 104 # Jan 1, 2021
+(410000 - sum(df1death$Deaths)) / 97 # Jan 1, 2021
 ```
 #### Average Deaths/Day for Jan. 31, 2020
 #### 410,000 
 
 ```{r}
-(410000 - sum(df1death$Deaths))/ 134 # Jan 31, 2020
+(410000 - sum(df1death$Deaths))/ 127 # Jan 31, 2020
 ```
 
 
@@ -105,12 +105,12 @@ ggplot(df1death) +geom_line(aes(x=Reported,y=Deaths),lwd=2,col="blue") +
   scale_y_continuous(labels = comma) +
    theme(axis.text.x=element_text(angle =- 45, vjust = 0.5)) +
   labs(title="US Daily Total Deaths(2020-03-01 - 2020-09-08)",
-       subtitle="Daily Avg (Black:973); Dec. 1 (Blue:1389);  Jan. 1 (Green:2033); Jan. 31 (Red:1577)"
+       subtitle="Daily Avg (Black:966); Dec. 1 (Blue:1480);  Jan. 1 (Green:2126); Jan. 31 (Red:1623)"
        ,x="Date Reported",y="Daily Deaths") +
-  geom_hline(yintercept=973,lwd=2,col="black") +
-  geom_hline(yintercept=1389,lwd=1,col="blue") +
-  geom_hline(yintercept=2033,lwd=1,col="green") +
-   geom_hline(yintercept=1577,lwd=1,col="red")
+  geom_hline(yintercept=966,lwd=2,col="black") +
+  geom_hline(yintercept=1480,lwd=1,col="blue") +
+  geom_hline(yintercept=2126,lwd=1,col="green") +
+   geom_hline(yintercept=1623,lwd=1,col="red")
 ```
 
 
