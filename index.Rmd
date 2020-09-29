@@ -1,7 +1,7 @@
 ---
 title: 'USA Battle with COVID-19'
 author: "David Jackson"
-date: "2020-09-27"
+date: "2020-09-28"
 output: 
   html_document: 
     fig_width: 9
@@ -38,8 +38,18 @@ AB <- subset(df,Reported >="2020-02-28")
 mean(AA$Deaths)
 #
 US <- subset(df,Reported >="2020-04-01")
+
+US$Rate <- US$Deaths/US$Cases
 ```
 
+### US COVID19 Mortality Rate
+
+```{r}
+ggplot(US) + geom_line(aes(x=Reported,y=Rate)) +
+  scale_y_continuous(labels = scales::percent) +
+  labs(title="Us COVID19 Mortality Rate ",x="Date Reported",y="Mortality Rate") + geom_hline(yintercept = 0.035,col="red")
+
+```
 
 ### Plot of Daily Cases and Deaths
 
