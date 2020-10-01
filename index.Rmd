@@ -93,10 +93,14 @@ Weekly_Cases$LivedSaved <- Weekly_Cases$Cases * (max(Weekly_Cases$DRate) - Weekl
 ```
 ```{r}
 ggplot(Weekly_Cases) + geom_col(aes(x=Weekly,y=Cases)) + 
-  labs(title="Weekly Cases",x="Date Reported", y="Weekly Cases")
+  labs(title="Weekly Cases",x="Date Reported", y="Weekly Cases") +
+  geom_hline(yintercept = mean(Weekly_Cases$Cases),col="red",lwd=1.5) +
+  scale_y_continuous(labels = scales::comma) 
 
 ggplot(Weekly_Deaths) + geom_col(aes(x=Weekly,y=Deaths)) + 
-  labs(title="Weekly Deaths",x="Date Reported", y="Weekly Deaths")
+  labs(title="Weekly Deaths",x="Date Reported", y="Weekly Deaths") +
+  scale_y_continuous(labels = scales::comma) +
+  geom_hline(yintercept = mean(Weekly_Deaths$Deaths),col="red",lwd=1.5)
 ``` 
 
 #### Monthly Cases and Deaths
