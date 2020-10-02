@@ -1,0 +1,29 @@
+---
+title: "USA COVID BoxPlot"
+author: "David Jackson"
+date: "9/27/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+library(scales)
+library(RSQLite)
+```
+```{r}
+rm(list=ls())
+source("../DATA/movavg.R")
+db <- db <- dbConnect(RSQLite::SQLite(),dbname= "../COVIDDB/COVID.sqlite3")
+df <- dbGetQuery(db,"select * from STATESDAILY")
+#
+df <- df[order(df$date,decreasing = TRUE),]
+```
+
+### Boxplot of Cases and Deaths for the USA
+
+```{r}
+ggplot(df,aes(x=date,y=new_cases)) + geom_boxplot() +
+  coord_flip()
+```
+
