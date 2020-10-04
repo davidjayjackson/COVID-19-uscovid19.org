@@ -83,7 +83,7 @@ sum(df1death$Deaths) + (59 *mean(df1death$Deaths))
 (410000 - sum(df1death$Deaths)) / 90 # Jan 1, 2021
 sum(df1death$Deaths) + (90 *mean(df1death$Deaths))
 ```
-#### Average Deaths/Day for Jan. 31, 2020
+#### Average Deaths/Day for Jan. 31, 2021
 #### 410,000 
 
 ```{r}

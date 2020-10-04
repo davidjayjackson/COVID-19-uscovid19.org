@@ -1,7 +1,7 @@
 ---
 title: 'GGPLOT2: Us in a Nutshell'
 author: "David Jackson"
-date: "09/19/2020"
+date: "10/02/2020"
 output: 
   html_document: 
     fig_width: 10
@@ -56,7 +56,8 @@ ggplotly(cumm_deaths)
 
 ```{r, echo=FALSE}
 df1 <- dbGetQuery(db,"select * from ECDC")
-df1$Reported <- as.Date(df1$Reported)
+df1$Reported <- lubridate::ymd(df1$Reported)
+#df1$Reported <- as.Date(df1$Reported,format="%Y-%m-%d")
 df1 <- df1[order(df1$Reported,decreasing = TRUE),]
 df1 <- subset(df1,Countries =="USA" )
 df1$Reported <- as.Date(df1$Reported)
@@ -66,7 +67,7 @@ df1death <- df1 %>% filter(Reported>="2020-02-29")
 #### Average US Covid-19 Deaths/day
 
 ```{r}
-mean(df1death$Deaths)
+mean(!is.na(df1death$Deaths))
 ```
 
 ### NPR/Washington Uni 300,000 by Dec. 1,2020 
