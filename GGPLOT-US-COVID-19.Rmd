@@ -67,33 +67,25 @@ df1death <- df1 %>% filter(Reported>="2020-02-29")
 #### Average US Covid-19 Deaths/day
 
 ```{r}
-mean(!is.na(df1death$Deaths))
+mean((df1death$Deaths))
 ```
 
-### NPR/Washington Uni 300,000 by Dec. 1,2020 
+### Washington University
+#### Institute for Health Metrics and Evaluation
+* Revised US COVID19 Deaths: 363,269 by Jan. 1, 2021 (Updated Oct. 2, 2020).
 
 ```{r}
-(300000 - sum(df1death$Deaths))/65
+(363269 - sum(df1death$Deaths)) / 87 # Jan 1, 2021
+sum(df1death$Deaths) + (mean((df1death$Deaths)) * 87)
+
 ```
 
-### Washington Uni and Yahoo/USA Today: 
-#### 410,000 Jan. 1 2021
-
-```{r}
-(410000 - sum(df1death$Deaths)) / 97 # Jan 1, 2021
-```
-#### Average Deaths/Day for Jan. 31, 2020
-#### 410,000 
-
-```{r}
-(410000 - sum(df1death$Deaths))/ 127 # Jan 31, 2020
-```
 
 
 
 ```{r,echo=FALSE}
 
-p1 <-ggplot(df1) +geom_line(aes(x=Reported,y=Cases,col="red"),lwd=2,col="red") + 
+p1 <-ggplot(df1) +geom_line(aes(x=Reported,y=Cases,col="red"),lwd=1.5,col="red") + 
     scale_x_date(date_breaks = "1 month") +
   scale_y_continuous(labels = comma) +
    theme(axis.text.x=element_text(angle =- 45, vjust = 0.5)) +
@@ -106,13 +98,12 @@ ggplot(df1death) +geom_line(aes(x=Reported,y=Deaths),lwd=2,col="blue") +
   scale_y_continuous(labels = comma) +
    theme(axis.text.x=element_text(angle =- 45, vjust = 0.5)) +
   labs(title="US Daily Total Deaths(2020-03-01 - 2020-09-08)",
-       subtitle="Daily Avg (Black:966); Dec. 1 (Blue:1480);  Jan. 1 (Green:2126); Jan. 31 (Red:1623)"
+       subtitle="Daily Avg (Black:950); Dec. 1 (Blue:1751))"
        ,x="Date Reported",y="Daily Deaths") +
-  geom_hline(yintercept=966,lwd=2,col="black") +
-  geom_hline(yintercept=1480,lwd=1,col="blue") +
-  geom_hline(yintercept=2126,lwd=1,col="green") +
-   geom_hline(yintercept=1623,lwd=1,col="red")
-```
+  geom_hline(yintercept=950,lwd=2,col="black") +
+  geom_hline(yintercept=1751,lwd=1,col="blue") 
+
+  ```
 
 
 

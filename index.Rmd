@@ -36,7 +36,7 @@ AA <- subset(df,Reported >="2020-01-21")
 mean(AA$Cases)
 #
 AB <- subset(df,Reported >="2020-02-28")
-mean(AA$Deaths)
+mean(AB$Deaths)
 #
 US <- subset(df,Reported >="2020-04-01")
 
