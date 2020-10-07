@@ -1,7 +1,7 @@
 ---
 title: 'USA Battle with COVID-19'
 author: "David Jackson"
-date: "2020-10-06"
+date: "2020-10-07"
 output: 
   html_document: 
     fig_width: 9
@@ -13,6 +13,7 @@ knitr::opts_chunk$set(echo = FALSE,message = FALSE,warning = FALSE)
 library(ggplot2)
 library(scales)
 library(RSQLite)
+library(plotly)
 theme_set(theme_linedraw())
 ```
 
@@ -125,8 +126,9 @@ ggplot(Monthly_Deaths) + geom_col(aes(x=Monthly,y=Deaths)) +
 ## Plotting 14 and 30 Moving Averages
 
 ```{r}
-ggplot(df) + geom_line(aes(x=Reported,y=MAD,col="14 Days")) +
+p1 <- ggplot(df) + geom_line(aes(x=Reported,y=MAD,col="14 Days")) +
   geom_line(aes(x=Reported, y=MAD30,col="30 Days")) +
   labs(title="COVID19 Deaths: Comparing Moving Average")
+ggplotly(p1)
 ```
 
