@@ -1,7 +1,7 @@
 ---
 title: 'USA Battle with COVID-19'
 author: "David Jackson"
-date: "2020-10-07"
+date: "2020-10-08"
 output: 
   html_document: 
     fig_width: 9
@@ -38,7 +38,7 @@ mean(AA$Cases)
 AB <- subset(df,Reported >="2020-02-28")
 mean(AB$Deaths)
 #
-US <- subset(df,Reported >="2020-04-01")
+US <- subset(df,Reported >="2020-03-01")
 
 US$Rate <- US$Deaths/US$Cases
 ```
@@ -57,12 +57,12 @@ ggplot(US) + geom_line(aes(x=Reported,y=Rate)) +
 ```{r}
 ggplot(US) + geom_line(aes(x=Reported,y=Cases,col="Daily Cases")) +
   labs(title="COVID-19 Cases by Date") +
-    geom_line(aes(Reported,MAC,col="14 Day Mov Avg."))
+    geom_smooth(aes(x=Reported,y=Cases,col="Loess"),span=0.25)
 ```
 ```{r}
 ggplot(US) + geom_line(aes(x=Reported,y=Deaths,col="Daily Deaths")) +
   labs(title="COVID-19 Deaths by Date")  +
- geom_line(aes(Reported,MAD,col="14 Day Mov Avg."))
+ geom_smooth(aes(x=Reported,y=Deaths,col="Loess"),span=0.25)
 ```
 ```{r}
 USA <- subset(US,Reported >="2020-06-01")
