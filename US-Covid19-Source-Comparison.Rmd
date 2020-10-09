@@ -1,0 +1,122 @@
+---
+title: "US COVID19 Source Data Comparison"
+author: "David Jackson"
+date: "10/9/2020"
+output: 
+  html_document: 
+    fig_width: 9
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE,warning = FALSE,message = FALSE)
+library(RSQLite)
+library(ggplot2)
+library(scales)
+library(plotly)
+```
+```{r}
+rm(list=ls())
+source("../DATA/movavg.R")
+db <- db <- dbConnect(RSQLite::SQLite(),dbname= "../COVIDDB/COVID.sqlite3")
+df <- dbGetQuery(db,"select * from ECDC")
+df <- subset(df,Countries =="USA"  )
+#
+df <- df[order(df$Reported),]
+#
+df$Reported <- as.Date(df$Reported)
+AA <- subset(df,Reported >="2020-01-21")
+mean(AA$Cases)
+#
+AB <- subset(df,Reported >="2020-02-28")
+mean(AB$Deaths)
+#
+US <- subset(df,Reported >="2020-03-01")
+
+US$Rate <- US$Deaths/US$Cases
+```
+
+```{r}
+## New York Times Data
+
+NYT <- dbGetQuery(db,"select * from STATESDAILY")
+NYT$date <- as.Date(NYT$date)
+NYTC <- subset(NYT,date >="2020-01-21")
+NYTCASES <-aggregate(new_cases~date,NYTC,FUN=sum)
+
+NYTD <- subset(NYT,date >="2020-02-28")
+NYTDEATHS <-aggregate(new_deaths~date,NYTD,FUN=sum)
+
+```
+```{r}
+##
+## Calc daily cases from John Hopkins data
+##
+JHU <- dbGetQuery(db,"select * from JHUDATA where country='US'")
+JHU$date <- as.Date(JHU$date)
+CASES <- diff(JHU$confirmed,lag=1)
+CASES <- as.data.frame(CASES)
+CASES$YMD <- seq(as.Date("2020-01-23"),as.Date("2020-10-08"),"day")
+```
+```{r}
+##
+## Calc daily deaths
+##
+JHU <- subset(JHU,date >="2020-02-28")
+DEATHS <- diff(JHU$deaths,lag=1)
+DEATHS <- as.data.frame(DEATHS)
+DEATHS$YMD <- seq(as.Date("2020-02-29"),as.Date("2020-10-08"),"day")
+```
+
+### US COVID19 Cases by Date
+#### Source European CDPC
+
+```{r}
+ggplot(AB) + geom_line(aes(x=Reported,y=Cases, col="Daily Cases")) + geom_point(aes(x=Reported,y=Cases)) + geom_smooth(aes(x=Reported,y=Cases,col="Loess"),span=0.25) +
+  labs(title="European CDPC:  US daily Cases")
+```
+
+#### Source John Hopkins University CSSE Cases
+
+```{r}
+ggplot(CASES) + geom_line(aes(x=YMD,y=CASES,col="Daily Cases")) +
+  geom_point(aes(x=YMD,y=CASES,col="Loess")) +
+  geom_smooth(aes(x=YMD,y=CASES),span=0.25) +
+  labs(title="John Hopkins CSSE: US DAily Cases")
+```
+
+### Source New York Times: Daily Cases
+
+```{r}
+ggplot(NYTCASES) + geom_line(aes(x=date,y=new_cases,col="Daily Cases")) +
+  geom_point(aes(x=date,y=new_cases,col="Loess")) +
+  geom_smooth(aes(x=date,y=new_cases),span=0.25) +
+  labs(title="New York Times: US Daily Cases")
+```
+
+### US COVID19 Deaths by Date
+
+#### Source European CDPC
+
+```{r}
+ggplot(AB) + geom_line(aes(x=Reported,y=Deaths, col="Daily Deaths")) + geom_point(aes(x=Reported,y=Deaths)) + 
+  geom_smooth(aes(x=Reported,y=Deaths,col="Loess"),span=0.25) +
+  labs(title="European CDPC:  US daily Deaths")
+```
+
+#### Source John Hopkins University CSSE: US Deaths
+
+```{r}
+ggplot(DEATHS) + geom_line(aes(x=YMD,y=DEATHS,col="Daily Deaths")) +
+  geom_point(aes(x=YMD,y=DEATHS,col="Loess")) +
+  geom_smooth(aes(x=YMD,y=DEATHS),span=0.25) +
+  labs(title="John Hopkins CSSE: US DAily Deaths")
+```
+
+### Source New York Times: Daily Cases
+
+```{r}
+ggplot(NYTDEATHS) + geom_line(aes(x=date,y=new_deaths,col="Daily Cases")) +
+  geom_point(aes(x=date,y=new_deaths,col="Loess")) +
+  geom_smooth(aes(x=date,y=new_deaths),span=0.25) +
+  labs(title="New York Times: US Daily Deaths")
+```
