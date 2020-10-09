@@ -72,7 +72,8 @@ DEATHS$YMD <- seq(as.Date("2020-02-29"),as.Date("2020-10-08"),"day")
 
 ```{r}
 ggplot(AB) + geom_line(aes(x=Reported,y=Cases, col="Daily Cases")) + geom_point(aes(x=Reported,y=Cases)) + geom_smooth(aes(x=Reported,y=Cases,col="Loess"),span=0.25) +
-  labs(title="European CDPC:  US daily Cases")
+  labs(title="European CDPC:  US daily Cases") +
+  scale_x_date(date_breaks = "month")
 ```
 
 #### Source John Hopkins University CSSE Cases
@@ -81,7 +82,8 @@ ggplot(AB) + geom_line(aes(x=Reported,y=Cases, col="Daily Cases")) + geom_point(
 ggplot(CASES) + geom_line(aes(x=YMD,y=CASES,col="Daily Cases")) +
   geom_point(aes(x=YMD,y=CASES,col="Loess")) +
   geom_smooth(aes(x=YMD,y=CASES),span=0.25) +
-  labs(title="John Hopkins CSSE: US DAily Cases")
+  labs(title="John Hopkins CSSE: US DAily Cases") +
+  scale_x_date(date_breaks = "month")
 ```
 
 ### Source New York Times: Daily Cases
@@ -90,7 +92,8 @@ ggplot(CASES) + geom_line(aes(x=YMD,y=CASES,col="Daily Cases")) +
 ggplot(NYTCASES) + geom_line(aes(x=date,y=new_cases,col="Daily Cases")) +
   geom_point(aes(x=date,y=new_cases,col="Loess")) +
   geom_smooth(aes(x=date,y=new_cases),span=0.25) +
-  labs(title="New York Times: US Daily Cases")
+  labs(title="New York Times: US Daily Cases") +
+  scale_x_date(date_breaks = "month")
 ```
 
 ### US COVID19 Deaths by Date
@@ -100,7 +103,8 @@ ggplot(NYTCASES) + geom_line(aes(x=date,y=new_cases,col="Daily Cases")) +
 ```{r}
 ggplot(AB) + geom_line(aes(x=Reported,y=Deaths, col="Daily Deaths")) + geom_point(aes(x=Reported,y=Deaths)) + 
   geom_smooth(aes(x=Reported,y=Deaths,col="Loess"),span=0.25) +
-  labs(title="European CDPC:  US daily Deaths")
+  labs(title="European CDPC:  US daily Deaths") +
+  scale_x_date(date_breaks = "month")
 ```
 
 #### Source John Hopkins University CSSE: US Deaths
@@ -109,7 +113,8 @@ ggplot(AB) + geom_line(aes(x=Reported,y=Deaths, col="Daily Deaths")) + geom_poin
 ggplot(DEATHS) + geom_line(aes(x=YMD,y=DEATHS,col="Daily Deaths")) +
   geom_point(aes(x=YMD,y=DEATHS,col="Loess")) +
   geom_smooth(aes(x=YMD,y=DEATHS),span=0.25) +
-  labs(title="John Hopkins CSSE: US DAily Deaths")
+  labs(title="John Hopkins CSSE: US DAily Deaths") +
+  scale_x_date(date_breaks = "month")
 ```
 
 ### Source New York Times: Daily Cases
@@ -118,5 +123,6 @@ ggplot(DEATHS) + geom_line(aes(x=YMD,y=DEATHS,col="Daily Deaths")) +
 ggplot(NYTDEATHS) + geom_line(aes(x=date,y=new_deaths,col="Daily Cases")) +
   geom_point(aes(x=date,y=new_deaths,col="Loess")) +
   geom_smooth(aes(x=date,y=new_deaths),span=0.25) +
-  labs(title="New York Times: US Daily Deaths")
+  labs(title="New York Times: US Daily Deaths") +
+  scale_x_date(date_breaks = "month")
 ```
