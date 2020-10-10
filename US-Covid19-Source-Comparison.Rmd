@@ -96,6 +96,19 @@ ggplot(NYTCASES) + geom_line(aes(x=date,y=new_cases,col="Daily Cases")) +
   scale_x_date(date_breaks = "month")
 ```
 
+### Combined Three Sources:  US COVID19 Cases 
+
+```{r}
+plot1 <-ggplot() + geom_line(data=AB,aes(x=Reported,y=Cases, col="ECDPC")) +
+   geom_line(data=CASES,aes(x=YMD,y=CASES,col="John Hopkins")) +
+  geom_line(data=NYTCASES,aes(x=date,y=new_cases,col="NYTimes")) +
+  labs(title="CombinedEuropean CDPC/NYTimes/John Hopkins: US Cases",y="Daily Cases") 
+ggplotly(plot1)
+  
+```
+
+
+
 ### US COVID19 Deaths by Date
 
 #### Source European CDPC
@@ -125,4 +138,15 @@ ggplot(NYTDEATHS) + geom_line(aes(x=date,y=new_deaths,col="Daily Cases")) +
   geom_smooth(aes(x=date,y=new_deaths),span=0.25) +
   labs(title="New York Times: US Daily Deaths") +
   scale_x_date(date_breaks = "month")
+```
+
+### Combined Three Sources:  US COVID19 Deaths 
+
+```{r}
+plot2 <-ggplot() + geom_line(data=AB,aes(x=Reported,y=Deaths, col="ECDPC")) +
+   geom_line(data=DEATHS,aes(x=YMD,y=DEATHS,col="John Hopkins")) +
+  geom_line(data=NYTDEATHS,aes(x=date,y=new_deaths,col="NYTimes")) +
+  labs(title="CombinedEuropean CDPC/NYTimes/John Hopkins: US Deaths",y="Daily Deaths") 
+ggplotly(plot2)
+  
 ```
