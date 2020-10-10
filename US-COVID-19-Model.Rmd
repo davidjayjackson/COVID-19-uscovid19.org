@@ -73,11 +73,15 @@ mean((df1death$Deaths))
 ### Washington University
 #### Institute for Health Metrics and Evaluation
 * Revised US COVID19 Deaths: 363,269 by Jan. 1, 2021 (Updated Oct. 2, 2020).
-
+* Revised US COVID19 Deaths: 363,269 by Feb. 1, 2021 (Updated Oct. 9, 2020).
 ```{r}
 (363269 - sum(df1death$Deaths)) / 87 # Jan 1, 2021
 sum(df1death$Deaths) + (mean((df1death$Deaths)) * 87)
-
+##
+## 394,693 by Feb. 1, 2021
+##
+(363269 - sum(df1death$Deaths)) / 114 # Jan 1, 2021
+sum(df1death$Deaths) + (mean((df1death$Deaths)) * 114)
 ```
 
 
@@ -97,28 +101,12 @@ ggplot(df1death) +geom_line(aes(x=Reported,y=Deaths),lwd=2,col="blue") +
     scale_x_date(date_breaks = "1 month") +
   scale_y_continuous(labels = comma) +
    theme(axis.text.x=element_text(angle =- 45, vjust = 0.5)) +
-  labs(title="US Daily Total Deaths(2020-03-01 - 2020-09-08)",
-       subtitle="Daily Avg (Black:950); Dec. 1 (Blue:1751))"
+  labs(title="US Daily Total Deaths(2020-03-01 - 2020-10-09)",
+       subtitle="Daily Avg (Red:950); Feb. 1 (Green:1320))"
        ,x="Date Reported",y="Daily Deaths") +
-  geom_hline(yintercept=950,lwd=2,col="black") +
-  geom_hline(yintercept=1751,lwd=1,col="blue") 
+  geom_hline(yintercept=950,lwd=2,col="red") +
+  geom_hline(yintercept=1320,lwd=1,col="green") 
 
   ```
 
-
-
-#### Histograms of Daily Cases and Deaths
-
-```{r, echo=FALSE}
-ggplot(df1) + geom_histogram(aes(x=Deaths))   +
-  labs(title="Histogram of Daily Deaths")
-
-ggplot(df1) + geom_histogram(aes(x=Cases))   +
-  labs(title="Histogram of Daily Cases")
-  
-```
-```{r}
-ggplot(df1) + geom_bar(aes(x=Deaths,fill=..count..),stat="bin")
-ggplot(df1) + geom_bar(aes(x=Cases,fill=..count..),stat="bin")
-```
 
