@@ -1,7 +1,7 @@
 ---
 title: 'GGPLOT2: Us in a Nutshell'
 author: "David Jackson"
-date: "10/02/2020"
+date: "10/11/2020"
 output: 
   html_document: 
     fig_width: 10
@@ -9,7 +9,7 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE,warning = FALSE,message = FALSE)
+knitr::opts_chunk$set(echo = FALSE,warning = FALSE,message = FALSE)
 library(RSQLite)
 library(ggplot2)
 library(scales)
@@ -30,7 +30,7 @@ str(df)
 
 ```
 
-### GGPLOt2 Plots of Cumulative Cases and Deaths
+### Plots of Cumulative Cases and Deaths
 #### Source: New York Times
 
 ```{r,echo=FALSE}
@@ -72,40 +72,42 @@ mean((df1death$Deaths))
 
 ### Washington University
 #### Institute for Health Metrics and Evaluation
-* Revised US COVID19 Deaths: 363,269 by Jan. 1, 2021 (Updated Oct. 2, 2020).
-* Revised US COVID19 Deaths: 363,269 by Feb. 1, 2021 (Updated Oct. 9, 2020).
+* "Daily deaths is the best indicator of the progression of the pandemic, although there is generally a 17-21 day lag between infection and deaths.+
+Daily deaths is the best indicator of the progression of the pandemic, although there is generally a 17-21 day lag between infection and deaths.
+* Revised US COVID19 Deaths: 363,269 by Jan. 1, 2021 (Updated Oct. 2, 2020)
+* Revised US COVID19 Deaths: 363,269 by Feb. 1, 2021 (Updated Oct. 9, 2020)
+* Revised US COVID19 Deaths: 394,693 by Feb. 1, 2021 (Updated Oct. 10, 2021)
+
 ```{r}
-(363269 - sum(df1death$Deaths)) / 87 # Jan 1, 2021
+##
+## 363, 000 Deaths by Jan. 2010 
+(363269 - sum(df1death$Deaths)) / 83  # Jan 1, 2021
 sum(df1death$Deaths) + (mean((df1death$Deaths)) * 87)
+##
+## 363269 by Feb. 1, 2020
+(363269 - sum(df1death$Deaths)) / 114  # Jan 1, 2021
+sum(df1death$Deaths) + (mean((df1death$Deaths)) * 114)
 ##
 ## 394,693 by Feb. 1, 2021
 ##
-(363269 - sum(df1death$Deaths)) / 114 # Jan 1, 2021
+(394693 - sum(df1death$Deaths)) / 114 # Feb 1, 2021
 sum(df1death$Deaths) + (mean((df1death$Deaths)) * 114)
+##
+## 
 ```
-
-
-
-
-```{r,echo=FALSE}
-
-p1 <-ggplot(df1) +geom_line(aes(x=Reported,y=Cases,col="red"),lwd=1.5,col="red") + 
-    scale_x_date(date_breaks = "1 month") +
-  scale_y_continuous(labels = comma) +
-   theme(axis.text.x=element_text(angle =- 45, vjust = 0.5)) +
-  labs(title="US Daily Total Cases(2020-03-01 - 2020-09-08)",x="Date Reported",y="Daily Cases")
-ggplotly(p1)
-```
+### US COVID19
 ```{r,echo=FALSE}
 ggplot(df1death) +geom_line(aes(x=Reported,y=Deaths),lwd=2,col="blue") + 
     scale_x_date(date_breaks = "1 month") +
   scale_y_continuous(labels = comma) +
    theme(axis.text.x=element_text(angle =- 45, vjust = 0.5)) +
-  labs(title="US Daily Total Deaths(2020-03-01 - 2020-10-09)",
-       subtitle="Daily Avg (Red:950); Feb. 1 (Green:1320))"
+  labs(title="US Daily Total Deaths(2020-03-01 - 2020-10-11)",
+       subtitle="Daily Avg (Red:949); Jan. 1 (Green:1794/363269);Feb.1 (Blue:1581/394693);Feb 1(Black: 1306/363269))"
        ,x="Date Reported",y="Daily Deaths") +
-  geom_hline(yintercept=950,lwd=2,col="red") +
-  geom_hline(yintercept=1320,lwd=1,col="green") 
+  geom_hline(yintercept=949,lwd=2,col="red") +
+  geom_hline(yintercept=1794,lwd=1,col="green") +
+  geom_hline(yintercept=1581,lwd=1,col="blue") +
+  geom_hline(yintercept=1306,lwd=1,col="black")
 
   ```
 
