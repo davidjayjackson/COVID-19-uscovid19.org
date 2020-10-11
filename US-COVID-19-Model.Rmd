@@ -85,7 +85,7 @@ Daily deaths is the best indicator of the progression of the pandemic, although 
 sum(df1death$Deaths) + (mean((df1death$Deaths)) * 87)
 ##
 ## 363269 by Feb. 1, 2020
-(363269 - sum(df1death$Deaths)) / 114  # Jan 1, 2021
+(363269 - sum(df1death$Deaths)) / 114  # Feb 1, 2021
 sum(df1death$Deaths) + (mean((df1death$Deaths)) * 114)
 ##
 ## 394,693 by Feb. 1, 2021
