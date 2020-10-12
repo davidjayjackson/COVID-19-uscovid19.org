@@ -1,7 +1,7 @@
 ---
 title: 'USA Battle with COVID-19'
 author: "David Jackson"
-date: "2020-11-09"
+date: "2020-12-09"
 output: 
   html_document: 
     fig_width: 9
@@ -57,7 +57,8 @@ ggplot(US) + geom_line(aes(x=Reported,y=Rate)) +
 ```{r}
 ggplot(US) + geom_line(aes(x=Reported,y=Cases,col="Daily Cases")) +
   labs(title="COVID-19 Cases by Date") +
-    geom_smooth(aes(x=Reported,y=Cases,col="Loess"),span=0.25)
+    geom_smooth(aes(x=Reported,y=Cases,col="Loess"),span=0.25) +
+    geom_rect(data=US,aes(xmin=max(Reported) -17,xmax=max(Reported) -21,ymin=min(Cases),ymax=max(Cases)), alpha= 0.01,fill="grey")
 ```
 ```{r}
 ggplot(US) + geom_line(aes(x=Reported,y=Deaths,col="Daily Deaths")) +
@@ -68,7 +69,8 @@ ggplot(US) + geom_line(aes(x=Reported,y=Deaths,col="Daily Deaths")) +
 USA <- subset(US,Reported >="2020-06-01")
 ggplot(USA) + geom_line(aes(x=Reported,y=Cases,col="Daily Cases")) +
   labs(title="COVID-19 Cases by Date since Jun. 1, 2020") +
-  geom_smooth(aes(x=Reported,y=Cases),span = 0.25)
+  geom_smooth(aes(x=Reported,y=Cases),span = 0.25) +
+    geom_rect(data=US,aes(xmin=max(Reported) -17,xmax=max(Reported) -21,ymin=min(Cases),ymax=max(Cases)), alpha= 0.01,fill="grey")
 
 ggplot(USA) + geom_line(aes(x=Reported,y=Deaths,col="Daily Deaths")) +
   labs(title="COVID-19 Deaths by Date (since Jun. 1, 2020)")  +
@@ -97,6 +99,7 @@ ggplot(Weekly_Cases) + geom_col(aes(x=Weekly,y=Cases)) +
   labs(title="Weekly Cases",x="Date Reported", y="Weekly Cases") +
   geom_hline(yintercept = mean(Weekly_Cases$Cases),col="red",lwd=1.5) +
   scale_y_continuous(labels = scales::comma) 
+
 
 ggplot(Weekly_Deaths) + geom_col(aes(x=Weekly,y=Deaths)) + 
   labs(title="Weekly Deaths",x="Date Reported", y="Weekly Deaths") +
