@@ -13,6 +13,7 @@ library(RSQLite)
 library(ggplot2)
 library(scales)
 library(plotly)
+library(pracma)
 ```
 ```{r}
 rm(list=ls())
@@ -150,3 +151,15 @@ plot2 <-ggplot() + geom_line(data=AB,aes(x=Reported,y=Deaths, col="ECDPC")) +
 ggplotly(plot2)
   
 ```
+
+## exponential Moving Average
+
+
+```{r}
+AA$EXP1<- movavg(AA$Cases,17,"e")
+AA$EXP2<- movavg(AA$Cases,28,"e")
+ggplot(AA) + geom_line(aes(x=Reported,y=EXP1,col="17")) +
+  geom_line(aes(x=Reported,y=EXP2,col="28")) + 
+  geom_line(aes(x=Reported,y=Cases,col="Cases"))
+```
+
