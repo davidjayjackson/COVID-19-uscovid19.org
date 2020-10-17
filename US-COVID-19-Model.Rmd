@@ -72,43 +72,81 @@ mean((df1death$Deaths))
 
 ### Washington University
 #### Institute for Health Metrics and Evaluation
-* "Daily deaths is the best indicator of the progression of the pandemic, although there is generally a 17-21 day lag between infection and deaths.+
-Daily deaths is the best indicator of the progression of the pandemic, although there is generally a 17-21 day lag between infection and deaths.
+* "Daily deaths is the best indicator of the progression of the pandemic, although there is generally a 17-21 day lag between infection and deaths.
+
 * Revised US COVID19 Deaths: 363,269 by Jan. 1, 2021 (Updated Oct. 2, 2020)
 * Revised US COVID19 Deaths: 363,269 by Feb. 1, 2021 (Updated Oct. 9, 2020)
-* Revised US COVID19 Deaths: 394,693 by Feb. 1, 2021 (Updated Oct. 10, 2021)
+* Revised US COVID19 Deaths: 394,693 by Feb. 1, 2021 (Updated Oct. 10, 2020)
+* Revised US COVID19 Deaths: 389,087 by Feb. 1, 2021 (Updated Oct. 15,2020)
+
+#### US COVID-19 Deaths  Guesstimate as of Oct. 17, 2020
+* Oct. 17, 2020 Fixed math error for average US Deaths per day
+* Dec. 15, 2020 WU IHME Model.
+* Nov 1, 2020 = 233,706
+* Dec. 1, 2020 =261,895
+* Jan. 1, 2021 = 291151
 
 ```{r}
 ##
-## 363, 000 Deaths by Jan. 2010 
-(363269 - sum(df1death$Deaths)) / 83  # Jan 1, 2021
-sum(df1death$Deaths) + (mean((df1death$Deaths)) * 87)
+## 363269 by Jan 1 . 2021 
+(363269 - sum(df1death$Deaths)) / 77  # Jan 1, 2021
+sum(df1death$Deaths) + (mean((df1death$Deaths)) * 77)  ## Jan. 1, 2021(363269)
 ##
-## 363269 by Feb. 1, 2020
-(363269 - sum(df1death$Deaths)) / 114  # Feb 1, 2021
-sum(df1death$Deaths) + (mean((df1death$Deaths)) * 114)
+##  by Feb. 1, 2020
+(363269 - sum(df1death$Deaths)) / 108  # Feb 1, 2021
+sum(df1death$Deaths) + (mean((df1death$Deaths)) * 108) ## Feb., 2021(363269)
 ##
 ## 394,693 by Feb. 1, 2021
 ##
-(394693 - sum(df1death$Deaths)) / 114 # Feb 1, 2021
-sum(df1death$Deaths) + (mean((df1death$Deaths)) * 114)
+(389087 - sum(df1death$Deaths)) / 108 # Feb 1, 2021
+sum(df1death$Deaths) + (mean((df1death$Deaths)) * 108) ## Feb.1 , 2021(389087)
 ##
 ## 
 ```
-### US COVID19
+
+### Daily US COID-19 Cases
+
+```{r}
+ggplot(df1death) +geom_line(aes(x=Reported,y=Cases),col="red") + 
+    scale_x_date(date_breaks = "1 month") +
+  scale_y_continuous(labels = comma) +
+   theme(axis.text.x=element_text(angle =- 45, vjust = 0.5)) + 
+  geom_smooth(aes(x=Reported,y=Cases),span=0.25) +
+  labs(title="US Daily COVID19 Cases")
+```
+
+
+
+### US COVID19 Projected Deaths
+
 ```{r,echo=FALSE}
 ggplot(df1death) +geom_line(aes(x=Reported,y=Deaths),lwd=2,col="blue") + 
     scale_x_date(date_breaks = "1 month") +
   scale_y_continuous(labels = comma) +
    theme(axis.text.x=element_text(angle =- 45, vjust = 0.5)) +
   labs(title="US Daily Total Deaths(2020-03-01 - 2020-10-11)",
-       subtitle="Daily Avg (Red:949); Jan. 1 (Green:1794/363269);Feb.1 (Blue:1581/394693);Feb 1(Black: 1306/363269))"
+       subtitle="Daily Avg (Red:942); Jan. 1 (Green:1878/363269);Feb.1 (Blue:1340/389087);Feb 1(Black: 1579/389087))"
        ,x="Date Reported",y="Daily Deaths") +
-  geom_hline(yintercept=949,lwd=2,col="red") +
-  geom_hline(yintercept=1794,lwd=1,col="green") +
-  geom_hline(yintercept=1581,lwd=1,col="blue") +
-  geom_hline(yintercept=1306,lwd=1,col="black")
+  geom_hline(yintercept=942,lwd=2,col="red") +
+  geom_hline(yintercept=1878,lwd=1,col="green") +
+  geom_hline(yintercept=1340,lwd=1,col="blue") +
+  geom_hline(yintercept=1579,lwd=1,col="black")
 
-  ```
+```
+### US COVID19 Projected Deaths:Loess/Lowess Smoothed
 
+```{r,echo=FALSE}
+ggplot(df1death) +geom_smooth(aes(x=Reported,y=Deaths,col="Loess"),span=0.25) +
+    scale_x_date(date_breaks = "1 month") +
+  scale_y_continuous(labels = comma) +
+   theme(axis.text.x=element_text(angle =- 45, vjust = 0.5)) +
+  labs(title="US Daily Total Deaths(2020-03-01 - 2020-10-11)",
+       subtitle="Daily Avg (Red:942); Jan. 1 (Green:1878/363269);Feb.1 (Blue:1340/389087);Feb 1(Black: 1579/389087))"
+       ,x="Date Reported",y="Daily Deaths") +
+  geom_hline(yintercept=942,lwd=2,col="red") +
+  geom_hline(yintercept=1878,lwd=1,col="green") +
+  geom_hline(yintercept=1340,lwd=1,col="blue") +
+  geom_hline(yintercept=1579,lwd=1,col="black")
+
+```
 
