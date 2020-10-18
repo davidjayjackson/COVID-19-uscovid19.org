@@ -1,7 +1,7 @@
 ---
 title: 'GGPLOT2: Us in a Nutshell'
 author: "David Jackson"
-date: "10/12/2020"
+date: "10/17/2020"
 output: 
   html_document: 
     fig_width: 10
@@ -86,6 +86,17 @@ mean((df1death$Deaths))
 * Dec. 1, 2020 =261,895
 * Jan. 1, 2021 = 291151
 
+### Daily US COID-19 Cases
+
+```{r}
+ggplot(df1death) +geom_line(aes(x=Reported,y=Cases),col="red") + 
+    scale_x_date(date_breaks = "1 month") +
+  scale_y_continuous(labels = comma) +
+   theme(axis.text.x=element_text(angle =- 45, vjust = 0.5)) + 
+  geom_smooth(aes(x=Reported,y=Cases),span=0.25) +
+  labs(title="US Daily COVID19 Cases")
+```
+
 ```{r}
 ##
 ## 363269 by Jan 1 . 2021 
@@ -104,19 +115,6 @@ sum(df1death$Deaths) + (mean((df1death$Deaths)) * 108) ## Feb.1 , 2021(389087)
 ## 
 ```
 
-### Daily US COID-19 Cases
-
-```{r}
-ggplot(df1death) +geom_line(aes(x=Reported,y=Cases),col="red") + 
-    scale_x_date(date_breaks = "1 month") +
-  scale_y_continuous(labels = comma) +
-   theme(axis.text.x=element_text(angle =- 45, vjust = 0.5)) + 
-  geom_smooth(aes(x=Reported,y=Cases),span=0.25) +
-  labs(title="US Daily COVID19 Cases")
-```
-
-
-
 ### US COVID19 Projected Deaths
 
 ```{r,echo=FALSE}
@@ -124,8 +122,8 @@ ggplot(df1death) +geom_line(aes(x=Reported,y=Deaths),lwd=2,col="blue") +
     scale_x_date(date_breaks = "1 month") +
   scale_y_continuous(labels = comma) +
    theme(axis.text.x=element_text(angle =- 45, vjust = 0.5)) +
-  labs(title="US Daily Total Deaths(2020-03-01 - 2020-10-11)",
-       subtitle="Daily Avg (Red:942); Jan. 1 (Green:1878/363269);Feb.1 (Blue:1340/389087);Feb 1(Black: 1579/389087))"
+  labs(title="US Daily Total Deaths(2020-03-01 - 2020-10-17)",
+       subtitle="Daily Avg (Red:942); Jan. 1 (Green:1878/363269);Feb.1 (Blue:1340/363269);Feb 1(Black: 1579/389087))"
        ,x="Date Reported",y="Daily Deaths") +
   geom_hline(yintercept=942,lwd=2,col="red") +
   geom_hline(yintercept=1878,lwd=1,col="green") +
@@ -140,13 +138,27 @@ ggplot(df1death) +geom_smooth(aes(x=Reported,y=Deaths,col="Loess"),span=0.25) +
     scale_x_date(date_breaks = "1 month") +
   scale_y_continuous(labels = comma) +
    theme(axis.text.x=element_text(angle =- 45, vjust = 0.5)) +
-  labs(title="US Daily Total Deaths(2020-03-01 - 2020-10-11)",
+  labs(title="US Daily Total Deaths(2020-03-01 - 2020-10-17)",
        subtitle="Daily Avg (Red:942); Jan. 1 (Green:1878/363269);Feb.1 (Blue:1340/389087);Feb 1(Black: 1579/389087))"
        ,x="Date Reported",y="Daily Deaths") +
-  geom_hline(yintercept=942,lwd=2,col="red") +
-  geom_hline(yintercept=1878,lwd=1,col="green") +
-  geom_hline(yintercept=1340,lwd=1,col="blue") +
-  geom_hline(yintercept=1579,lwd=1,col="black")
+  geom_hline(yintercept=942,lwd=1.5,col="red") +
+  geom_hline(yintercept=1878,lwd=1.5,col="green") +
+  geom_hline(yintercept=1340,lwd=1.5,col="blue") +
+  geom_hline(yintercept=1579,lwd=1.5,col="black")
 
 ```
+### Just COVID19 Deaths for Feb. 1, 2020 
 
+
+```{r,echo=FALSE}
+ggplot(df1death) +geom_line(aes(x=Reported,y=Deaths),lwd=2,col="blue") + 
+    scale_x_date(date_breaks = "1 month") +
+  scale_y_continuous(labels = comma) +
+   theme(axis.text.x=element_text(angle =- 45, vjust = 0.5)) +
+  labs(title="US Daily Total Deaths(2020-03-01 - 2020-10-17)",
+       subtitle="Daily Avg (Red:942);Feb 1(Black: 1579/389087))"
+       ,x="Date Reported",y="Daily Deaths") +
+  geom_hline(yintercept=942,lwd=1.5,col="red") +
+    geom_hline(yintercept=1579,lwd=1.5,col="green")
+
+```

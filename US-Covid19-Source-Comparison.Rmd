@@ -1,7 +1,7 @@
 ---
 title: "US COVID19 Source Data Comparison"
 author: "David Jackson"
-date: "10/9/2020"
+date: "10/17/2020"
 output: 
   html_document: 
     fig_width: 9
