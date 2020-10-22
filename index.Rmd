@@ -1,7 +1,7 @@
 ---
 title: 'USA Battle with COVID-19'
 author: "David Jackson"
-date: "2020-21-09"
+date: "2020-22-09"
 output: 
   html_document: 
     fig_width: 9
@@ -41,6 +41,7 @@ mean(AB$Deaths)
 US <- subset(df,Reported >="2020-03-01")
 
 US$Rate <- US$Deaths/US$Cases
+mean(US$Rate)
 ```
 
 ### US COVID19 Mortality Rate
