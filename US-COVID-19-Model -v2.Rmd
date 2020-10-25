@@ -1,7 +1,7 @@
 ---
 title: 'GGPLOT2: Us in a Nutshell'
 author: "David Jackson"
-date: "10/19/2020"
+date: "10/24/2020"
 output: 
   html_document: 
     fig_width: 10
@@ -14,7 +14,6 @@ library(RSQLite)
 library(ggplot2)
 library(scales)
 library(plotly)
-library(esquisse)
 theme_set(theme_linedraw())
 ```
 
@@ -77,6 +76,7 @@ mean((df1death$Deaths))
 * Revised US COVID19 Deaths: 363,269 by Feb. 1, 2021 (Updated Oct. 9, 2020)
 * Revised US COVID19 Deaths: 394,693 by Feb. 1, 2021 (Updated Oct. 10, 2020)
 * Revised US COVID19 Deaths: 389,087 by Feb. 1, 2021 (Updated Oct. 15,2020)
+* Revised US COVID19 Deaths: 385,611 vy Feb. 1, 2021 (Update October 22, 2020)
 
 #### US COVID-19 Deaths  Guesstimate as of Oct. 17, 2020
 * Oct. 17, 2020 Fixed math error for average US Deaths per day
@@ -103,8 +103,8 @@ ggplot(df1death) +geom_line(aes(x=Reported,y=Cases),col="red") +
 ```{r}
 ## 394,693 by Feb. 1, 2021
 ##
-(389087 - sum(df1death$Deaths)) / 108 # Feb 1, 2021
-sum(df1death$Deaths) + (mean((df1death$Deaths)) * 108) ## Feb.1 , 2021(389087)
+(385611 - sum(df1death$Deaths)) / 101 # Feb 1, 2021
+sum(df1death$Deaths) + (mean((df1death$Deaths)) * 101) ## Feb.1 , 2021(389087)
 ##
 ## 
 ```
@@ -119,10 +119,10 @@ ggplot(df1death) +geom_line(aes(x=Reported,y=Deaths),lwd=2,col="blue") +
   scale_y_continuous(labels = comma) +
    theme(axis.text.x=element_text(angle =- 45, vjust = 0.5)) +
   labs(title="US Daily Total Deaths(2020-03-01 - 2020-10-17)",
-       subtitle="Daily Avg (Red:942);Feb 1(Grenn: 1579/389087))"
+       subtitle="Daily Avg (Red:937);Feb 1(Grenn: 1600/385611))"
        ,x="Date Reported",y="Daily Deaths") +
-  geom_hline(yintercept=942,lwd=1.5,col="red") +
-    geom_hline(yintercept=1579,lwd=1.5,col="green")
+  geom_hline(yintercept=937,lwd=1.5,col="red") +
+    geom_hline(yintercept=1600,lwd=1.5,col="green")
 
 ```
 
