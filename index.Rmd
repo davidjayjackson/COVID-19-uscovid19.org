@@ -1,7 +1,7 @@
 ---
 title: 'USA Battle with COVID-19'
 author: "David Jackson"
-date: "2020-10-26"
+date: "2020-10-27"
 output: 
   html_document: 
     fig_width: 9
