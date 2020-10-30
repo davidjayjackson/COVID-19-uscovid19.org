@@ -76,6 +76,13 @@ DEATHS <- as.data.frame(DEATHS)
 DEATHS$YMD <- seq(as.Date("2020-02-29"),as.Date("2020-10-29"),"day")
 mean(CASES$CASES)
 mean(DEATHS$DEATHS)
+CASES$YMD <- as.character(CASES$YMD)
+dbWriteTable(db, "JHCASES",CASES ,overwrite=TRUE)
+
+DEATHS$YMD <- as.character(DEATHS$YMD)
+dbWriteTable(db, "JHDEATHS",DEATHS ,overwrite=TRUE)
+CASES$YMD <- as.Date(CASES$YMD)
+DEATHS$YMD <-as.Date(DEATHS$YMD)
 ```
 
 ### US COVID19 Cases by Date
