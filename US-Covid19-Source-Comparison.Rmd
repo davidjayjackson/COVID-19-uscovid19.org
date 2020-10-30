@@ -46,8 +46,15 @@ NYTCASES <-aggregate(new_cases~date,NYTC,FUN=sum)
 
 NYTD <- subset(NYT,date >="2020-02-28")
 NYTDEATHS <-aggregate(new_deaths~date,NYTD,FUN=sum)
+## Mean Cases and Deaths
+##
+mean(NYTCASES$new_cases)
+mean(NYTDEATHS$new_deaths)
 
 ```
+
+### John Hopkins Daily Cases and Deaths
+
 ```{r}
 ##
 ## Calc daily cases from John Hopkins data
@@ -56,7 +63,8 @@ JHU <- dbGetQuery(db,"select * from JHUDATA where country='US'")
 JHU$date <- as.Date(JHU$date)
 CASES <- diff(JHU$confirmed,lag=1)
 CASES <- as.data.frame(CASES)
-CASES$YMD <- seq(as.Date("2020-01-23"),as.Date("2020-10-08"),"day")
+CASES$YMD <- seq(as.Date("2020-01-23"),as.Date("2020-10-29"),"day")
+
 ```
 ```{r}
 ##
@@ -65,7 +73,9 @@ CASES$YMD <- seq(as.Date("2020-01-23"),as.Date("2020-10-08"),"day")
 JHU <- subset(JHU,date >="2020-02-28")
 DEATHS <- diff(JHU$deaths,lag=1)
 DEATHS <- as.data.frame(DEATHS)
-DEATHS$YMD <- seq(as.Date("2020-02-29"),as.Date("2020-10-08"),"day")
+DEATHS$YMD <- seq(as.Date("2020-02-29"),as.Date("2020-10-29"),"day")
+mean(CASES$CASES)
+mean(DEATHS$DEATHS)
 ```
 
 ### US COVID19 Cases by Date
