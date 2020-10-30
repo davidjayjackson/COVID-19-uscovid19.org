@@ -15,6 +15,9 @@ library(scales)
 library(plotly)
 library(pracma)
 ```
+
+#### European CDPC Mean Cases and Deaths
+
 ```{r}
 rm(list=ls())
 source("../DATA/movavg.R")
@@ -26,7 +29,7 @@ df <- df[order(df$Reported),]
 #
 df$Reported <- as.Date(df$Reported)
 AA <- subset(df,Reported >="2020-01-21")
-mean(AA$Cases)
+mean(AA$Cases) 
 #
 AB <- subset(df,Reported >="2020-02-28")
 mean(AB$Deaths)
@@ -35,6 +38,8 @@ US <- subset(df,Reported >="2020-03-01")
 
 US$Rate <- US$Deaths/US$Cases
 ```
+
+#### New York Times Mean Cases and  Deaths
 
 ```{r}
 ## New York Times Data
@@ -53,7 +58,7 @@ mean(NYTDEATHS$new_deaths)
 
 ```
 
-### John Hopkins Daily Cases and Deaths
+#### John Hopkins Mean Cases and Deaths
 
 ```{r}
 ##
@@ -89,7 +94,7 @@ DEATHS$YMD <-as.Date(DEATHS$YMD)
 #### Source European CDPC
 
 ```{r}
-ggplot(AB) + geom_line(aes(x=Reported,y=Cases, col="Daily Cases")) + geom_point(aes(x=Reported,y=Cases)) + geom_smooth(aes(x=Reported,y=Cases,col="Loess"),span=0.25) +
+ggplot(AB) + geom_line(aes(x=Reported,y=Cases, col="Daily Cases")) +  geom_smooth(aes(x=Reported,y=Cases,col="Loess"),span=0.25) +
   labs(title="European CDPC:  US daily Cases") +
   scale_x_date(date_breaks = "month")
 ```
@@ -98,8 +103,7 @@ ggplot(AB) + geom_line(aes(x=Reported,y=Cases, col="Daily Cases")) + geom_point(
 
 ```{r}
 ggplot(CASES) + geom_line(aes(x=YMD,y=CASES,col="Daily Cases")) +
-  geom_point(aes(x=YMD,y=CASES,col="Loess")) +
-  geom_smooth(aes(x=YMD,y=CASES),span=0.25) +
+    geom_smooth(aes(x=YMD,y=CASES),span=0.25) +
   labs(title="John Hopkins CSSE: US DAily Cases") +
   scale_x_date(date_breaks = "month")
 ```
@@ -108,8 +112,7 @@ ggplot(CASES) + geom_line(aes(x=YMD,y=CASES,col="Daily Cases")) +
 
 ```{r}
 ggplot(NYTCASES) + geom_line(aes(x=date,y=new_cases,col="Daily Cases")) +
-  geom_point(aes(x=date,y=new_cases,col="Loess")) +
-  geom_smooth(aes(x=date,y=new_cases),span=0.25) +
+   geom_smooth(aes(x=date,y=new_cases),span=0.25) +
   labs(title="New York Times: US Daily Cases") +
   scale_x_date(date_breaks = "month")
 ```
@@ -132,7 +135,7 @@ ggplotly(plot1)
 #### Source European CDPC
 
 ```{r}
-ggplot(AB) + geom_line(aes(x=Reported,y=Deaths, col="Daily Deaths")) + geom_point(aes(x=Reported,y=Deaths)) + 
+ggplot(AB) + geom_line(aes(x=Reported,y=Deaths, col="Daily Deaths")) +  
   geom_smooth(aes(x=Reported,y=Deaths,col="Loess"),span=0.25) +
   labs(title="European CDPC:  US daily Deaths") +
   scale_x_date(date_breaks = "month")
@@ -142,18 +145,16 @@ ggplot(AB) + geom_line(aes(x=Reported,y=Deaths, col="Daily Deaths")) + geom_poin
 
 ```{r}
 ggplot(DEATHS) + geom_line(aes(x=YMD,y=DEATHS,col="Daily Deaths")) +
-  geom_point(aes(x=YMD,y=DEATHS,col="Loess")) +
   geom_smooth(aes(x=YMD,y=DEATHS),span=0.25) +
   labs(title="John Hopkins CSSE: US DAily Deaths") +
   scale_x_date(date_breaks = "month")
 ```
 
-### Source New York Times: Daily Cases
+### Source New York Times: Daily Deaths
 
 ```{r}
-ggplot(NYTDEATHS) + geom_line(aes(x=date,y=new_deaths,col="Daily Cases")) +
-  geom_point(aes(x=date,y=new_deaths,col="Loess")) +
-  geom_smooth(aes(x=date,y=new_deaths),span=0.25) +
+ggplot(NYTDEATHS) + geom_line(aes(x=date,y=new_deaths,col="Daily Deaths")) +
+    geom_smooth(aes(x=date,y=new_deaths),span=0.25) +
   labs(title="New York Times: US Daily Deaths") +
   scale_x_date(date_breaks = "month")
 ```
@@ -169,13 +170,24 @@ ggplotly(plot2)
   
 ```
 
+### Combined Tree Sources: Loess/Lowess Deaths
+
+```{r}
+plot2 <-ggplot() + geom_smooth(data=AB,aes(x=Reported,y=Deaths, col="ECDPC"),span=0.25,se=FALSE) +
+   geom_smooth(data=DEATHS,aes(x=YMD,y=DEATHS,col="John Hopkins"),span=0.25,se=FALSE) +
+  geom_smooth(data=NYTDEATHS,aes(x=date,y=new_deaths,col="NYTimes"),span=0.25,se=FALSE) +
+  labs(title="CombinedEuropean CDPC/NYTimes/John Hopkins: US Deaths",y="Daily Deaths") 
+ggplotly(plot2)
+  
+```
+
 ## exponential Moving Average
 
 
 ```{r}
-AA$EXP1<- movavg(AA$Cases,17,"e")
+# AA$EXP1<- movavg(AA$Cases,17,"e")
 AA$EXP2<- movavg(AA$Cases,28,"e")
-ggplot(AA) + geom_line(aes(x=Reported,y=EXP1,col="17")) +
+ggplot(AA) + 
   geom_line(aes(x=Reported,y=EXP2,col="28")) + 
   geom_line(aes(x=Reported,y=Cases,col="Cases"))
 ```
