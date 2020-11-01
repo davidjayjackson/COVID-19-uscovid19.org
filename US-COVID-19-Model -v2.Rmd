@@ -148,3 +148,6 @@ ggplot(df1death) +geom_smooth(aes(x=Reported,y=Deaths,col="Loess"),span=0.1) +
   
 
 ```
+
+
+
