@@ -1,7 +1,7 @@
 ---
 title: 'USA Battle with COVID-19'
 author: "David Jackson"
-date: "2020-11-04"
+date: "2020-11-06"
 output: 
   html_document: 
     fig_width: 9
@@ -14,7 +14,8 @@ library(ggplot2)
 library(scales)
 library(RSQLite)
 library(plotly)
-theme_set(theme_linedraw())
+theme_set(theme_linedraw() + theme(panel.grid = element_line(linetype = 'dashed')))
+
 ```
 
 ## USA's Battle with COVID-19
@@ -127,18 +128,5 @@ ggplot(Monthly_Deaths) + geom_col(aes(x=Monthly,y=Deaths)) +
   scale_y_continuous(labels = scales::comma)
 ```
 
-## Plotting 14 and 30 Moving Averages
 
-```{r}
-p1 <- ggplot(df) + geom_line(aes(x=Reported,y=MAD,col="14 Days")) +
-  geom_line(aes(x=Reported, y=MAD30,col="30 Days")) +
-  labs(title="COVID19 Deaths: Comparing Moving Average")
-ggplotly(p1)
-```
-
-```{r}
-AA$MOV <- movingAverage(AA$Cases,180)
-ggplot(AA) + geom_line(aes(x=Reported,y=MOV,col="Daily Cases")) +
-  labs(title="COVID-19 Cases by Date")
-```
 
