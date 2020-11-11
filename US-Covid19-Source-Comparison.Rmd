@@ -68,7 +68,7 @@ JHU <- dbGetQuery(db,"select * from JHUDATA where country='US'")
 JHU$date <- as.Date(JHU$date)
 CASES <- diff(JHU$confirmed,lag=1)
 CASES <- as.data.frame(CASES)
-CASES$YMD <- seq(as.Date("2020-01-23"),as.Date("2020-11-09"),"day")
+CASES$YMD <- seq(as.Date("2020-01-23"),as.Date("2020-11-10"),"day")
 
 ```
 ```{r}
@@ -78,7 +78,7 @@ CASES$YMD <- seq(as.Date("2020-01-23"),as.Date("2020-11-09"),"day")
 JHU <- subset(JHU,date >="2020-02-28")
 DEATHS <- diff(JHU$deaths,lag=1)
 DEATHS <- as.data.frame(DEATHS)
-DEATHS$YMD <- seq(as.Date("2020-02-29"),as.Date("2020-11-09"),"day")
+DEATHS$YMD <- seq(as.Date("2020-02-29"),as.Date("2020-11-10"),"day")
 mean(CASES$CASES)
 
 mean(DEATHS$DEATHS)
