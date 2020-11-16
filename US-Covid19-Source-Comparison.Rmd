@@ -1,7 +1,7 @@
 ---
 title: "US COVID19 Source Data Comparison"
 author: "David Jackson"
-date: "11/15/2020"
+date: "11/16/2020"
 output: 
   html_document: 
     fig_width: 9
@@ -68,7 +68,7 @@ JHU <- dbGetQuery(db,"select * from JHUDATA where country='US'")
 JHU$date <- as.Date(JHU$date)
 CASES <- diff(JHU$confirmed,lag=1)
 CASES <- as.data.frame(CASES)
-CASES$YMD <- seq(as.Date("2020-01-23"),as.Date("2020-11-14"),"day")
+CASES$YMD <- seq(as.Date("2020-01-23"),as.Date("2020-11-15"),"day")
 
 ```
 ```{r}
@@ -78,7 +78,7 @@ CASES$YMD <- seq(as.Date("2020-01-23"),as.Date("2020-11-14"),"day")
 JHU <- subset(JHU,date >="2020-02-28")
 DEATHS <- diff(JHU$deaths,lag=1)
 DEATHS <- as.data.frame(DEATHS)
-DEATHS$YMD <- seq(as.Date("2020-02-29"),as.Date("2020-11-14"),"day")
+DEATHS$YMD <- seq(as.Date("2020-02-29"),as.Date("2020-11-15"),"day")
 mean(CASES$CASES)
 
 mean(DEATHS$DEATHS)
