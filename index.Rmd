@@ -1,7 +1,7 @@
 ---
 title: 'USA Battle with COVID-19'
 author: "David Jackson"
-date: "2020-11-19"
+date: "2020-11-21"
 output: 
   html_document: 
     fig_width: 9
@@ -128,5 +128,19 @@ ggplot(Monthly_Deaths) + geom_col(aes(x=Monthly,y=Deaths)) +
   scale_y_continuous(labels = scales::comma)
 ```
 
+#### Monthly Cases and Deaths as a Percentage of Totals.
+
+```{r}
+Monthly_Cases$CPercent <- Monthly_Cases$Cases/sum(Monthly_Cases$Cases)
+ggplot(Monthly_Cases) + geom_col(aes(x=Monthly,y=CPercent)) +
+  scale_y_continuous(labels=percent) +
+  labs(title="Monthly Cases as a Percent of Total Cases",y="Percentage")
+```
+```{r}
+Monthly_Deaths$DPercent <- Monthly_Deaths$Deaths/sum(Monthly_Deaths$Deaths)
+ggplot(Monthly_Deaths) + geom_col(aes(x=Monthly,y=DPercent)) +
+  scale_y_continuous(labels=percent) +
+  labs(title="Monthly Cases as a Percent of Total Deaths",y="Percentage")
+```
 
 
