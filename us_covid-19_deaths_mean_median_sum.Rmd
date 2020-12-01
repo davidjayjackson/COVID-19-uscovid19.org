@@ -1,0 +1,50 @@
+---
+title: "US COVID-19 Deaths: Mean, Median and Sums"
+author: "David Jackson"
+date: "12/1/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+library(scales)
+library(RSQLite)
+library(plotly)
+library(dplyr)
+theme_set(theme_linedraw() + theme(panel.grid = element_line(linetype = 'dashed')))
+```
+```{r}
+rm(list=ls())
+db <- db <- dbConnect(RSQLite::SQLite(),dbname= "../COVIDDB/COVID.sqlite3")
+df <- dbGetQuery(db,"select * from COUNTYDAILY")
+df$date <- as.Date(df$date)
+# df <- subset(df,Countries =="USA"  )
+```
+
+#### Calculate US COVID-19 Deaths: Sum, Mean and Median
+
+```{r}
+report <- df %>% group_by(date) %>% 
+  summarise(Median = median(new_cases),
+                     Mean = mean(new_cases),
+                     Total = sum(new_cases),
+                      Count = n())
+```
+
+#### Plot Mean, Median, Sum and Count
+
+```{r}
+ggplot(report) + geom_line(aes(x=date,y=Median)) + labs(title="Median Deaths by Date")
+                                                       
+```
+```{r}
+ggplot(report) + geom_line(aes(x=date,y=Mean)) + labs(title="Mean Deaths by Date")
+```
+```{r}
+ggplot(report) + geom_line(aes(x=date,y=Total)) + labs(title="Total Deaths by Date")
+```
+```{r}
+ggplot(report) + geom_line(aes(x=date,y=Count)) + labs(title="Counts Deaths by Date")
+```
+
