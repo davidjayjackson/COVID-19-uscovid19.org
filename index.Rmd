@@ -1,7 +1,7 @@
 ---
 title: 'USA: COVID-19 Analysis'
 author: "David Jackson"
-date: "12/15/2020"
+date: "12/16/2020"
 output: html_document
 ---
 
@@ -41,11 +41,11 @@ df %>% filter(date >="2020-04-05") %>%
 
 ```{r}
 df %>% filter(date >="2020-01-24" & new_cases >0) %>%
-ggplot() + geom_line(aes(x=date,y=new_cases)) +
+ggplot() + geom_line(aes(x=date,y=new_cases),) +
   geom_smooth(aes(x=date,y=new_cases),span=0.25) +
   labs(title="USA Daily new_cases")
 
-ggplot(df) + geom_line(aes(x=date,y=CMA),col="red") + 
+ggplot(df) + geom_line(aes(x=date,y=CMA,lwd=1.4),col="red") + 
   labs(title="Seven Day Moving Average: new_cases")
 
 ```
@@ -58,7 +58,7 @@ ggplot() +  geom_line(aes(x=date,y=new_deaths)) +
   geom_smooth(aes(x=date,y=new_deaths),span=0.25) +
   labs(title="USA Daily new_deaths") 
 
-ggplot(df) + geom_line(aes(x=date,y=DMA),col="red") + 
+ggplot(df) + geom_line(aes(x=date,y=DMA,lwd=1.5),col="red") + 
   labs(title="Seven Day Moving Average: new_deaths")
   
 ```
