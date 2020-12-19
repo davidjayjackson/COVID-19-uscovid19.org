@@ -20,15 +20,15 @@ theme_set(theme_linedraw() + theme(panel.grid = element_line(linetype = 'dashed'
 rm(list=ls())
 source("../DATA/movavg.R")
 db <- db <- dbConnect(RSQLite::SQLite(),dbname= "../COVID-19-DB/OURWORLD.sqlite3")
-df <- dbGetQuery(db,"select * from JHU ")
-df <- subset(df,location =="United States"  )
+df <- dbGetQuery(db,"select * from JHU where location='United States'")
+#df <- subset(df,location =="United States"  )
 df$date <- as.Date(df$date)
 df <- df[order(df$date),]
 df$CMA <- ma(df$new_cases,14)
 df$DMA <- ma(df$new_deaths,14)
 ```
 
-#### Mortality Rate
+#### Mortality Rate(Deaths/Cases)
 ```{r}
 df %>% filter(date >="2020-04-05") %>%
   group_by(date) %>% summarise(Rate = new_deaths/new_cases) %>%
