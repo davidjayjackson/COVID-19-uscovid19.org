@@ -1,7 +1,7 @@
 ---
 title: 'USA: COVID-19 Analysis'
 author: "David Jackson"
-date: "12/18/2020"
+date: "12/20/2020"
 output: html_document
 ---
 
@@ -29,6 +29,7 @@ df$DMA <- ma(df$new_deaths,14)
 ```
 
 #### Mortality Rate(Deaths/Cases)
+
 ```{r}
 df %>% filter(date >="2020-04-05") %>%
   group_by(date) %>% summarise(Rate = new_deaths/new_cases) %>%
