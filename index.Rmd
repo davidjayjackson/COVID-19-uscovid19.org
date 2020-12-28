@@ -1,7 +1,7 @@
 ---
 title: 'USA: COVID-19 Analysis'
 author: "David Jackson"
-date: "12/25/2020 02:45PM EST"
+date: "12/28/2020 03:450PM EST"
 output: html_document
 ---
 
@@ -33,7 +33,7 @@ df$DMA <- ma(df$new_deaths,14)
 ```{r}
 df %>% filter(date >="2020-04-05") %>%
   group_by(date) %>% summarise(Rate = new_deaths/new_cases) %>%
-  ggplot(aes(x=date,y=Rate)) + geom_line(aes(x=date,y=Rate)) + scale_y_continuous(labels = percent) + geom_smooth()
+  ggplot(aes(x=date,y=Rate)) + geom_line(aes(x=date,y=Rate)) + scale_y_continuous(labels = percent) + geom_smooth(method="loess",span=0.25)
   labs(title="US Daily Mortality Rate", y="Mortality Rate",caption="(Source: John Hopkins/Our World In Data)") 
 ```
 
@@ -46,7 +46,7 @@ ggplot() + geom_line(aes(x=date,y=new_cases),) +
   geom_smooth(aes(x=date,y=new_cases),span=0.25) +
   labs(title="USA Daily Cases") + scale_y_continuous(labels=comma)
 
-ggplot(df) + geom_line(aes(x=date,y=CMA,lwd=1.4),col="red") + 
+ggplot(df) + geom_line(aes(x=date,y=CMA),col="red") + 
   labs(title="Fourteen Day Moving Average: Case")
 
 ```
@@ -59,7 +59,7 @@ ggplot() +  geom_line(aes(x=date,y=new_deaths)) +
   geom_smooth(aes(x=date,y=new_deaths),span=0.25) +
   labs(title="USA Daily Deaths") + scale_y_continuous(labels=comma)
 
-ggplot(df) + geom_line(aes(x=date,y=DMA,lwd=1.5),col="red") + 
+ggplot(df) + geom_line(aes(x=date,y=DMA),col="red") + 
   labs(title="Fourteen Day Moving Average: Deaths")
   
 ```
