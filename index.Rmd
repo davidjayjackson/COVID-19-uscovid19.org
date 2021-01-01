@@ -1,7 +1,7 @@
 ---
 title: 'USA: COVID-19 Analysis'
 author: "David Jackson"
-date: "12/31/2020 11:45AM EST"
+date: "01/01/2021 02:15PM EST"
 output: html_document
 ---
 
@@ -26,6 +26,8 @@ df$date <- as.Date(df$date)
 df <- df[order(df$date),]
 df$CMA <- ma(df$new_cases,14)
 df$DMA <- ma(df$new_deaths,14)
+sum(df$new_cases,na.rm=TRUE)
+sum(df$new_deaths,na.rm=TRUE)
 ```
 
 #### Mortality Rate(Deaths/Cases)
