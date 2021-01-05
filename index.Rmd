@@ -1,7 +1,7 @@
 ---
 title: 'USA: COVID-19 Analysis'
 author: "David Jackson"
-date: "01/05/2021 01:40 PM EST"
+date: "01/05/2021 02:05 PM EST"
 output: html_document
 ---
 
