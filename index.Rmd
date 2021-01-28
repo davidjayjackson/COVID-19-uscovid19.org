@@ -24,8 +24,8 @@ df <- dbGetQuery(db,"select * from JHU where location='United States'")
 #df <- subset(df,location =="United States"  )
 df$date <- as.Date(df$date)
 df <- df[order(df$date),]
-df$CMA <- ma(df$new_cases,14)
-df$DMA <- ma(df$new_deaths,14)
+df$CMA <- ma(df$new_cases,7,centre = TRUE)
+df$DMA <- ma(df$new_deaths,7,centre = TRUE)
 sum(df$new_cases,na.rm=TRUE)
 sum(df$new_deaths,na.rm=TRUE)
 ```
@@ -43,26 +43,26 @@ df %>% filter(date >="2020-04-05") %>%
 #### Daily COVID-19 Cases
 
 ```{r}
-df %>% filter(date >="2020-01-24" & new_cases >0) %>%
-ggplot() + geom_line(aes(x=date,y=new_cases),) +
-  geom_smooth(aes(x=date,y=new_cases),span=0.25) +
-  labs(title="USA Daily Cases") + scale_y_continuous(labels=comma)
-
-ggplot(df) + geom_line(aes(x=date,y=CMA),col="red") + 
-  labs(title="Fourteen Day Moving Average: Case") +
-scale_y_continuous(labels=comma)
+plot1 <- df %>% filter(date >="2020-01-24" & new_cases >0) %>%
+     ggplot() + geom_col(aes(x=date,y=CMA),) +
+    labs(title="USA Daily Cases (W/ 7 day moving average)") + scale_y_continuous(labels=comma)
+ggplotly(plot1)
+# 
+# ggplot(df) + geom_line(aes(x=date,y=CMA,fill="CMA)) + 
+#   labs(title="Fourteen Day Moving Average: Case") +
+# scale_y_continuous(labels=comma)
 ```
 
 #### Daily Deaths
 
 ```{r}
-df %>% filter(date>="2020-02-29" & new_deaths>0) %>%
-ggplot() +  geom_line(aes(x=date,y=new_deaths)) +
-  geom_smooth(aes(x=date,y=new_deaths),span=0.25) +
-  labs(title="USA Daily Deaths") + scale_y_continuous(labels=comma)
+plot2 <- df %>% filter(date>="2020-02-29" & new_deaths>0) %>%
+ggplot() +  geom_col(aes(x=date,y=DMA,fill="Deaths")) +
+  labs(title="USA Daily Deaths (7 day moving average") + scale_y_continuous(labels=comma)
+ggplotly(plot2)
 
-ggplot(df) + geom_line(aes(x=date,y=DMA),col="red") + 
-  labs(title="Fourteen Day Moving Average: Deaths")
+# ggplot(df) + geom_line(aes(x=date,y=DMA),col="red") + 
+#   labs(title="Fourteen Day Moving Average: Deaths")
   
 ```
 
