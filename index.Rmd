@@ -1,7 +1,7 @@
 ---
 title: 'USA: COVID-19 Analysis'
 author: "David Jackson"
-date: "01/30/2021 07:35 PM/EST"
+date: "01/31/2021 02:25 PM/EST"
 output: html_document
 ---
 
@@ -20,14 +20,53 @@ theme_set(theme_linedraw() + theme(panel.grid = element_line(linetype = 'dashed'
 rm(list=ls())
 source("../DATA/movavg.R")
 db <- db <- dbConnect(RSQLite::SQLite(),dbname= "../COVID-19-DB/OURWORLD.sqlite3")
-df <- dbGetQuery(db,"select * from JHU where location='United States'")
+df <- dbGetQuery(db,"select * from OWID where location='United States'")
 #df <- subset(df,location =="United States"  )
 df$date <- as.Date(df$date)
 df <- df[order(df$date),]
-df$CMA <- ma(df$new_cases,7,centre = TRUE)
-df$DMA <- ma(df$new_deaths,7,centre = TRUE)
 sum(df$new_cases,na.rm=TRUE)
 sum(df$new_deaths,na.rm=TRUE)
+```
+## US Vaccine Rollout 
+
+```{r}
+# vac <- dbGetQuery(db,"select * from OWID where location = 'Spain'")
+# vac$date <- as.Date(vac$date)
+# vac <- vac[order(vac$date),]
+df <- df %>%select(date,location,iso_code,new_cases,new_deaths,new_vaccinations,
+                    new_vaccinations_smoothed,total_vaccinations,population)
+                    
+summary(df$new_vaccinations)
+summary(df$new_cases)
+summary(df$new_deaths)
+```
+```{r}
+df$CMA <- ma(df$new_cases,7,centre=TRUE)
+df$DMA <- ma(df$new_deaths,7,centre=TRUE)
+```
+
+```{r}
+p5 <- ggplot(df) + geom_line(aes(x=date,y=new_vaccinations)) +
+  scale_y_continuous(labels=comma) +
+  labs(title="Spain's New Vaccinations By Date") +
+  geom_smooth(aes(x=date,y=new_vaccinations))
+```
+```{r}
+p6 <- ggplot(df) + geom_line(aes(x=date,y=total_vaccinations)) +
+  scale_y_continuous(labels=comma) +
+  labs(title="Spain's Total Vaccinations By Date") 
+
+```
+
+```{r}
+df$Rate <- df$total_vaccinations/df$population
+p7 <- ggplot(df) + geom_line(aes(x=date,y=Rate)) + 
+    scale_y_continuous(labels=percent) +
+  labs(title="Spain's vaccination Rate By Day")
+ggplotly(p5)
+ggplotly(p6)
+ggplotly(p7)
+
 ```
 
 #### Mortality Rate(Deaths/Cases)
