@@ -27,14 +27,14 @@ df <- df[order(df$date),]
 sum(df$new_cases,na.rm=TRUE)
 sum(df$new_deaths,na.rm=TRUE)
 ```
+
 ## US Vaccine Rollout 
 
 ```{r}
 # vac <- dbGetQuery(db,"select * from OWID where location = 'Spain'")
 # vac$date <- as.Date(vac$date)
 # vac <- vac[order(vac$date),]
-df <- df %>%select(date,location,iso_code,new_cases,new_deaths,new_vaccinations,
-                    new_vaccinations_smoothed,total_vaccinations,population)
+df <- df %>%select(date,location,iso_code,new_cases,new_deaths,new_vaccinations,new_vaccinations_smoothed,total_vaccinations,people_vaccinated,people_fully_vaccinated,population)
                     
 summary(df$new_vaccinations)
 summary(df$new_cases)
@@ -46,26 +46,46 @@ df$DMA <- ma(df$new_deaths,7,centre=TRUE)
 ```
 
 ```{r}
-p5 <- ggplot(df) + geom_line(aes(x=date,y=new_vaccinations)) +
+vac <- df %>% filter(date >="2020-12-15")
+p5 <- ggplot(vac) + geom_line(aes(x=date,y=new_vaccinations)) +
   scale_y_continuous(labels=comma) +
-  labs(title="Spain's New Vaccinations By Date") +
+  labs(title="US's New Vaccinations By Date") +
   geom_smooth(aes(x=date,y=new_vaccinations))
 ```
 ```{r}
-p6 <- ggplot(df) + geom_line(aes(x=date,y=total_vaccinations)) +
+p6 <- ggplot(vac) + geom_line(aes(x=date,y=total_vaccinations)) +
   scale_y_continuous(labels=comma) +
-  labs(title="Spain's Total Vaccinations By Date") 
+  labs(title="US's Total Vaccinations By Date") 
 
 ```
 
+### Peaple Vacinated 
+
+
+```{r}
+p7 <- ggplot(vac) + geom_line(aes(x=date,y=people_vaccinated)) +
+  scale_y_continuous(labels=comma) +
+  labs(title="US's People Vaccinated By Date") +
+  geom_smooth(aes(x=date,y=new_vaccinations))
+```
+```{r}
+p8 <- ggplot(vac) + geom_line(aes(x=date,y=people_fully_vaccinated)) +
+  scale_y_continuous(labels=comma) +
+  labs(title="US's People Fully Vaccinated By Date") 
+
+```
+
+
 ```{r}
 df$Rate <- df$total_vaccinations/df$population
-p7 <- ggplot(df) + geom_line(aes(x=date,y=Rate)) + 
+p9 <- ggplot(df) + geom_line(aes(x=date,y=Rate)) + 
     scale_y_continuous(labels=percent) +
-  labs(title="Spain's vaccination Rate By Day")
+  labs(title="US's vaccination Rate By Day")
 ggplotly(p5)
 ggplotly(p6)
 ggplotly(p7)
+ggplotly(p8)
+ggplotly(p9)
 
 ```
 
