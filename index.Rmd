@@ -1,175 +1,180 @@
 ---
-title: 'USA: COVID-19 Analysis'
+title: 'United States: Battle With COVID-19'
 author: "David Jackson"
-date: "01/31/2021 02:25 PM/EST"
-output: html_document
+date: "2021-02-02 12:00 PM/EST"
+output: 
+  html_document: 
+    fig_width: 9
+    fig_height: 5
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE,message = FALSE,warning = FALSE)
+knitr::opts_chunk$set(echo = TRUE)
 library(ggplot2)
 library(scales)
 library(RSQLite)
 library(plotly)
-library(dplyr)
 library(forecast)
-theme_set(theme_linedraw() + theme(panel.grid = element_line(linetype = 'dashed')))
-
+theme_set(theme_linedraw())
 ```
+## VAccination Report
+
+
+## USA's Battle with COVID-19
+
 ```{r}
 rm(list=ls())
 source("../DATA/movavg.R")
-db <- db <- dbConnect(RSQLite::SQLite(),dbname= "../COVID-19-DB/OURWORLD.sqlite3")
-df <- dbGetQuery(db,"select * from OWID where location='United States'")
-#df <- subset(df,location =="United States"  )
+
+db <- dbConnect(SQLite(), dbname="../COVID-19-DB/OURWORLD.sqlite3")
+df <- dbGetQuery(db,"select * from JHU")
+df <- subset(df,location =="United States"  )
 df$date <- as.Date(df$date)
-df <- df[order(df$date),]
-sum(df$new_cases,na.rm=TRUE)
+sum(df$new_cases,na.rm = TRUE)
 sum(df$new_deaths,na.rm=TRUE)
-```
 
-## US Vaccine Rollout 
-
-```{r}
-# vac <- dbGetQuery(db,"select * from OWID where location = 'Spain'")
-# vac$date <- as.Date(vac$date)
-# vac <- vac[order(vac$date),]
-df <- df %>%select(date,location,iso_code,new_cases,new_deaths,new_vaccinations,new_vaccinations_smoothed,total_vaccinations,people_vaccinated,people_fully_vaccinated,population)
-                    
-summary(df$new_vaccinations)
-summary(df$new_cases)
-summary(df$new_deaths)
 ```
 ```{r}
-df$CMA <- ma(df$new_cases,7,centre=TRUE)
-df$DMA <- ma(df$new_deaths,7,centre=TRUE)
+US <- subset(df,date >="2020-04-01" & new_cases >=1)
+US <- US[order(US$date,decreasing = TRUE),]
+US$MAC <- ma(US$new_cases,7,centre=TRUE)
+US$MAD <- ma(US$new_deaths,7,centre=TRUE)
+US$Rate <- US$new_deaths/US$new_cases
 ```
 
+## USA's Vaccine Rollout
+
 ```{r}
-vac <- df %>% filter(date >="2020-12-15")
+vac <- dbGetQuery(db,"select * from OWID where location = 'United States'")
+vac$date <- as.Date(vac$date)
+vac <- vac[order(vac$date),]
+vac <- vac %>%select(date,location,iso_code,new_vaccinations,
+                    total_vaccinations,population,
+                    people_vaccinated,people_fully_vaccinated
+
+) %>%
+                    na.omit()
+summary(vac$speople_vaccinated)
+summary(vac$people_fully_vaccinated)
+```
+
+### Doses Administered 
+
+```{r}
 p5 <- ggplot(vac) + geom_line(aes(x=date,y=new_vaccinations)) +
   scale_y_continuous(labels=comma) +
-  labs(title="US's New Vaccinations By Date") +
-  geom_smooth(aes(x=date,y=new_vaccinations))
+  labs(title="USA's Daily Doses By Date")
+ # geom_smooth(aes(x=date,y=new_vaccinations))
+ggplotly(p5)
 ```
 ```{r}
 p6 <- ggplot(vac) + geom_line(aes(x=date,y=total_vaccinations)) +
   scale_y_continuous(labels=comma) +
-  labs(title="US's Total Vaccinations By Date") 
-
-```
-
-### Peaple Vacinated 
-
-
-```{r}
-p7 <- ggplot(vac) + geom_line(aes(x=date,y=people_vaccinated)) +
-  scale_y_continuous(labels=comma) +
-  labs(title="US's People Vaccinated By Date") +
-  geom_smooth(aes(x=date,y=new_vaccinations))
-```
-```{r}
-p8 <- ggplot(vac) + geom_line(aes(x=date,y=people_fully_vaccinated)) +
-  scale_y_continuous(labels=comma) +
-  labs(title="US's People Fully Vaccinated By Date") 
-
-```
-
-
-```{r}
-df$Rate <- df$total_vaccinations/df$population
-p9 <- ggplot(df) + geom_line(aes(x=date,y=Rate)) + 
-    scale_y_continuous(labels=percent) +
-  labs(title="US's vaccination Rate By Day")
-ggplotly(p5)
+  labs(title="USA's Total (Full) Doses Date")
 ggplotly(p6)
-ggplotly(p7)
-ggplotly(p8)
-ggplotly(p9)
+```
+
+### People Vaccinated
+
+```{r}
+ p5 <- ggplot(vac) + geom_line(aes(x=date,y=people_vaccinated)) +
+   scale_y_continuous(labels=comma) +
+   labs(title="USA's Number of People Vaccinatations By Date")
+  #  geom_smooth(aes(x=date,y=))
+ ggplotly(p5)
+```
+```{r} 
+p6 <- ggplot(vac) + geom_line(aes(x=date,y=people_fully_vaccinated)) +
+  scale_y_continuous(labels=comma) +
+  labs(title="USA's Total  Number of People Fully Vaccinated By Date")
+ggplotly(p6)
 
 ```
 
-#### Mortality Rate(Deaths/Cases)
-
 ```{r}
-df %>% filter(date >="2020-04-05") %>%
-  group_by(date) %>% summarise(Rate = new_deaths/new_cases) %>%
-  ggplot(aes(x=date,y=Rate)) + geom_line(aes(x=date,y=Rate)) + scale_y_continuous(labels = percent) + geom_smooth(method="loess",span=0.25)
-  labs(title="US Daily Mortality Rate", y="Mortality Rate",caption="(Source: John Hopkins/Our World In Data)") 
+vac$Rate <- vac$total_vaccinations/vac$population
+p7 <- ggplot(US) + geom_line(aes(x=date,y=Rate)) + 
+     scale_y_continuous(labels=percent) +  ylim(0,0.5) +
+   labs(title="USA's vaccination Rate By Day")
+ ggplotly(p7)
+
 ```
 
-
-#### Daily COVID-19 Cases
+### USA COVID19 Mortality Rate
 
 ```{r}
-plot1 <- df %>% filter(date >="2020-01-24" & new_cases >0) %>%
-     ggplot() + geom_col(aes(x=date,y=CMA),) +
-    labs(title="USA Daily Cases (W/ 7 day moving average)") + scale_y_continuous(labels=comma)
-ggplotly(plot1)
-# 
-# ggplot(df) + geom_line(aes(x=date,y=CMA,fill="CMA)) + 
-#   labs(title="Fourteen Day Moving Average: Case") +
-# scale_y_continuous(labels=comma)
+A <- subset(US,date >="2020-02-01")
+ggplot(A) + # geom_line(aes(x=date,y=Rate)) +
+  scale_y_continuous(labels = scales::percent) +
+  labs(title="USA COVID19 Mortality Rate ",x="Date date",y="Mortality Rate") +
+  geom_hline(yintercept = mean(A$Rate),col="red") +
+  geom_line(aes(x=date,y=Rate,col="Rolling Mean")) +
+  scale_alpha_date()
+
 ```
 
-#### Daily Deaths
+### Plot of Daily Cases and Deaths
 
 ```{r}
-plot2 <- df %>% filter(date>="2020-02-29" & new_deaths>0) %>%
-ggplot() +  geom_col(aes(x=date,y=DMA,fill="Deaths")) +
-  labs(title="USA Daily Deaths (7 day moving average") + scale_y_continuous(labels=comma)
-ggplotly(plot2)
+daily_new_cases <-ggplot(US) + 
+  labs(title="COVID-19 new_cases by Date",y="Cases") +
+    geom_line(aes(x=date,y=MAC,col="Mov Average")) +
+   geom_line(aes(x=date,y=new_cases,col="Daily Cases"))
+ggplotly(daily_new_cases)
 
-# ggplot(df) + geom_line(aes(x=date,y=DMA),col="red") + 
-#   labs(title="Fourteen Day Moving Average: Deaths")
-  
+
+daily_new_deaths <-ggplot(US) + 
+  labs(title="COVID-19 Deaths by Date",col="Deaths",y="Deaths")  +
+  geom_line(aes(x=date,y=MAD,col="Mov. Average")) +
+   geom_line(aes(x=date,y=new_deaths,col="Daily Deaths"))
+ ggplotly(daily_new_deaths)
+
 ```
 
 #### Non-Moving Average By Week and By Month
 
 ```{r}
-df$Monthly <- as.Date(cut(df$date,
+US$Monthly <- as.Date(cut(US$date,
   breaks = "month"))
-df$Weekly <- as.Date(cut(df$date,
+US$Weekly <- as.Date(cut(US$date,
   breaks = "week",
   start.on.monday = FALSE))
 
 ```
 ```{r}
-Weekly_new_cases <- aggregate(new_cases~Weekly,df,FUN=sum)
-Weekly_new_deaths <- aggregate(new_deaths~Weekly,df,FUN=sum)
+Weekly_new_cases <- aggregate(new_cases~Weekly,US,FUN=sum)
+Weekly_new_deaths <- aggregate(new_deaths~Weekly,US,FUN=sum)
 Weekly_new_cases$DRate <- Weekly_new_deaths$new_deaths/Weekly_new_cases$new_cases
+Weekly_new_cases$LivedSaved <- Weekly_new_cases$new_cases * (max(Weekly_new_cases$DRate) - Weekly_new_cases$DRate) 
 
 ```
 ```{r}
 ggplot(Weekly_new_cases) + geom_col(aes(x=Weekly,y=new_cases)) + 
-  labs(title="Weekly new_cases",x="date date", y="Weekly Cases") +
-  geom_hline(yintercept = mean(Weekly_new_cases$new_cases),col="red",lwd=1.5) +
-  scale_y_continuous(labels = scales::comma) 
-
+  labs(title="Weekly new_cases",x="Date date", y="Weekly new_cases") +
+   scale_alpha_date()
 
 ggplot(Weekly_new_deaths) + geom_col(aes(x=Weekly,y=new_deaths)) + 
-  labs(title="Weekly Deaths",x="date date", y="Weekly new_deaths") +
-  scale_y_continuous(labels = scales::comma) +
-  geom_hline(yintercept = mean(Weekly_new_deaths$new_deaths),col="red",lwd=1.5)
+  labs(title="Weekly new_deaths",x="Date date", y="Weekly new_deaths") 
+  
 ``` 
+
 
 #### Monthly new_cases and new_deaths
 
 ```{r}
 
-Monthly_new_cases <- aggregate(new_cases~Monthly,df,FUN=sum)
-Monthly_new_deaths <- aggregate(new_deaths~Monthly,df,FUN=sum)
+Monthly_new_cases <- aggregate(new_cases~Monthly,US,FUN=sum)
+Monthly_new_deaths <- aggregate(new_deaths~Monthly,US,FUN=sum)
 Monthly_new_cases$DRate <- Monthly_new_deaths$new_deaths/Monthly_new_cases$new_cases
-
+Monthly_new_cases$LivedSaved <- Monthly_new_cases$new_cases * (max(Monthly_new_cases$DRate) - Monthly_new_cases$DRate) * 100
 ```
 ```{r}
 ggplot(Monthly_new_cases) + geom_col(aes(x=Monthly,y=new_cases)) +
-  labs(title="Monthly Cases") +
-  scale_y_continuous(labels = scales::comma)
+  labs(title="Monthly new_cases") +
+  scale_y_continuous(labels=scales::comma) +
+   scale_alpha_date()
 
 ggplot(Monthly_new_deaths) + geom_col(aes(x=Monthly,y=new_deaths)) +
-  labs(title="Monthly Deaths") +
-  scale_y_continuous(labels = scales::comma)
+  labs(title="Monthly new_deaths") +
+   scale_alpha_date()
 ```
-
