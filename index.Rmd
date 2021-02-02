@@ -1,7 +1,7 @@
 ---
 title: 'United States: Battle With COVID-19'
 author: "David Jackson"
-date: "2021-02-02 12:00 PM/EST"
+date: "2021-02-02 02:25 PM/EST"
 output: 
   html_document: 
     fig_width: 9
@@ -63,8 +63,8 @@ summary(vac$people_fully_vaccinated)
 ```{r}
 p5 <- ggplot(vac) + geom_line(aes(x=date,y=new_vaccinations)) +
   scale_y_continuous(labels=comma) +
-  labs(title="USA's Daily Doses By Date")
- # geom_smooth(aes(x=date,y=new_vaccinations))
+  labs(title="USA's Daily Doses By Date") +
+ geom_point(aes(x=date,y=new_vaccinations))
 ggplotly(p5)
 ```
 ```{r}
@@ -92,10 +92,13 @@ ggplotly(p6)
 ```
 
 ```{r}
-vac$Rate <- vac$total_vaccinations/vac$population
-p7 <- ggplot(US) + geom_line(aes(x=date,y=Rate)) + 
-     scale_y_continuous(labels=percent) +  ylim(0,0.5) +
-   labs(title="USA's vaccination Rate By Day")
+vac$Rate <- vac$people_vaccinated/vac$population
+vac$Rate1 <- vac$people_fully_vaccinated/vac$population
+p7 <- ggplot(vac) + geom_line(aes(x=date,y=Rate,col="Total People")) + 
+  geom_line(aes(x=date,y=Rate1,col="Full Vaccine")) +
+     scale_y_continuous(labels=percent) +  ylim(0,0.15) +
+   labs(title="USA's  vaccination Rate By Day") 
+  
  ggplotly(p7)
 
 ```
@@ -109,7 +112,7 @@ ggplot(A) + # geom_line(aes(x=date,y=Rate)) +
   labs(title="USA COVID19 Mortality Rate ",x="Date date",y="Mortality Rate") +
   geom_hline(yintercept = mean(A$Rate),col="red") +
   geom_line(aes(x=date,y=Rate,col="Rolling Mean")) +
-  scale_alpha_date()
+  geom_smooth(aes(x=date,y=Rate))
 
 ```
 
