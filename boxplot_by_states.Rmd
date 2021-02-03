@@ -1,0 +1,40 @@
+---
+title: "Boxplot by State"
+author: "IllicitDavid Jackson"
+date: "2/2/2021"
+output: 
+  html_document: 
+    fig_width: 9
+    fig_height: 7
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE,message = FALSE, error = FALSE)
+library(ggplot2)
+library(scales)
+library(RSQLite)
+library(plotly)
+library(forecast)
+theme_set(theme_light())
+```
+
+```{r}
+rm(list=ls())
+db <- dbConnect(SQLite(), dbname="../COVID-19-DB/NYTimes.sqlite3")
+df <- dbGetQuery(db,"select * from STATESDAILY")
+df$date <- as.Date(df$date,format="%Y-%m-%d")
+names(df)
+
+```
+```{r}
+box1 <-ggplot(df) + geom_boxplot(aes(x=state,y=new_cases)) +
+  theme(axis.text.x = element_text(angle = 45,vjust=0.5)) +
+  labs(title="Boxplot of  Daily Cases by US States")
+ggplotly(box1)
+```
+```{r}
+box2 <-ggplot(df) + geom_boxplot(aes(x=state,y=new_deaths)) +
+  theme(axis.text.x = element_text(angle = 45,vjust=0.5)) +
+  labs(title="Boxplot of  Daily Deaths by US States")
+ggplotly(box2)
+```
