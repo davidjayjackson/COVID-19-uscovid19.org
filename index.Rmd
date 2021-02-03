@@ -1,7 +1,7 @@
 ---
 title: 'United States: Battle With COVID-19'
 author: "David Jackson"
-date: "2021-02-02 02:25 PM/EST"
+date: "2021-02-03 03:30 PM/EST"
 output: 
   html_document: 
     fig_width: 9
@@ -17,6 +17,7 @@ library(plotly)
 library(forecast)
 theme_set(theme_linedraw())
 ```
+
 ## VAccination Report
 
 
@@ -48,6 +49,7 @@ US$Rate <- US$new_deaths/US$new_cases
 vac <- dbGetQuery(db,"select * from OWID where location = 'United States'")
 vac$date <- as.Date(vac$date)
 vac <- vac[order(vac$date),]
+vac <- vac %>% filter(date >="2012-1-15")
 vac <- vac %>%select(date,location,iso_code,new_vaccinations,
                     total_vaccinations,population,
                     people_vaccinated,people_fully_vaccinated
