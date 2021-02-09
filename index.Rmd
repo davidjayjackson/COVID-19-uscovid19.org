@@ -40,7 +40,6 @@ US$MAD <- ma(US$new_deaths,7,centre=TRUE)
 US$Rate <- US$new_deaths/US$new_cases
 ```
 
-
 ### USA COVID19 Mortality Rate
 
 ```{r}
