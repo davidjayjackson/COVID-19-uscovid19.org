@@ -1,0 +1,47 @@
+---
+title: "Prophet and COVID-19"
+author: "David Jackson"
+date: "11/29/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE,message = FALSE,warning = FALSE)
+library(ggplot2)
+library(scales)
+library(RSQLite)
+library(plotly)
+library(prophet)
+library(dplyr)
+theme_set(theme_linedraw() + theme(panel.grid = element_line(linetype = 'dashed')))
+```
+
+```{r}
+rm(list=ls())
+source("../DATA/movavg.R")
+db <- db <- dbConnect(RSQLite::SQLite(),dbname= "../COVIDDB/COVID.sqlite3")
+df <- dbGetQuery(db,"select * from ECDC")
+df <- subset(df,Countries =="USA"  )
+```
+
+#### Using Facebook Prophet to Predict COVID-19 Deaths
+
+```{r}
+df <- df %>% select(Reported,Deaths)
+df$Reported <- as.Date(df$Reported)
+colnames(df) <- c("ds","y")
+```
+```{r}
+m <- prophet(df,daily.seasonality = "TRUE")
+future <- make_future_dataframe(m, periods = 365,freq="day")
+tail(future)
+```
+```{r}
+forecast <- predict(m, future)
+tail(forecast[c('ds', 'yhat', 'yhat_lower', 'yhat_upper')])
+
+```
+```{r}
+plot(m, forecast)
+```
+

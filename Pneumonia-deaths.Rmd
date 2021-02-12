@@ -1,0 +1,17 @@
+---
+title: "US Pneumonia Deaths"
+author: "David Jackson"
+date: "1/20/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+library(scales)
+library(dplyr)
+library(tidyr)
+```
+
+## How much did  Pneumonia Contribute to Covid19 Deaths
+
