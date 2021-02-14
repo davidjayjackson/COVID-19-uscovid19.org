@@ -1,0 +1,47 @@
+---
+title: "More Fun with Rolling Means."
+author: "IllicitDavid Jackson"
+date: "2/13/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+library(scales)
+library(RSQLite)
+library(plotly)
+library(forecast)
+library(pracma)
+theme_set(theme_linedraw())
+```
+
+```{r}
+rm(list=ls())
+db <- dbConnect(SQLite(), dbname="../COVID-19-DB/OURWORLD.sqlite3")
+df <- dbGetQuery(db,"select * from OWID")
+df <- subset(df,location =="United States"  )
+df$date <- as.Date(df$date)
+```
+
+## Let the Fun Begin: movavg function
+
+```{r}
+df$MAD7 <- movavg(df$new_deaths,7,type="w")
+df$MAD14 <- movavg(df$new_deaths,14,type="w")
+df$MAD28 <- movavg(df$new_deaths,28,type="w")
+df$MAD56 <- movavg(df$new_deaths,56,type="w")
+df$MAD112 <- movavg(df$new_deaths,112,type="w")
+```
+```{r}
+ggplot(df) + geom_line(aes(x=date,y=MAD7,col="7 Days")) +
+  geom_line(aes(x=date,y=MAD14,col="14 Days")) +
+  geom_line(aes(x=date,y=MAD28,col="28 Days")) +
+  geom_line(aes(x=date,y=MAD56,col="56 Days")) +
+  geom_line(aes(x=date,y=MAD112,col="112 Days"))
+```
+
+```{r}
+
+```
+
