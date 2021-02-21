@@ -41,7 +41,5 @@ ggplot(df) + geom_line(aes(x=date,y=MAD7,col="7 Days")) +
   geom_line(aes(x=date,y=MAD112,col="112 Days"))
 ```
 
-```{r}
 
-```
 

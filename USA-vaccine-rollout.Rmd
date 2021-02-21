@@ -1,7 +1,7 @@
 ---
 title: "United States COVID-19 Vaccine Rollout"
 author: "David Jackson"
-date: "2/14/2021 11:20 AM/EST"
+date: "2/21/2021 11:21 AM/EST"
 output: 
   html_document: 
     fig_width: 9
@@ -68,11 +68,12 @@ ggplotly(p2)
 ```{r}
 
 VAC$PeoplePercent <- VAC$people_vaccinated/VAC$population
-VAC %>% filter(date >="2021-01-02") %>%
+p3 <-VAC %>% filter(date >="2021-01-02") %>%
   ggplot(aes(x=date,y=PeoplePercent)) +
     geom_line() + scale_y_continuous(labels= percent) +
   labs(title="Percentage of People Receiving At Least Shot",
        y="Percent of Population")
+ggplotly(p3)
 ```
 
 ```{r}
@@ -80,11 +81,12 @@ VAC %>% filter(date >="2021-01-02") %>%
 VAC$PeoplFullVac <- VAC$people_fully_vaccinated/VAC$population
 ```
 ```{r}
-VAC %>% filter(date >="2021-01-10") %>%
+p4 <- VAC %>% filter(date >="2021-01-10") %>%
   ggplot(aes(x=date,y=PeoplFullVac)) +
     geom_line() + scale_y_continuous(labels= percent) +
   labs(title="Percentage of People Fully Vaccinated",
        y="Percent of Population")
+ggplotly(p4)
 ```
 
 
