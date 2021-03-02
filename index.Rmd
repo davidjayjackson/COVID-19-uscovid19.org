@@ -1,7 +1,7 @@
 ---
 title: 'United States: Battle With COVID-19'
 author: "David Jackson"
-date: "2021-03-01 01:00 PM/EST"
+date: "2021-03-02 12:40 PM/EST"
 output: 
   html_document: 
     fig_width: 9
@@ -35,8 +35,8 @@ sum(df$new_deaths,na.rm=TRUE)
 ```{r}
 US <- subset(df,date >="2020-04-01" & new_cases >=1)
 US <- US[order(US$date,decreasing = TRUE),]
-US$MAC <- ma(US$new_cases,7,centre=TRUE)
-US$MAD <- ma(US$new_deaths,7,centre=TRUE)
+US$MAC <- ma(US$new_cases,14,centre=TRUE)
+US$MAD <- ma(US$new_deaths,14,centre=TRUE)
 US$Rate <- US$new_deaths/US$new_cases
 ```
 
@@ -58,19 +58,18 @@ ggplot(A) + # geom_line(aes(x=date,y=Rate)) +
 ```{r}
 daily_new_cases <-ggplot(US) + 
   labs(title="COVID-19 new_cases by Date",y="Cases") +
-    geom_line(aes(x=date,y=MAC,col="Mov Average")) +
+    geom_line(aes(x=date,y=MAC,col="Mov Average"),lwd=1) +
    geom_line(aes(x=date,y=new_cases,col="Daily Cases")) +
-  geom_point(aes(x=date,y=new_cases)) +
+  # geom_point(aes(x=date,y=new_cases)) +
   scale_y_continuous(labels = comma)
 ggplotly(daily_new_cases)
-
-
+```
+```{r}
 daily_new_deaths <-ggplot(US) + 
   labs(title="COVID-19 Deaths by Date",col="Deaths",y="Deaths")  +
-  geom_line(aes(x=date,y=MAD,col="Mov. Average")) +
-   geom_line(aes(x=date,y=new_deaths,col="Daily Deaths")) +
-  geom_point(aes(x=date,y=new_deaths))
- ggplotly(daily_new_deaths)
+  geom_line(aes(x=date,y=MAD,col="Mov. Average"),lwd=1) +
+   geom_line(aes(x=date,y=new_deaths,col="Daily Deaths")) 
+   ggplotly(daily_new_deaths)
 
 ```
 
