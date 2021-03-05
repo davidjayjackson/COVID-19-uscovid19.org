@@ -1,9 +1,9 @@
 ---
 title: 'United States: Battle With COVID-19'
 author: "David Jackson"
-date: "2021-03-04 1:10 PM/EST"
+date: "2021-03-05 11:15 AM/EST"
 output: 
-  html_document: 
+  html_document:
     fig_width: 9
     fig_height: 5
 ---
