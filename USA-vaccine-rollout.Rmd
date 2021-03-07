@@ -1,7 +1,7 @@
 ---
 title: "United States COVID-19 Vaccine Rollout"
 author: "David Jackson"
-date: "2/28/2021 12:15 PM/EST"
+date: "03/07/2021 2:35 PM/EST"
 output: 
   html_document: 
     fig_width: 9
