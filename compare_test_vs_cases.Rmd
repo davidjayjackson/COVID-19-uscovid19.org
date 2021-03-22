@@ -1,0 +1,68 @@
+---
+title: "United States Covid-19 Test vs Cases"
+author: "David Jackson"
+date: "3/22/2021 3:50 PM/EDT"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = FALSE,message = FALSE,warning = FALSE)
+library(ggplot2)
+library(scales)
+library(RSQLite)
+library(plotly)
+library(dplyr)
+library(forecast)
+# theme_set(theme_linedraw() + theme(panel.grid = element_line(linetype = 'dashed')))
+theme_set(theme_light())
+```
+
+##  United States's Covid-19 Cases vs Test
+
+
+```{r}
+rm(list=ls())
+db <- db <- dbConnect(RSQLite::SQLite(),dbname= "../COVID-19-DB/OURWORLD.sqlite3")
+df <- dbGetQuery(db,"select * from OWID where location ='United States'")
+df$date <- as.Date(df$date)
+df <- df[order(df$date),]
+SWE <- df %>% select(date,new_cases,new_tests) %>% filter(date >="2020-07-10")
+```
+
+### Summary States
+
+```{r}
+SWE %>% dlookr::diagnose_numeric() %>% flextable::flextable()
+```
+
+### Plot  Cases and Test and Ratios (Cases/Tests)
+
+```{r}
+SWE %>% ggplot(aes(x=date,y=new_cases)) + geom_col() +
+  labs(title = "United States Daily Covid-19 Cases") +
+  scale_y_continuous(labels = comma)
+  
+SWE %>% ggplot(aes(x=date,y=new_tests)) + geom_col() +
+  labs(title = "United States Daily Covid-19 Test") +
+  scale_y_continuous(labels = comma)
+```
+```{r}
+
+SWE %>% mutate(Ratio = new_cases/new_tests) %>%
+  ggplot(aes(x=date,y=Ratio)) + geom_col() +
+  labs(title = "United States Covid-19 Ratio of Cases to Test ") +
+  scale_y_continuous(labels  = percent)
+```
+
+### Plot of 7 Day Moving Average vs Test
+
+```{r}
+SWE$movavg <- ma(SWE$new_cases,28,centre = TRUE) 
+SWE$Calc  <- SWE$movavg/SWE$new_test
+ggplot(SWE) + geom_line(aes(x=date,y=Calc),lwd=1,col="red") +
+  scale_y_continuous(labels  = percent) +
+  labs(title="United States Ratio of Cases (28 day mov avg) to Test",
+       y = "Ratio of Cases to Tests")
+```
+
