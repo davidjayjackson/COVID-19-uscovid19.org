@@ -120,3 +120,18 @@ ggplot(Monthly_new_deaths) + geom_col(aes(x=Monthly,y=new_deaths)) +
   labs(title="Monthly new_deaths") +
    scale_alpha_date()
 ```
+
+#### Cases and Deaths Per 100,000
+
+```{r}
+df$PC <- (df$new_cases/331002651)*100000
+ggplot(df) + geom_line(aes(x=date,y=PC)) +
+  scale_y_continuous(labels = comma) +
+  labs(title="US Case Per 100,000")
+```
+```{r}
+df$DPC <- (df$new_deaths/331002651) *100000
+ggplot(df) + geom_line(aes(x=date,y=DPC)) +
+  scale_y_continuous(labels = comma) +
+  labs(title="US Deaths Per 100,000") + theme_light()
+```
