@@ -1,0 +1,67 @@
+---
+title: "Exponential Smoothing"
+author: "David Jackson"
+date: "4/19/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+library(scales)
+library(dplyr)
+library(tidyr)
+library(RSQLite)
+library(dlookr)
+library(forecast)
+```
+
+## Predicting Covid-19 Cases and Deaths With ARIMA Method
+Source: https://youtu.be/FYwTl9s4lVc
+
+```{r}
+rm(list=ls())
+db <- dbConnect(SQLite(), dbname="../COVID-19-DB/OURWORLD.sqlite3")
+df <- dbGetQuery(db,"select * from OWID where location ='United States'") 
+df$date <- as.Date(df$date)
+cases <- df %>% select(date,new_cases) %>% na.omit() 
+deaths <- df %>% select(date,new_deaths) %>% na.omit()
+```
+
+### ARMIA model from Forecast: Cases
+
+```{r}
+cases.ts <- ts(cases$new_cases,frequency = 365,start = c(2020,01,01),end = c(2021,04,19))
+plot.ts(cases.ts)
+```
+
+```{r}
+cases_arima <- arima(cases.ts,order = c(10,1,1))
+cases_forecast <- forecast(cases_arima,h=30)
+plot(cases_forecast,include = 120,main= "ARIMA Forecast: US COVID-19 Cases")
+grid()
+
+```
+```{r}
+summary(cases_arima)
+```
+
+
+
+#### ARIMa Model From Forecast: Deaths
+
+```{r}
+deaths.ts <- ts(deaths$new_deaths,frequency = 365,start = c(2020,01,01),end = c(2021,04,19))
+plot.ts(deaths.ts)
+## Begin ARIMa Forecast
+deaths_arima <- arima(deaths.ts,order = c(10,1,1))
+deaths_forecast <- forecast(deaths_arima,h=30)
+plot(deaths_forecast,include = 120,main ="ARIMA Forecast:US COVID-19 Deaths")
+grid()
+```
+```{r}
+summary(deaths_arima)
+```
+
+
+
