@@ -1,7 +1,7 @@
 ---
 title: "Exponential Smoothing"
 author: "David Jackson"
-date: "4/19/2021"
+date: "4/20/2021 7:30 PM/EDT"
 output: html_document
 ---
 
@@ -23,7 +23,10 @@ Source: https://youtu.be/FYwTl9s4lVc
 rm(list=ls())
 db <- dbConnect(SQLite(), dbname="../COVID-19-DB/OURWORLD.sqlite3")
 df <- dbGetQuery(db,"select * from OWID where location ='United States'") 
+```
+```{r}
 df$date <- as.Date(df$date)
+df$new_deaths <- as.numeric(df$new_deaths)
 cases <- df %>% select(date,new_cases) %>% na.omit() 
 deaths <- df %>% select(date,new_deaths) %>% na.omit()
 ```
@@ -48,13 +51,13 @@ summary(cases_arima)
 
 
 
-#### ARIMa Model From Forecast: Deaths
+#### ARIMA Model From Forecast: Deaths
 
 ```{r}
 deaths.ts <- ts(deaths$new_deaths,frequency = 365,start = c(2020,01,01),end = c(2021,04,19))
 plot.ts(deaths.ts)
 ## Begin ARIMa Forecast
-deaths_arima <- arima(deaths.ts,order = c(10,1,1))
+deaths_arima <- arima(deaths.ts,order = c(10,0,0))
 deaths_forecast <- forecast(deaths_arima,h=30)
 plot(deaths_forecast,include = 120,main ="ARIMA Forecast:US COVID-19 Deaths")
 grid()
@@ -63,5 +66,13 @@ grid()
 summary(deaths_arima)
 ```
 
+#### Use Ggplot2 to plot time series
+
+```{r}
+US <- read.csv("./cases_forecast.csv")
+ggplot(US) + geom_line(aes(x=Index,y=Forecast,col="Forecast")) +
+  geom_line(aes(x=Index,y=Lo80,col="Lo 80")) +
+  geom_line(aes(x=Index,y=Hi80,col="Hi 80"))
+```
 
 
