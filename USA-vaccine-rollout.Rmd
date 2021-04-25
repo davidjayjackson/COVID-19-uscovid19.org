@@ -1,7 +1,7 @@
 ---
 title: "United States COVID-19 Vaccine Rollout"
 author: "David Jackson"
-date: "04/18/2021 1:10 PM/EDT"
+date: "04/25/2021 3:50 PM/EDT"
 output: 
   html_document: 
     fig_width: 9
@@ -30,6 +30,7 @@ rm(list=ls())
 db <- db <- dbConnect(RSQLite::SQLite(),dbname= "../COVID-19-DB/OURWORLD.sqlite3")
 SWE <- dbGetQuery(db,"select * from OWID where location ='United States'")
 SWE$date <- as.Date(SWE$date)
+
 ```
 ```{r}
 VAC <- SWE %>% filter(date >="2020-12-25") %>% 

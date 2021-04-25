@@ -76,3 +76,14 @@ ggplot(US) + geom_line(aes(x=Index,y=Forecast,col="Forecast")) +
 ```
 
 
+#### AutoArima 
+
+```{r}
+deaths.ts <- ts(deaths$new_deaths,frequency = 365,start = c(2020,01,01),end = c(2021,04,19))
+plot.ts(deaths.ts)
+## Begin ARIMa Forecast
+deaths_auto_arima <- auto.arima(deaths.ts)
+deaths_auto_forecast <- forecast(deaths_auto_arima,h=30)
+plot(deaths_auto_forecast,include = 120,main ="AUTO ARIMA Forecast:US COVID-19 Deaths")
+grid()
+```
