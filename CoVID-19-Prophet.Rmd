@@ -19,21 +19,21 @@ theme_set(theme_linedraw() + theme(panel.grid = element_line(linetype = 'dashed'
 ```{r}
 rm(list=ls())
 source("../DATA/movavg.R")
-db <- db <- dbConnect(RSQLite::SQLite(),dbname= "../COVIDDB/COVID.sqlite3")
-df <- dbGetQuery(db,"select * from ECDC")
-df <- subset(df,Countries =="USA"  )
+db <- db <- dbConnect(RSQLite::SQLite(),dbname= "../COVID-19-DB/OURWORLD.sqlite3")
+df <- dbGetQuery(db,"select * from OWID")
+df <- subset(df,location =="United States"  )
 ```
 
 #### Using Facebook Prophet to Predict COVID-19 Deaths
 
 ```{r}
-df <- df %>% select(Reported,Deaths)
-df$Reported <- as.Date(df$Reported)
+df <- df %>% select(date,new_cases)
+df$date <- as.Date(df$date)
 colnames(df) <- c("ds","y")
 ```
 ```{r}
-m <- prophet(df,daily.seasonality = "TRUE")
-future <- make_future_dataframe(m, periods = 365,freq="day")
+m <- prophet(df,weekly.seasonality ="TRUE")
+future <- make_future_dataframe(m, periods = 52,freq="week")
 tail(future)
 ```
 ```{r}
