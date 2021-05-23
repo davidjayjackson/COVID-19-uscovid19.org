@@ -1,7 +1,7 @@
 ---
 title: "Exponential Smoothing"
 author: "David Jackson"
-date: "4/20/2021 7:30 PM/EDT"
+date: "4/23/2021 1:15 PM/EDT"
 output: html_document
 ---
 
@@ -69,10 +69,10 @@ summary(deaths_arima)
 #### Use Ggplot2 to plot time series
 
 ```{r}
-US <- read.csv("./cases_forecast.csv")
-ggplot(US) + geom_line(aes(x=Index,y=Forecast,col="Forecast")) +
-  geom_line(aes(x=Index,y=Lo80,col="Lo 80")) +
-  geom_line(aes(x=Index,y=Hi80,col="Hi 80"))
+# US <- read.csv("./cases_forecast.csv")
+# ggplot(US) + geom_line(aes(x=Index,y=Forecast,col="Forecast")) +
+#   geom_line(aes(x=Index,y=Lo80,col="Lo 80")) +
+#   geom_line(aes(x=Index,y=Hi80,col="Hi 80"))
 ```
 
 
@@ -86,4 +86,6 @@ deaths_auto_arima <- auto.arima(deaths.ts)
 deaths_auto_forecast <- forecast(deaths_auto_arima,h=30)
 plot(deaths_auto_forecast,include = 120,main ="AUTO ARIMA Forecast:US COVID-19 Deaths")
 grid()
+
+summary(deaths_auto_arima)
 ```
