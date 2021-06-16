@@ -1,0 +1,88 @@
+---
+title: "More Fun With Covid019 Vaccine"
+author: "David Jackson"
+date: "6/15/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(scales)
+library(dlookr)
+library(RSQLite)
+```
+
+## Source: Our World In Data
+(Source: http://ourworldindata.org)
+
+```{r}
+rm(list=ls())
+
+db <- db <- dbConnect(RSQLite::SQLite(),dbname= "../COVID-19-DB/OURWORLD.sqlite3")
+df <- dbGetQuery(db,"select * from OWID where location ='United States'")
+df$date <- as.Date(df$date)
+
+df <- df %>% filter(date >="2020-12-25") %>% 
+  select(date,total_vaccinations:new_vaccinations_smoothed_per_million)
+         
+```
+
+### Various Vaccine Metrics
+
+```{r}
+ggplot(df) + geom_line(aes(x=date,y=total_vaccinations)) +
+  scale_y_continuous(labels = comma) +
+  labs(title="US total vaccinations Doses by Date")
+```
+
+```{r}
+ggplot(df) + geom_line(aes(x=date,y=people_vaccinated)) +
+  scale_y_continuous(labels = comma) +
+  labs(title="US Total People Vaccinated To Date")
+```
+
+```{r}
+ggplot(df) + geom_line(aes(x=date,y=people_fully_vaccinated)) +
+  scale_y_continuous(labels = comma) +
+  labs(title="US Total People Fully  Vaccinated To Date")
+```
+
+```{r}
+ggplot(df) + geom_line(aes(x=date,y=new_vaccinations)) +
+  scale_y_continuous(labels = comma) +
+  labs(title="US Daily People  Vaccinated by Date")
+```
+
+```{r}
+ggplot(df) + geom_line(aes(x=date,y=new_vaccinations_smoothed)) +
+  scale_y_continuous(labels = comma) +
+  labs(title="US Daily People  Vaccinated by Date",y="Daily Vaccinations (Smooth)")
+```
+
+```{r}
+ggplot(df) + geom_line(aes(x=date,y=total_vaccinations_per_hundred)) +
+  scale_y_continuous(labels = comma) +
+  labs(title="US Total Vaccinations Per Hundred",y="Daily Vaccinations (Per 100 People)")
+```
+
+```{r}
+ggplot(df) + geom_line(aes(x=date,y=people_vaccinated_per_hundred)) +
+  scale_y_continuous(labels = comma) +
+  labs(title="US People Vaccinated Per Hundred",y="People Vaccinated (per 100)")
+```
+
+
+```{r}
+ggplot(df) + geom_line(aes(x=date,y=people_fully_vaccinated_per_hundred)) +
+  scale_y_continuous(labels = comma) +
+  labs(title="US People Fully Vaccinated Per Hundred",y="People Vaccinated (per 100)")
+```
+
+```{r}
+ggplot(df) + geom_line(aes(x=date,y=new_vaccinations_smoothed_per_million)) +
+  scale_y_continuous(labels = comma) +
+  labs(title="New Vaccinations Smoothed per Million",y="Vaccinations")
+```
