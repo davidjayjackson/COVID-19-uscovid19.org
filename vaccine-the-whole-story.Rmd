@@ -35,54 +35,63 @@ df <- df %>% filter(date >="2020-12-25") %>%
 ```{r}
 ggplot(df) + geom_line(aes(x=date,y=total_vaccinations)) +
   scale_y_continuous(labels = comma) +
-  labs(title="US total vaccinations Doses by Date")
+  labs(title="US total vaccinations Doses by Date",
+       subtitle ="Total number of COVID-19 vaccination doses administered" )
 ```
 
 ```{r}
 ggplot(df) + geom_line(aes(x=date,y=people_vaccinated)) +
   scale_y_continuous(labels = comma) +
-  labs(title="US Total People Vaccinated To Date")
+  labs(title="US Total People Vaccinated To Date",
+       subtitle = "Total number of people who received at least one vaccine dose")
 ```
 
 ```{r}
 ggplot(df) + geom_line(aes(x=date,y=people_fully_vaccinated)) +
   scale_y_continuous(labels = comma) +
-  labs(title="US Total People Fully  Vaccinated To Date")
+  labs(title="US Total People Fully  Vaccinated To Date",
+       subtitle = "Total number of people who received all doses prescribed by the vaccination protocol")
 ```
 
 ```{r}
 ggplot(df) + geom_line(aes(x=date,y=new_vaccinations)) +
   scale_y_continuous(labels = comma) +
-  labs(title="US Daily People  Vaccinated by Date")
+  labs(title="US Daily People  Vaccinated by Date",
+       subtitle = "New COVID-19 vaccination doses administered\n (only calculated for consecutive days)")
 ```
 
 ```{r}
 ggplot(df) + geom_line(aes(x=date,y=new_vaccinations_smoothed)) +
   scale_y_continuous(labels = comma) +
-  labs(title="US Daily People  Vaccinated by Date",y="Daily Vaccinations (Smooth)")
+  labs(title="US Daily People  Vaccinated by Date",y="Daily Vaccinations (Smooth)",
+       subtitle = "New COVID-19 vaccination doses administered (7-day smoothed). For countries that don't report vaccination data on a daily basis, we assume that vaccination changed equally on a daily basis over any periods in which no data was reported. This produces a complete series of daily figures, which is then averaged over a rolling 7-day window")
 ```
 
 ```{r}
 ggplot(df) + geom_line(aes(x=date,y=total_vaccinations_per_hundred)) +
   scale_y_continuous(labels = comma) +
-  labs(title="US Total Vaccinations Per Hundred",y="Daily Vaccinations (Per 100 People)")
+  labs(title="US Total Vaccinations Per Hundred",y="Daily Vaccinations (Per 100 People)",
+       subtitle = "Total number of COVID-19 vaccination doses administered per 100 people in the total population")
 ```
 
 ```{r}
 ggplot(df) + geom_line(aes(x=date,y=people_vaccinated_per_hundred)) +
   scale_y_continuous(labels = comma) +
-  labs(title="US People Vaccinated Per Hundred",y="People Vaccinated (per 100)")
+  labs(title="US People Vaccinated Per Hundred",y="People Vaccinated (per 100)",
+       subtitle = "Total number of people who received at least one vaccine dose per 100 people in the total population")
 ```
 
 
 ```{r}
 ggplot(df) + geom_line(aes(x=date,y=people_fully_vaccinated_per_hundred)) +
   scale_y_continuous(labels = comma) +
-  labs(title="US People Fully Vaccinated Per Hundred",y="People Vaccinated (per 100)")
+  labs(title="US People Fully Vaccinated Per Hundred",y="People Vaccinated (per 100)",
+       subtitle = "Total number of people who received all doses prescribed by the vaccination protocol per 100 people in the total population")
 ```
 
 ```{r}
 ggplot(df) + geom_line(aes(x=date,y=new_vaccinations_smoothed_per_million)) +
   scale_y_continuous(labels = comma) +
-  labs(title="New Vaccinations Smoothed per Million",y="Vaccinations")
+  labs(title="New Vaccinations Smoothed per Million",y="Vaccinations",
+       subtitle = "New COVID-19 vaccination doses administered (7-day smoothed) per 1,000,000 people in the total population")
 ```
