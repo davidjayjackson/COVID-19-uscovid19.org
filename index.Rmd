@@ -1,7 +1,7 @@
 ---
 title: 'United States: Battle With COVID-19'
 author: "David Jackson"
-date: "2021-06-22 12:25 PM/EDT"
+date: "2021-06-23 1:30 PM/EDT"
 output: 
   html_document:
     fig_width: 9
