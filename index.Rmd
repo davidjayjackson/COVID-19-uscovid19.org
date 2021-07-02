@@ -26,13 +26,18 @@ source("../DATA/movavg.R")
 
 db <- dbConnect(SQLite(), dbname="../COVID-19-DB/OURWORLD.sqlite3")
 df <- dbGetQuery(db,"select * from OWID")
-df <- subset(df,location =="United States"  )
+df <- df %>% filter(location =="United States" & date >= Sys.Date() - 365)
+# df <- subset(df,location =="United States" )
 df$date <- as.Date(df$date)
 sum(df$new_cases,na.rm = TRUE)
 df$new_deaths <- as.numeric(df$new_deaths)
 sum(df$new_deaths,na.rm=TRUE)
 
 ```
+
+### Report for Previous 365 Days: * `r Sys.Date() - 365` *
+
+
 ```{r}
 US <- subset(df,date >="2020-04-01" & new_cases >=1)
 US <- US[order(US$date,decreasing = TRUE),]

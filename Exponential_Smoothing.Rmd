@@ -1,7 +1,7 @@
 ---
 title: "Exponential Smoothing"
 author: "David Jackson"
-date: "6/17/2021 25 PM/EDT"
+date: "`r Sys.time()`"
 output: html_document
 ---
 
