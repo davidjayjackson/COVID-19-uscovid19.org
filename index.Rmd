@@ -144,4 +144,14 @@ ggplot(df) + geom_line(aes(x=date,y=DPC)) +
   labs(title="US Deaths Per 100,000") + theme_light()
 ```
 
+### Total Cases and Total Deaths
+
+```{r}
+ggplot(df) + geom_line(aes(x=date,y=total_cases,col='Toal Cases'),lwd=2) +
+  labs(title = "Total Cases to Date")
+
+ggplot(df) + geom_area(aes(x=date,y=total_deaths,fill='Toal Deaths'),lwd=2) +
+  labs(title = "Total Deaths to Date")
+```
+
 
