@@ -39,7 +39,7 @@ sum(df$new_deaths,na.rm=TRUE)
 
 
 ```{r}
-US <- subset(df,date >="2020-04-01" & new_cases >=1)
+US <- subset(df,date >="2020-07-01" & new_cases >=1)
 US <- US[order(US$date,decreasing = TRUE),]
 US$MAC <- ma(US$new_cases,14,centre=TRUE)
 US$MAD <- ma(US$new_deaths,14,centre=TRUE)
@@ -49,7 +49,7 @@ US$Rate <- US$new_deaths/US$new_cases
 ### USA COVID19 Mortality Rate
 
 ```{r}
-A <- subset(US,date >="2020-02-01")
+A <- subset(US,date >="2020-07-01")
 ggplot(A) + # geom_line(aes(x=date,y=Rate)) +
   scale_y_continuous(labels = scales::percent) +
   labs(title="USA COVID19 Mortality Rate ",x="Date date",y="Mortality Rate") +
@@ -69,6 +69,14 @@ daily_new_cases <-ggplot(US) +
   # geom_point(aes(x=date,y=new_cases)) +
   scale_y_continuous(labels = comma)
 ggplotly(daily_new_cases)
+
+daily_new_cases1 <-ggplot(US) + 
+  labs(title="COVID-19 new_cases by Date",y="Cases") +
+    geom_line(aes(x=date,y=MAC,col="Mov Average"),lwd=1) +
+   geom_step(aes(x=date,y=new_cases,col="Daily Cases")) +
+  # geom_point(aes(x=date,y=new_cases)) +
+  scale_y_continuous(labels = comma)
+ggplotly(daily_new_cases1)
 ```
 ```{r}
 daily_new_deaths <-ggplot(US) + 
