@@ -73,7 +73,7 @@ ggplotly(daily_new_cases)
 daily_new_cases1 <-ggplot(US) + 
   labs(title="COVID-19 new_cases by Date",y="Cases") +
     geom_line(aes(x=date,y=MAC,col="Mov Average"),lwd=1) +
-   geom_step(aes(x=date,y=new_cases,col="Daily Cases")) +
+   geom_line(aes(x=date,y=new_cases,col="Daily Cases")) +
   # geom_point(aes(x=date,y=new_cases)) +
   scale_y_continuous(labels = comma)
 ggplotly(daily_new_cases1)
