@@ -30,6 +30,7 @@ rm(list=ls())
 db <- db <- dbConnect(RSQLite::SQLite(),dbname= "../COVID-19-DB/OURWORLD.sqlite3")
 SWE <- dbGetQuery(db,"select * from OWID where location ='United States'")
 SWE$date <- as.Date(SWE$date)
+SWE$Year <- lubridate::year(SWE$date)
 
 ```
 ```{r}
