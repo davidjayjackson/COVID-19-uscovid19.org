@@ -36,28 +36,43 @@ sum(df$new_deaths,na.rm=TRUE)
 
 ```
 
+### Report for Year of 2021 
+
+```{r}
+db2 <- subset(df,date >="2021-01-01" & new_cases >=1)
+db2$MAC <- ma(db2$new_cases,14,centre=TRUE)
+db2$MAD <- ma(db2$new_deaths,14,centre=TRUE)
+db2$Rate <- db2$new_deaths/db2$new_cases
+```
+```{r}
+ggplot(db2) + geom_line(aes(x=date,y=new_cases,col="cases"),lwd=1) +
+  geom_line(aes(x=date,y=MAC,col="average"),lwd=1) +
+  scale_y_continuous(labels = comma) +
+  labs(title="Daily Cases for Current Year (2021)",
+       subtitle = "(14 day moving average)")
+
+ggplot(db2) + geom_line(aes(x=date,y=new_deaths,col="deaths"),lwd=1) +
+  geom_line(aes(x=date,y=MAD,col="average"),lwd=1) +
+  scale_y_continuous(labels = comma) +
+  labs(title="Daily Deaths for Current Year (2021)",
+       subtitle = "(14 day moving average)")
+```
+
+
 # Let us compare 2020 numbers to 2021 numbers
 
 ```{r}
+df <- subset(df,date >="2020-07-01" & new_cases >=1)
 df$Year <- as.factor(df$Year)
+df$MAC <- ma(df$new_cases,14,centre=TRUE)
+df$MAD <- ma(df$new_deaths,14,centre=TRUE)
+df$Rate <- df$new_deaths/df$new_cases
+
 ggplot(df) + geom_line(aes(x=date,y=new_cases,col=Year)) +
   labs(title = "Daily Cases: 2020 vs 2021")
 ggplot(df) + geom_line(aes(x=date,y=new_deaths,col=Year)) +
   labs(title = "Daily Deaths: 2020 -2021")
 ```
-
-
-### Report for Previous 12 Months: * July 1, 2020*
-
-
-```{r}
-df <- subset(df,date >="2020-07-01" & new_cases >=1)
-df <- df[order(df$date,decreasing = TRUE),]
-df$MAC <- ma(df$new_cases,14,centre=TRUE)
-df$MAD <- ma(df$new_deaths,14,centre=TRUE)
-df$Rate <- df$new_deaths/df$new_cases
-```
-
 
 ### Plot of Daily Cases and Deaths
 
