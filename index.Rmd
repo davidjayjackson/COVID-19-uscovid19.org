@@ -57,6 +57,16 @@ ggplot(db2) + geom_line(aes(x=date,y=new_deaths,col="deaths"),lwd=1) +
   labs(title="Daily Deaths for Current Year (2021)",
        subtitle = "(14 day moving average)")
 ```
+```{r}
+df$Year <- as.factor(df$Year)
+ggplot(df) + geom_col(aes(x=Year,y=new_cases)) +
+  labs(title = "Covid-19 Cases By Year") +
+  scale_y_continuous(labels = comma)
+
+ggplot(df) + geom_col(aes(x=Year,y=new_deaths)) +
+  labs(title = "Covid-19 Deaths By Year") +
+  scale_y_continuous(labels = comma)
+```
 
 
 # Let us compare 2020 numbers to 2021 numbers
