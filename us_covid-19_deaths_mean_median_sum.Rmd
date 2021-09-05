@@ -16,19 +16,25 @@ theme_set(theme_linedraw() + theme(panel.grid = element_line(linetype = 'dashed'
 ```
 ```{r}
 rm(list=ls())
-db <- db <- dbConnect(RSQLite::SQLite(),dbname= "../COVIDDB/COVID.sqlite3")
-df <- dbGetQuery(db,"select * from STATESDAILY")
+db <- db <- dbConnect(RSQLite::SQLite(),dbname= "../COVID-19-DB/NYTimes.sqlite3")
+df <- dbGetQuery(db,"select * from COUNTYDAILY")
 df$date <- as.Date(df$date)
 # df <- subset(df,Countries =="USA"  )
 ```
 
-#### Calculate US COVID-19 Deaths: Sum, Mean and Median
+#### Calculate US COVID-19 Deaths And Cases: Sum, Mean and Median
 
 ```{r}
 report <- df %>% group_by(date) %>% 
   summarise(Median = median(new_deaths),
                      Mean = mean(new_deaths),
                      Total = sum(new_deaths),
+                      Count = n())
+
+report <- df %>% group_by(date) %>% 
+  summarise(Median = median(new_cases),
+                     Mean = mean(new_cases),
+                     Total = sum(new_cases),
                       Count = n())
 ```
 
