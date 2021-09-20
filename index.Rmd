@@ -14,7 +14,7 @@ library(ggplot2)
 library(scales)
 library(RSQLite)
 library(plotly)
-library(forecast)
+library(pracma)
 theme_set(theme_linedraw())
 ```
 
@@ -40,8 +40,8 @@ sum(df$new_deaths,na.rm=TRUE)
 
 ```{r}
 db2 <- subset(df,date >="2021-01-01" & new_cases >=1)
-db2$MAC <- ma(db2$new_cases,14,centre=TRUE)
-db2$MAD <- ma(db2$new_deaths,14,centre=TRUE)
+db2$MAC <- movavg(db2$new_cases,14,type = "e")
+db2$MAD <- movavg(db2$new_deaths,14,type = "e")
 db2$Rate <- db2$new_deaths/db2$new_cases
 ```
 ```{r}
@@ -74,8 +74,8 @@ ggplot(df) + geom_col(aes(x=Year,y=new_deaths)) +
 ```{r}
 df <- subset(df,date >="2020-07-01" & new_cases >=1)
 df$Year <- as.factor(df$Year)
-df$MAC <- ma(df$new_cases,14,centre=TRUE)
-df$MAD <- ma(df$new_deaths,14,centre=TRUE)
+df$MAC <- movavg(df$new_cases,14,type = "e")
+df$MAD <- movavg(df$new_deaths,14,type = "e")
 df$Rate <- df$new_deaths/df$new_cases
 
 ggplot(df) + geom_col(aes(x=date,y=new_cases,col=Year)) +
