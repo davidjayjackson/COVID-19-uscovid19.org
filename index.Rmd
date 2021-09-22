@@ -40,8 +40,8 @@ sum(df$new_deaths,na.rm=TRUE)
 
 ```{r}
 db2 <- subset(df,date >="2021-01-01" & new_cases >=1)
-db2$MAC <- movavg(db2$new_cases,14,type = "e")
-db2$MAD <- movavg(db2$new_deaths,14,type = "e")
+db2$MAC <- movavg(db2$new_cases,14,type = "w")
+db2$MAD <- movavg(db2$new_deaths,14,type = "w")
 db2$Rate <- db2$new_deaths/db2$new_cases
 ```
 ```{r}
