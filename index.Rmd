@@ -45,13 +45,13 @@ db2$MAD <- movavg(db2$new_deaths,14,type = "w")
 db2$Rate <- db2$new_deaths/db2$new_cases
 ```
 ```{r}
-ggplot(db2) + geom_col(aes(x=date,y=new_cases,col="cases"),lwd=1) +
+ggplot(db2) + geom_line(aes(x=date,y=new_cases,col="cases"),lwd=1) +
   geom_line(aes(x=date,y=MAC,col="average"),lwd=1) +
   scale_y_continuous(labels = comma) +
   labs(title="Daily Cases for Current Year (2021)",
        subtitle = "(14 day moving average)")
 
-ggplot(db2) + geom_col(aes(x=date,y=new_deaths,col="deaths"),lwd=1) +
+ggplot(db2) + geom_line(aes(x=date,y=new_deaths,col="deaths"),lwd=1) +
   geom_line(aes(x=date,y=MAD,col="average"),lwd=1) +
   scale_y_continuous(labels = comma) +
   labs(title="Daily Deaths for Current Year (2021)",
