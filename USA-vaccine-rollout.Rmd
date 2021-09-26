@@ -24,6 +24,8 @@ theme_set(theme_light())
 ## Sweden COVID-19 Rollout
 ### Our World In Data: http://ourworldindata.org
 
+"In August, the United Nations, International Monetary Fund, World Bank, World Health Organization and World Trade Organization called for international commitment and support so that every country would have vaccinated at least 40% of its population with at least one dose by the end of 2021."
+
 ```{r}
 rm(list=ls())
 
