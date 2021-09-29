@@ -84,6 +84,13 @@ ggplot(df) + geom_col(aes(x=date,y=new_deaths,col=Year)) +
   labs(title = "Daily Deaths: 2020 -2021")
 ```
 
+```{r}
+df %>% group_by(Year) %>%
+  summarise(Cases = mean(new_cases,na.rm = TRUE),
+            Deaths = mean(new_deaths,na.rm = TRUE))
+```
+
+
 ### Plot of Daily Cases and Deaths
 
 ```{r}
