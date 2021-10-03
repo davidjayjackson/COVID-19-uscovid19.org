@@ -15,6 +15,7 @@ library(scales)
 library(RSQLite)
 library(plotly)
 library(pracma)
+library(timetk)
 theme_set(theme_linedraw())
 ```
 
@@ -89,6 +90,15 @@ df %>% group_by(Year) %>%
   summarise(Cases = mean(new_cases,na.rm = TRUE),
             Deaths = mean(new_deaths,na.rm = TRUE))
 ```
+```{r}
+df %>% group_by(date) %>%
+  summarise_by_time(date,.by = "quarter",Cases =sum(new_cases)) %>% ggplot(aes(x=date,y=Cases)) + geom_col() +
+  labs(title = "Cases by Quarter")
+
+df %>% group_by(date) %>%
+  summarise_by_time(date,.by = "quarter",Deaths =sum(new_deaths)) %>% ggplot(aes(x=date,y=Deaths)) + geom_col() +
+  labs(title = "Deaths by Quarter")
+```
 
 
 ### Plot of Daily Cases and Deaths
@@ -110,7 +120,8 @@ daily_new_deaths <-ggplot(df) +
   labs(title="COVID-19 Deaths by Date",col="Deaths",y="Deaths")  +
   geom_col(aes(x=date,y=MAD,col="Mov. Average"),lwd=1) +
    geom_col(aes(x=date,y=new_deaths,col="Daily Deaths")) 
-   ggplotly(daily_new_deaths)
+   
+     
 
 ```
 
@@ -133,8 +144,7 @@ Weekly_new_cases$LivedSaved <- Weekly_new_cases$new_cases * (max(Weekly_new_case
 ```
 ```{r}
 ggplot(Weekly_new_cases) + geom_col(aes(x=Weekly,y=new_cases)) + 
-  labs(title="Weekly new_cases",x="Date date", y="Weekly Cases") +
-   scale_alpha_date()
+  labs(title="Weekly new_cases",x="Date date", y="Weekly Cases") 
 
 ggplot(Weekly_new_deaths) + geom_col(aes(x=Weekly,y=new_deaths)) + 
   labs(title="Weekly new_deaths",x="Date date", y="Weekly Deaths") 
