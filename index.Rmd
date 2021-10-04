@@ -23,7 +23,7 @@ theme_set(theme_linedraw())
 
 ```{r}
 rm(list=ls())
-source("../DATA/movavg.R")
+# source("../DATA/movavg.R")
 
 db <- dbConnect(SQLite(), dbname="../COVID-19-DB/OURWORLD.sqlite3")
 df <- dbGetQuery(db,"select * from OWID")
