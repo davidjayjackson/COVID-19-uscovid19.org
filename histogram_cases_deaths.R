@@ -18,7 +18,7 @@ deaths_hi_sd <- mean_deaths + deaths_sd
   facet_wrap(~Year) 
   
   ggplot(df) + geom_boxplot(aes(x=new_deaths,group=Year,fill=factor(Year))) +
-    coord_flip() + labs(title = "US Covid-9 Cases Boxplot")
+    labs(title = "US Covid-9 Cases Boxplot")
   
   median_cases <- median(df$new_cases,na.rm = T)
   mean_cases <- mean(df$new_cases,na.rm = T)
@@ -36,6 +36,6 @@ deaths_hi_sd <- mean_deaths + deaths_sd
     facet_wrap(~Year) 
   
   ggplot(df) + geom_boxplot(aes(x=new_cases,group=Year,fill=factor(Year))) +
-    coord_flip() + labs(title = "US Cases Boxplot")
+    labs(title = "US Cases Boxplot")
   
   
