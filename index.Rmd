@@ -79,9 +79,9 @@ df$MAC <- movavg(df$new_cases,14,type = "e")
 df$MAD <- movavg(df$new_deaths,14,type = "e")
 df$Rate <- df$new_deaths/df$new_cases
 
-ggplot(df) + geom_col(aes(x=date,y=new_cases,col=Year)) +
+ggplot(df) + geom_line(aes(x=date,y=new_cases,col=Year)) +
   labs(title = "Daily Cases: 2020 vs 2021")
-ggplot(df) + geom_col(aes(x=date,y=new_deaths,col=Year)) +
+ggplot(df) + geom_line(aes(x=date,y=new_deaths,col=Year)) +
   labs(title = "Daily Deaths: 2020 -2021")
 ```
 
@@ -92,11 +92,11 @@ df %>% group_by(Year) %>%
 ```
 ```{r}
 df %>% group_by(date) %>%
-  summarise_by_time(date,.by = "quarter",Cases =sum(new_cases)) %>% ggplot(aes(x=date,y=Cases)) + geom_col() +
+  summarise_by_time(date,.by = "quarter",Cases =sum(new_cases)) %>% ggplot(aes(x=date,y=Cases)) + geom_line() +
   labs(title = "Cases by Quarter")
 
 df %>% group_by(date) %>%
-  summarise_by_time(date,.by = "quarter",Deaths =sum(new_deaths)) %>% ggplot(aes(x=date,y=Deaths)) + geom_col() +
+  summarise_by_time(date,.by = "quarter",Deaths =sum(new_deaths)) %>% ggplot(aes(x=date,y=Deaths)) + geom_line() +
   labs(title = "Deaths by Quarter")
 ```
 
@@ -106,8 +106,8 @@ df %>% group_by(date) %>%
 ```{r}
 daily_new_cases <-ggplot(df) + 
   labs(title="COVID-19 new_cases by Date",y="Cases") +
-    geom_col(aes(x=date,y=MAC,col="Mov Average"),lwd=1) +
-   geom_col(aes(x=date,y=new_cases,col="Daily Cases")) +
+    geom_line(aes(x=date,y=MAC,col="Mov Average"),lwd=1) +
+   geom_line(aes(x=date,y=new_cases,col="Daily Cases")) +
   # geom_point(aes(x=date,y=new_cases)) +
   scale_y_continuous(labels = comma)
 ggplotly(daily_new_cases)
@@ -118,8 +118,8 @@ ggplotly(daily_new_cases)
 ```{r}
 daily_new_deaths <-ggplot(df) + 
   labs(title="COVID-19 Deaths by Date",col="Deaths",y="Deaths")  +
-  geom_col(aes(x=date,y=MAD,col="Mov. Average"),lwd=1) +
-   geom_col(aes(x=date,y=new_deaths,col="Daily Deaths")) 
+  geom_line(aes(x=date,y=MAD,col="Mov. Average"),lwd=1) +
+   geom_line(aes(x=date,y=new_deaths,col="Daily Deaths")) 
    
      
 
@@ -176,14 +176,14 @@ ggplot(Monthly_new_deaths) + geom_col(aes(x=Monthly,y=new_deaths)) +
 
 ```{r}
 df$PC <- (df$new_cases/331002651)*100000
-ggplot(df) + geom_col(aes(x=date,y=PC)) +
+ggplot(df) + geom_line(aes(x=date,y=PC)) +
   scale_y_continuous(labels = comma) +
   geom_smooth(aes(x=date,y=PC),span=0.1) +
   labs(title="df Case Per 100,000")
 ```
 ```{r}
 df$DPC <- (df$new_deaths/331002651) *100000
-ggplot(df) + geom_col(aes(x=date,y=DPC)) +
+ggplot(df) + geom_line(aes(x=date,y=DPC)) +
   scale_y_continuous(labels = comma) +
   geom_smooth(aes(x=date,y=DPC),span=0.1) +
   labs(title="df Deaths Per 100,000") + theme_light()
@@ -192,7 +192,7 @@ ggplot(df) + geom_col(aes(x=date,y=DPC)) +
 ### Total Cases and Total Deaths
 
 ```{r}
-ggplot(df) + geom_col(aes(x=date,y=total_cases,col='Toal Cases'),lwd=2) +
+ggplot(df) + geom_line(aes(x=date,y=total_cases,col='Toal Cases'),lwd=2) +
   labs(title = "Total Cases to Date")
 
 ggplot(df) + geom_area(aes(x=date,y=total_deaths,fill='Toal Deaths'),lwd=2) +
