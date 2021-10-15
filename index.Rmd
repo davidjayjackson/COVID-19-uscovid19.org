@@ -92,11 +92,11 @@ df %>% group_by(Year) %>%
 ```
 ```{r}
 df %>% group_by(date) %>%
-  summarise_by_time(date,.by = "quarter",Cases =sum(new_cases)) %>% ggplot(aes(x=date,y=Cases)) + geom_line() +
+  summarise_by_time(date,.by = "quarter",Cases =sum(new_cases)) %>% ggplot(aes(x=date,y=Cases)) + geom_col() +
   labs(title = "Cases by Quarter")
 
 df %>% group_by(date) %>%
-  summarise_by_time(date,.by = "quarter",Deaths =sum(new_deaths)) %>% ggplot(aes(x=date,y=Deaths)) + geom_line() +
+  summarise_by_time(date,.by = "quarter",Deaths =sum(new_deaths)) %>% ggplot(aes(x=date,y=Deaths)) + geom_col() +
   labs(title = "Deaths by Quarter")
 ```
 
@@ -117,10 +117,10 @@ ggplotly(daily_new_cases)
 ```
 ```{r}
 daily_new_deaths <-ggplot(df) + 
-  labs(title="COVID-19 Deaths by Date",col="Deaths",y="Deaths")  +
-  geom_line(aes(x=date,y=MAD,col="Mov. Average"),lwd=1) +
-   geom_line(aes(x=date,y=new_deaths,col="Daily Deaths")) 
-   
+    geom_line(aes(x=date,y=MAD,col="Mov. Average"),lwd=1) +
+   geom_line(aes(x=date,y=new_deaths,col="Daily Deaths")) +
+  labs(title="COVID-19 Deaths by Date",col="Deaths",y="Deaths") 
+ggplotly(daily_new_deaths)
      
 
 ```
