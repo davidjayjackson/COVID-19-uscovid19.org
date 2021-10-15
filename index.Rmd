@@ -33,7 +33,7 @@ df$date <- as.Date(df$date)
 df$Year <- lubridate::year(df$date)
 sum(df$new_cases,na.rm = TRUE)
 df$new_deaths <- as.numeric(df$new_deaths)
-sum(df$new_cases,na.rm=TRUE)
+sum(df$new_deaths,na.rm=TRUE)
 ```
 
 ####  Estimated Yearly Cases and Deaths
