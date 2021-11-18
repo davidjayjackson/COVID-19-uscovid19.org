@@ -1,0 +1,213 @@
+---
+title: 'United States: Battle With COVID-19'
+author: "David Jackson"
+date: "`r Sys.time()`"
+output: 
+  html_document:
+    fig_width: 9
+    fig_height: 5
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE,error=FALSE,message=FALSE)
+library(ggplot2)
+library(scales)
+library(RSQLite)
+library(plotly)
+library(pracma)
+library(timetk)
+theme_set(theme_linedraw())
+```
+
+## USA's Battle with COVID-19
+
+```{r}
+rm(list=ls())
+# source("../DATA/movavg.R")
+
+db <- dbConnect(SQLite(), dbname="../COVID-19-DB/OURWORLD.sqlite3")
+df <- dbGetQuery(db,"select * from OWID")
+df <- df %>% filter(location =="United States")
+# df <- subset(df,location =="United States" )
+df$date <- as.Date(df$date)
+df$Year <- lubridate::year(df$date)
+sum(df$new_cases,na.rm = TRUE)
+df$new_deaths <- as.numeric(df$new_deaths)
+sum(df$new_deaths,na.rm=TRUE)
+```
+
+####  Estimated Yearly Cases and Deaths
+
+```{r}
+mean(df$new_cases,na.rm=TRUE)
+mean(df$new_cases,na.rm=TRUE) *365
+```
+
+```{r}
+mean(df$new_deaths,na.rm=TRUE)
+mean(df$new_deaths,na.rm=TRUE) *365
+```
+
+### Report for Year of 2021 
+
+```{r}
+db2 <- subset(df,date >="2021-01-01" & new_cases >=1)
+db2$MAC <- movavg(db2$new_cases,14,type = "w")
+db2$MAD <- movavg(db2$new_deaths,14,type = "w")
+db2$Rate <- db2$new_deaths/db2$new_cases
+```
+```{r}
+ggplot(db2) + geom_line(aes(x=date,y=new_cases,col="cases"),lwd=1) +
+  geom_line(aes(x=date,y=MAC,col="average"),lwd=1) +
+  scale_y_continuous(labels = comma) +
+  labs(title="Daily Cases for Current Year (2021)",
+       subtitle = "(14 day moving average)")
+
+ggplot(db2) + geom_line(aes(x=date,y=new_deaths,col="deaths"),lwd=1) +
+  geom_line(aes(x=date,y=MAD,col="average"),lwd=1) +
+  scale_y_continuous(labels = comma) +
+  labs(title="Daily Deaths for Current Year (2021)",
+       subtitle = "(14 day moving average)")
+```
+```{r}
+df$Year <- as.factor(df$Year)
+ggplot(df) + geom_col(aes(x=Year,y=new_cases)) +
+  labs(title = "Covid-19 Cases By Year") +
+  scale_y_continuous(labels = comma)
+
+ggplot(df) + geom_col(aes(x=Year,y=new_deaths)) +
+  labs(title = "Covid-19 Deaths By Year") +
+  scale_y_continuous(labels = comma)
+```
+
+
+# Let us compare 2020 numbers to 2021 numbers
+
+```{r}
+df <- subset(df,date >="2020-07-01" & new_cases >=1)
+df$Year <- as.factor(df$Year)
+df$MAC <- movavg(df$new_cases,14,type = "e")
+df$MAD <- movavg(df$new_deaths,14,type = "e")
+df$Rate <- df$new_deaths/df$new_cases
+
+ggplot(df) + geom_line(aes(x=date,y=new_cases,col=Year)) +
+  labs(title = "Daily Cases: 2020 vs 2021")
+ggplot(df) + geom_line(aes(x=date,y=new_deaths,col=Year)) +
+  labs(title = "Daily Deaths: 2020 -2021")
+```
+
+```{r}
+df %>% group_by(Year) %>%
+  summarise(Cases = mean(new_cases,na.rm = TRUE),
+            Deaths = mean(new_deaths,na.rm = TRUE))
+```
+```{r}
+df %>% group_by(date) %>%
+  summarise_by_time(date,.by = "quarter",Cases =sum(new_cases)) %>% ggplot(aes(x=date,y=Cases)) + geom_col() +
+  labs(title = "Cases by Quarter")
+
+df %>% group_by(date) %>%
+  summarise_by_time(date,.by = "quarter",Deaths =sum(new_deaths)) %>% ggplot(aes(x=date,y=Deaths)) + geom_col() +
+  labs(title = "Deaths by Quarter")
+```
+
+
+### Plot of Daily Cases and Deaths
+
+```{r}
+daily_new_cases <-ggplot(df) + 
+  labs(title="COVID-19 new_cases by Date",y="Cases") +
+    geom_line(aes(x=date,y=MAC,col="Mov Average"),lwd=1) +
+   geom_line(aes(x=date,y=new_cases,col="Daily Cases")) +
+  # geom_point(aes(x=date,y=new_cases)) +
+  scale_y_continuous(labels = comma)
+ggplotly(daily_new_cases)
+
+
+
+```
+```{r}
+daily_new_deaths <-ggplot(df) + 
+    geom_line(aes(x=date,y=MAD,col="Mov. Average"),lwd=1) +
+   geom_line(aes(x=date,y=new_deaths,col="Daily Deaths")) +
+  labs(title="COVID-19 Deaths by Date",col="Deaths",y="Deaths") 
+ggplotly(daily_new_deaths)
+     
+
+```
+
+#### Non-Moving Average By Week and By Month
+
+```{r}
+df$Monthly <- as.Date(cut(df$date,
+  breaks = "month"))
+df$Weekly <- as.Date(cut(df$date,
+  breaks = "week",
+  start.on.monday = FALSE))
+
+```
+```{r}
+Weekly_new_cases <- aggregate(new_cases~Weekly,df,FUN=sum)
+Weekly_new_deaths <- aggregate(new_deaths~Weekly,df,FUN=sum)
+Weekly_new_cases$DRate <- Weekly_new_deaths$new_deaths/Weekly_new_cases$new_cases
+Weekly_new_cases$LivedSaved <- Weekly_new_cases$new_cases * (max(Weekly_new_cases$DRate) - Weekly_new_cases$DRate) 
+
+```
+```{r}
+ggplot(Weekly_new_cases) + geom_col(aes(x=Weekly,y=new_cases)) + 
+  labs(title="Weekly new_cases",x="Date date", y="Weekly Cases") 
+
+ggplot(Weekly_new_deaths) + geom_col(aes(x=Weekly,y=new_deaths)) + 
+  labs(title="Weekly new_deaths",x="Date date", y="Weekly Deaths") 
+  
+``` 
+
+
+#### Monthly new_cases and new_deaths
+
+```{r}
+
+Monthly_new_cases <- aggregate(new_cases~Monthly,df,FUN=sum)
+Monthly_new_deaths <- aggregate(new_deaths~Monthly,df,FUN=sum)
+Monthly_new_cases$DRate <- Monthly_new_deaths$new_deaths/Monthly_new_cases$new_cases
+Monthly_new_cases$LivedSaved <- Monthly_new_cases$new_cases * (max(Monthly_new_cases$DRate) - Monthly_new_cases$DRate) * 100
+```
+```{r}
+ggplot(Monthly_new_cases) + geom_col(aes(x=Monthly,y=new_cases)) +
+  labs(title="Monthly new_cases") +
+  scale_y_continuous(labels=scales::comma) 
+
+
+ggplot(Monthly_new_deaths) + geom_col(aes(x=Monthly,y=new_deaths)) +
+  labs(title="Monthly new_deaths") +
+   scale_alpha_date()
+```
+
+#### Cases and Deaths Per 100,000
+
+```{r}
+df$PC <- (df$new_cases/331002651)*100000
+ggplot(df) + geom_line(aes(x=date,y=PC)) +
+  scale_y_continuous(labels = comma) +
+  geom_smooth(aes(x=date,y=PC),span=0.1) +
+  labs(title="df Case Per 100,000")
+```
+```{r}
+df$DPC <- (df$new_deaths/331002651) *100000
+ggplot(df) + geom_line(aes(x=date,y=DPC)) +
+  scale_y_continuous(labels = comma) +
+  geom_smooth(aes(x=date,y=DPC),span=0.1) +
+  labs(title="df Deaths Per 100,000") + theme_light()
+```
+
+### Total Cases and Total Deaths
+
+```{r}
+ggplot(df) + geom_line(aes(x=date,y=total_cases,col='Toal Cases'),lwd=2) +
+  labs(title = "Total Cases to Date")
+
+ggplot(df) + geom_area(aes(x=date,y=total_deaths,fill='Toal Deaths'),lwd=2) +
+  labs(title = "Total Deaths to Date")
+```
+
+
