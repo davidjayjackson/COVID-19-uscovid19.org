@@ -194,3 +194,5 @@ ggplot(df) + geom_line(aes(x=date,y=DPC)) +
   labs(title="df Deaths Per 100,000") + theme_light()
 ```
 
+
+
