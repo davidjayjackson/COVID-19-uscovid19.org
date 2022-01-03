@@ -1,0 +1,34 @@
+---
+title: "Cases/Deatrhs and Population Density"
+author: "David Jackson"
+date: "12/26/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(ggplot2)
+library(scales)
+library(RSQLite)
+library(plotly)
+library(pracma)
+library(timetk)
+theme_set(theme_linedraw())
+```
+
+## R Markdown
+
+```{r}
+rm(list=ls())
+db <- dbConnect(SQLite(), dbname="../COVID-19-DB/OURWORLD.sqlite3")
+df <- dbGetQuery(db,"select * from OWID")
+df <- df %>% filter(continent =="World")
+# df <- subset(df,location =="United States" )
+df$date <- as.Date(df$date)
+```
+```{r}
+good_stuff <- df  %>% select(continent,population_density,new_cases,total_cases,new_deaths,total_deaths)
+
+```
+
