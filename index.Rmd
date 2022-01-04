@@ -31,18 +31,6 @@ df$new_deaths <- as.numeric(df$new_deaths)
 sum(df$new_deaths,na.rm=TRUE)
 ```
 
-####  Estimated Yearly Cases 
-
-```{r}
-mean(df$new_cases,na.rm=TRUE)
-mean(df$new_cases,na.rm=TRUE) *365
-```
-
-```{r}
-mean(df$new_deaths,na.rm=TRUE)
-mean(df$new_deaths,na.rm=TRUE) *365
-```
-
 ## US Covid-19 Cases by Day,Week,Month, Quarter and Year
 
 ```{r}
