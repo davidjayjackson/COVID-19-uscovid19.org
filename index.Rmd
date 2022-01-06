@@ -173,6 +173,12 @@ ggplot(df) + geom_line(aes(x=date,y=PC)) +
   scale_y_continuous(labels = comma) +
   geom_smooth(aes(x=date,y=PC),span=0.1) +
   labs(title="df Case Per 100,000")
+
+df$PC <- (df$new_cases/331002651)
+ggplot(df) + geom_line(aes(x=date,y=PC)) +
+  scale_y_continuous(labels = comma) +
+  geom_smooth(aes(x=date,y=PC),span=0.1) +
+  labs(title="df Case Per Capita")
 ```
 ```{r}
 df$DPC <- (df$new_deaths/331002651) *100000
@@ -180,6 +186,12 @@ ggplot(df) + geom_line(aes(x=date,y=DPC)) +
   scale_y_continuous(labels = comma) +
   geom_smooth(aes(x=date,y=DPC),span=0.1) +
   labs(title="df Deaths Per 100,000") + theme_light()
+
+df$DPC <- (df$new_deaths/331002651)
+ggplot(df) + geom_line(aes(x=date,y=DPC)) +
+  scale_y_continuous(labels = comma) +
+  geom_smooth(aes(x=date,y=DPC),span=0.1) +
+  labs(title="df Deaths Per Capita") + theme_light()
 ```
 
 
