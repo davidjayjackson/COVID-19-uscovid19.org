@@ -23,7 +23,8 @@ rm(list=ls())
 db <- dbConnect(SQLite(), dbname="../COVID-19-DB/OURWORLD.sqlite3")
 df <- dbGetQuery(db,"select * from OWID")
 df <- df %>% filter(location =="United States")
-# df <- subset(df,location =="United States" )
+df <- df %>% filter(date >= Sys.Date() - 365)
+# df <- subset(df,location =="United States" &  )
 df$date <- as.Date(df$date)
 df$Year <- lubridate::year(df$date)
 sum(df$new_cases,na.rm = TRUE)
@@ -34,13 +35,11 @@ sum(df$new_deaths,na.rm=TRUE)
 ## US Covid-19 Cases by Day,Week,Month, Quarter and Year
 
 ```{r}
-db2 <- subset(df,date >="2021-01-01" & new_cases >=1)
-db2$MAC <- movavg(db2$new_cases,14,type = "w")
-db2$MAD <- movavg(db2$new_deaths,14,type = "w")
-db2$Rate <- db2$new_deaths/db2$new_cases
+df$MAC <- movavg(df$new_cases,14,type = "w")
+df$MAD <- movavg(df$new_deaths,14,type = "w")
+df$Rate <- df$new_deaths/df$new_cases
 ```
 ```{r}
-df <- subset(df,date >="2020-07-01" & new_cases >=1)
 df$Year <- as.factor(df$Year)
 df$MAC <- movavg(df$new_cases,14,type = "e")
 df$MAD <- movavg(df$new_deaths,14,type = "e")
@@ -111,7 +110,7 @@ ggplot(Weekly_new_cases) + geom_col(aes(x=Weekly,y=new_cases)) +
 
 ```
 ```{r}
-daily_new_cases <-ggplot(db2) + 
+daily_new_cases <-ggplot(df) + 
   labs(title="COVID-19 new_cases by Date",y="Cases") +
     geom_line(aes(x=date,y=MAC,col="Mov Average"),lwd=1) +
    geom_line(aes(x=date,y=new_cases,col="Daily Cases")) +
