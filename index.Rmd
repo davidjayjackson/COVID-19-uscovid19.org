@@ -1,7 +1,7 @@
 ---
 title: "US Battle With Covid-29"
 author: "David Jackson"
-date: "11/17/2021"
+date:  "`r Sys.time()`"
 output: html_document
 ---
 
@@ -137,6 +137,7 @@ ggplot(df) + geom_col(aes(x=Year,y=new_deaths)) +
 df %>% group_by(date) %>%
   summarise_by_time(date,.by = "quarter",Deaths =sum(new_deaths)) %>% ggplot(aes(x=date,y=Deaths)) + geom_col() +
   labs(title = "Deaths by Quarter")
+
 ```
 
 ####  US Covid-19 Deaths by Month
