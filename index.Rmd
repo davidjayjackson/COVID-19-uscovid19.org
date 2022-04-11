@@ -86,8 +86,8 @@ Monthly_new_cases$LivedSaved <- Monthly_new_cases$new_cases * (max(Monthly_new_c
 ```{r}
 Weekly_new_cases <- aggregate(new_cases~Weekly,df,FUN=sum)
 Weekly_new_deaths <- aggregate(new_deaths~Weekly,df,FUN=sum)
-Weekly_new_cases$DRate <- Weekly_new_deaths$new_deaths/Weekly_new_cases$new_cases
-Weekly_new_cases$LivedSaved <- Weekly_new_cases$new_cases * (max(Weekly_new_cases$DRate) - Weekly_new_cases$DRate) 
+# Weekly_new_cases$DRate <- Weekly_new_deaths$new_deaths/Weekly_new_cases$new_cases
+#Weekly_new_cases$LivedSaved <- Weekly_new_cases$new_cases * (max(Weekly_new_cases$DRate) - Weekly_new_cases$DRate) 
 
 ```
 ```{r}
