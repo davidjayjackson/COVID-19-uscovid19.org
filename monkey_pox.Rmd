@@ -1,0 +1,48 @@
+---
+title: "Monkey Pox (OWID)"
+author: "David Jackson"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(janitor)
+```
+
+## R Markdown
+
+```{r}
+monkeypox <- read_csv("https://raw.githubusercontent.com/globaldothealth/monkeypox/main/latest.csv") %>% remove_empty(which = c("rows","cols")) %>% clean_names()
+```
+
+
+### Status of Reported Cases
+
+```{r}
+monkeypox %>% count(status)
+```
+```{r}
+monkeypox %>%  count(status) %>% 
+  ggplot(aes(x=status,y=n)) + geom_col() + labs(title="Cases by Status", y="Number of Cases")
+```
+
+### World wide Cases
+
+```{r}
+monkeypox %>% count(date_confirmation) %>%
+  ggplot(aes(x=date_confirmation,n)) +
+  geom_line() + labs(title ="Confirmed by Date", y="Number of Cases")
+```
+
+```{r}
+monkeypox_country <- monkeypox %>% select(country, date_confirmation) %>% filter(country %in% c("United Sates","Brazil","Spain","India","Israel","Portugal","Sweden")) %>%
+  count(country,date_confirmation) %>% na.omit()
+```
+
+```{r}
+ggplot(monkeypox_country) + geom_line(aes(x=date_confirmation,y=n)) + facet_wrap(~country,scales ="free_y") + 
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust=1)) + labs(title ="Confirmed by Country",y="Number of Cases")
+```
+
