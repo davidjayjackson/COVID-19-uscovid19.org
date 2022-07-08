@@ -14,6 +14,7 @@ library(janitor)
 ## R Markdown
 
 ```{r}
+rm(list=ls())
 monkeypox <- read_csv("https://raw.githubusercontent.com/globaldothealth/monkeypox/main/latest.csv") %>% remove_empty(which = c("rows","cols")) %>% clean_names()
 ```
 
@@ -33,7 +34,8 @@ monkeypox %>%  count(status) %>%
 ```{r}
 monkeypox %>% count(date_confirmation) %>%
   ggplot(aes(x=date_confirmation,n)) +
-  geom_line() + labs(title ="Confirmed by Date", y="Number of Cases")
+  geom_line() + labs(title ="Confirmed by Date", y="Number of Cases") +
+  geom_smooth()
 ```
 
 ```{r}
@@ -46,3 +48,9 @@ ggplot(monkeypox_country) + geom_line(aes(x=date_confirmation,y=n)) + facet_wrap
   theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust=1)) + labs(title ="Confirmed by Country",y="Number of Cases")
 ```
 
+### Cofirmed Cases by Age Group
+
+
+```{r}
+monkeypox %>% filter(age >0) %>% ggplot() + geom_bar(aes(x=age)) + coord_flip()
+```
