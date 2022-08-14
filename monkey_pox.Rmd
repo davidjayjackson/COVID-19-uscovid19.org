@@ -17,6 +17,9 @@ library(janitor)
 rm(list=ls())
 monkeypox <- read_csv("https://raw.githubusercontent.com/globaldothealth/monkeypox/main/latest.csv") %>% remove_empty(which = c("rows","cols")) %>% clean_names()
 ```
+```{r}
+monkeypox_owid <- read_csv("https://raw.githubusercontent.com/owid/notebooks/main/EdouardMathieu/monkeypox/owid-monkeypox-data.csv")
+```
 
 
 ### Status of Reported Cases
@@ -53,4 +56,46 @@ ggplot(monkeypox_country) + geom_line(aes(x=date_confirmation,y=n)) + facet_wrap
 
 ```{r}
 monkeypox %>% filter(age >0) %>% ggplot() + geom_bar(aes(x=age)) + coord_flip()
+```
+
+## US Monkeypox
+
+```{r}
+monkeypox_US <- monkeypox %>% 
+  filter(country == "United States" & status =="confirmed") %>%
+
+```
+```{r}
+US_Daily <-monkeypox_US %>%
+  group_by(date_confirmation) %>% summarise(Confirmed = n()) %>%
+ungroup()
+```
+```{r}
+US_Daily$Cumsum <- cumsum(US_Daily$Confirmed)
+```
+```{r}
+ggplot(US_Daily) + geom_line(aes(x=date_confirmation,y=Cumsum))
+```
+
+
+
+
+```{r}
+ 
+  count(date_confirmation,sort =T) %>%
+  ggplot() + geom_line(aes(x=date_confirmation,n)) +
+  geom_smooth(aes(x=date_confirmation,y=n))
+```
+
+```{r}
+monkeypox %>% 
+  filter(country == "United States" & status =="confirmed") %>%
+  count(age)
+```
+```{r}
+monkeypox %>% 
+  filter(country == "United States" & status =="confirmed") %>%
+  count(city,date_confirmation,sort =T) %>%
+  ggplot() + geom_line(aes(x=date_confirmation,n)) +
+  facet_wrap(~city,scale ="free_y")
 ```
