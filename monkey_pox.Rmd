@@ -62,7 +62,7 @@ monkeypox %>% filter(age >0) %>% ggplot() + geom_bar(aes(x=age)) + coord_flip()
 
 ```{r}
 monkeypox_US <- monkeypox %>% 
-  filter(country == "United States" & status =="confirmed") %>%
+  filter(country == "United States" & status =="confirmed")
 
 ```
 ```{r}
@@ -82,9 +82,9 @@ ggplot(US_Daily) + geom_line(aes(x=date_confirmation,y=Cumsum))
 
 ```{r}
  
-  count(date_confirmation,sort =T) %>%
-  ggplot() + geom_line(aes(x=date_confirmation,n)) +
-  geom_smooth(aes(x=date_confirmation,y=n))
+  # US_Daily %>% count(date_confirmation,sort =T) %>%
+  # ggplot() + geom_line(aes(x=date_confirmation,n)) +
+  # geom_smooth(aes(x=date_confirmation,y=n))
 ```
 
 ```{r}
