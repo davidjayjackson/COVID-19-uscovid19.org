@@ -69,14 +69,14 @@ ggplot(df) + geom_col(aes(x=Year,y=new_deaths)) +
 ```{r}
 daily_new_deaths <- ggplot(US) + 
   labs(title="COVID-19 Cases by Date",col="CAses",y="Cases")  +
-  geom_line(aes(x=date,y=MAC,col="Mov. Average"),lwd=1) 
+  geom_line(aes(x=date,y=MAC,col="Mov. Average"),linewidth=1) 
     ggplotly(daily_new_deaths)
 
 ```
 ```{r}
 daily_new_deaths <- ggplot(US) + 
   labs(title="COVID-19 Deaths by Date",col="Deaths",y="Deaths")  +
-  geom_line(aes(x=date,y=MAD,col="Mov. Average"),lwd=1) 
+  geom_line(aes(x=date,y=MAD,col="Mov. Average"),linewidth=1) 
    ggplotly(daily_new_deaths)
 
 ```
